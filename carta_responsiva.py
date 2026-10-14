@@ -275,7 +275,7 @@ if accion == "Nueva Carta Responsiva":
     with col_e1:
         nombre_emisor = st.text_input("Razón Social / Empresa Emisora", value="NAUPAGAS S.A. de C.V.")
     with col_e2:
-        rfc_emisor = st.text_input("RFC del Emisor", value="NAU1002221A3")
+        rfc_emisor = st.text_input("RFC del Emisor", value="NGA1608221S4")
 
     # --- PARTE 2: DATOS DEL CHOFER ---
     st.subheader("2. 👤 Datos del Operador / Chofer")
