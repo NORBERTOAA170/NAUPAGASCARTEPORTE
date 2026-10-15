@@ -45,7 +45,6 @@ def cargar_historial_disco():
         try:
             with open(ARCHIVO_HISTORIAL_JSON, "r", encoding="utf-8") as f:
                 datos = json.load(f)
-                # Convertir la fecha de string a objeto date para los filtros
                 for item in datos:
                     if "fecha_dt" in item and isinstance(item["fecha_dt"], str):
                         try:
@@ -59,7 +58,6 @@ def cargar_historial_disco():
 
 def guardar_historial_disco(historial):
     try:
-        # Crear una copia serializable (convertir date a string)
         datos_serializables = []
         for item in historial:
             item_copia = item.copy()
@@ -87,7 +85,6 @@ if "registro_bloqueado_naupagas" not in st.session_state:
 
 # ================= CATÁLOGO LOCAL DE C.P. VERIFICADO (MÉXICO) =================
 CATALOGO_LOCAL_CP = {
-    # Veracruz
     "91400": {"colonia": "Perote Centro", "municipio": "Perote", "estado": "Veracruz", "pais": "México"},
     "91403": {"colonia": "El Sabinal", "municipio": "Perote", "estado": "Veracruz", "pais": "México"},
     "91405": {"colonia": "Fovissste", "municipio": "Perote", "estado": "Veracruz", "pais": "México"},
@@ -96,24 +93,19 @@ CATALOGO_LOCAL_CP = {
     "91190": {"colonia": "Ánimas", "municipio": "Xalapa", "estado": "Veracruz", "pais": "México"},
     "91110": {"colonia": "Badillo", "municipio": "Xalapa", "estado": "Veracruz", "pais": "México"},
     "91700": {"colonia": "Veracruz Centro", "municipio": "Veracruz", "estado": "Veracruz", "pais": "México"},
-    # Puebla
     "72000": {"colonia": "Puebla Centro", "municipio": "Puebla", "estado": "Puebla", "pais": "México"},
     "72100": {"colonia": "La Paz", "municipio": "Puebla", "estado": "Puebla", "pais": "México"},
-    # Tlaxcala
     "90000": {"colonia": "Tlaxcala de Xicohténcatl Centro", "municipio": "Tlaxcala", "estado": "Tlaxcala", "pais": "México"},
     "90300": {"colonia": "Tlaxco Centro", "municipio": "Tlaxco", "estado": "Tlaxcala", "pais": "México"},
-    # Estado de México
     "54680": {"colonia": "Teoloyucan Centro", "municipio": "Teoloyucan", "estado": "Estado de México", "pais": "México"},
     "54789": {"colonia": "Santa Cruz", "municipio": "Tepotzotlán", "estado": "Estado de México", "pais": "México"},
     "54600": {"colonia": "Tepotzotlán Centro", "municipio": "Tepotzotlán", "estado": "Estado de México", "pais": "México"},
     "54000": {"colonia": "Tlalnepantla Centro", "municipio": "Tlalnepantla de Baz", "estado": "Estado de México", "pais": "México"},
     "55000": {"colonia": "Ecatepec de Morelos Centro", "municipio": "Ecatepec de Morelos", "estado": "Estado de México", "pais": "México"},
     "54900": {"colonia": "Tultitlán de Ocampo Centro", "municipio": "Tultitlán", "estado": "Estado de México", "pais": "México"},
-    # Ciudad de México
     "01000": {"colonia": "San Ángel", "municipio": "Álvaro Obregón", "estado": "Ciudad de México", "pais": "México"},
     "06000": {"colonia": "Centro", "municipio": "Cuauhtémoc", "estado": "Ciudad de México", "pais": "México"},
     "15000": {"colonia": "Federal", "municipio": "Venustiano Carranza", "estado": "Ciudad de México", "pais": "México"},
-    # Hidalgo
     "42000": {"colonia": "Pachuca de Soto Centro", "municipio": "Pachuca de Soto", "estado": "Hidalgo", "pais": "México"},
     "42188": {"colonia": "San Antonio El Desmonte", "municipio": "Pachuca de Soto", "estado": "Hidalgo", "pais": "México"},
     "43960": {"colonia": "Apan Centro", "municipio": "Apan", "estado": "Hidalgo", "pais": "México"}
@@ -200,105 +192,105 @@ def generar_pdf(d):
                 pass
                 
         pdf.set_font("helvetica", "B", 14)
-        pdf.cell(0, 8, "NAUPAGAS S.A. DE C.V.", align="C", new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(0, 8, "NAUPAGAS S.A. DE C.V.", align="C", ln=True)
         pdf.set_font("helvetica", "B", 11)
-        pdf.cell(0, 6, "COMPLEMENTO CARTA PORTE 3.1 - TRÁNSITO FEDERAL", align="C", new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(0, 6, "COMPLEMENTO CARTA PORTE 3.1 - TRÁNSITO FEDERAL", align="C", ln=True)
         pdf.set_font("helvetica", "", 8)
-        pdf.cell(0, 5, f"Fecha de Emisión: {d.get('fecha_registro', '')} | IDCCP: {d.get('idccp', '')}", align="C", new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(0, 5, f"Fecha de Emisión: {d.get('fecha_registro', '')} | IDCCP: {d.get('idccp', '')}", align="C", ln=True)
         pdf.ln(4)
 
         def seccion_pdf(titulo):
             pdf.set_fill_color(220, 225, 230)
             pdf.set_font("helvetica", "B", 9)
-            pdf.cell(0, 6, f"  {titulo}", fill=True, new_x="LMARGIN", new_y="NEXT")
+            pdf.cell(0, 6, f"  {titulo}", fill=True, ln=True)
             pdf.ln(2)
 
         # 1. Datos del Emisor
         seccion_pdf("1. DATOS DEL EMISOR Y PERMISOS SCT")
         pdf.set_font("helvetica", "", 8)
-        pdf.cell(95, 5, f"Empresa / Razón Social: {d.get('nombre_emisor', '')}", new_x="RIGHT", new_y="TOP")
-        pdf.cell(95, 5, f"RFC Emisor: {d.get('rfc_emisor', '')}", new_x="LMARGIN", new_y="NEXT")
-        pdf.cell(95, 5, f"Tipo Permiso SCT: {d.get('tipo_permiso_sct', '')}", new_x="RIGHT", new_y="TOP")
-        pdf.cell(95, 5, f"Número Permiso SCT: {d.get('num_permiso_sct', '')}", new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(95, 5, f"Empresa / Razón Social: {d.get('nombre_emisor', '')}", ln=0)
+        pdf.cell(95, 5, f"RFC Emisor: {d.get('rfc_emisor', '')}", ln=1)
+        pdf.cell(95, 5, f"Tipo Permiso SCT: {d.get('tipo_permiso_sct', '')}", ln=0)
+        pdf.cell(95, 5, f"Número Permiso SCT: {d.get('num_permiso_sct', '')}", ln=1)
         pdf.ln(3)
 
         # 2. Datos del Operador / Chofer
         seccion_pdf("2. DATOS DEL OPERADOR / CHOFER (FIGURA TRANSPORTE)")
         pdf.set_font("helvetica", "", 8)
-        pdf.cell(95, 5, f"Chofer: {d.get('nombre_chofer', '')}", new_x="RIGHT", new_y="TOP")
-        pdf.cell(95, 5, f"RFC Chofer: {d.get('rfc_chofer', '')}", new_x="LMARGIN", new_y="NEXT")
-        pdf.cell(95, 5, f"Tipo de Licencia: {d.get('tipo_licencia', '')}", new_x="RIGHT", new_y="TOP")
-        pdf.cell(95, 5, f"Número de Licencia: {d.get('num_licencia', '')}", new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(95, 5, f"Chofer: {d.get('nombre_chofer', '')}", ln=0)
+        pdf.cell(95, 5, f"RFC Chofer: {d.get('rfc_chofer', '')}", ln=1)
+        pdf.cell(95, 5, f"Tipo de Licencia: {d.get('tipo_licencia', '')}", ln=0)
+        pdf.cell(95, 5, f"Número de Licencia: {d.get('num_licencia', '')}", ln=1)
         pdf.ln(3)
 
         # 3. Unidad y Seguro
         seccion_pdf("3. DATOS DE LA UNIDAD Y SEGURO DE RESPONSABILIDAD")
         pdf.set_font("helvetica", "", 8)
-        pdf.cell(95, 5, f"Unidad: {d.get('tipo_unidad', '')} - Eco: {d.get('eco_unidad', '')}", new_x="RIGHT", new_y="TOP")
-        pdf.cell(95, 5, f"Placas: {d.get('placas', '')}", new_x="LMARGIN", new_y="NEXT")
-        pdf.cell(95, 5, f"Marca/Modelo: {d.get('marca_modelo', '')} (Cap: {d.get('capacidad', '')})", new_x="RIGHT", new_y="TOP")
-        pdf.cell(95, 5, f"Aseguradora: {d.get('aseguradora', '')} | Póliza: {d.get('num_poliza', '')}", new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(95, 5, f"Unidad: {d.get('tipo_unidad', '')} - Eco: {d.get('eco_unidad', '')}", ln=0)
+        pdf.cell(95, 5, f"Placas: {d.get('placas', '')}", ln=1)
+        pdf.cell(95, 5, f"Marca/Modelo: {d.get('marca_modelo', '')} (Cap: {d.get('capacidad', '')})", ln=0)
+        pdf.cell(95, 5, f"Aseguradora: {d.get('aseguradora', '')} | Póliza: {d.get('num_poliza', '')}", ln=1)
         pdf.ln(3)
 
         # 4. Origen y Destino
         seccion_pdf("4. RUTA DE TRÁNSITO (ORIGEN Y DESTINO)")
         
         pdf.set_font("helvetica", "B", 8)
-        pdf.cell(18, 5, "ORIGEN:", new_x="RIGHT", new_y="TOP")
+        pdf.cell(18, 5, "ORIGEN:", ln=0)
         pdf.set_font("helvetica", "", 8)
-        pdf.cell(100, 5, f"{d.get('nombre_origen', '')}", new_x="RIGHT", new_y="TOP")
+        pdf.cell(100, 5, f"{d.get('nombre_origen', '')}", ln=0)
         pdf.set_font("helvetica", "B", 8)
-        pdf.cell(12, 5, "RFC:", new_x="RIGHT", new_y="TOP")
+        pdf.cell(12, 5, "RFC:", ln=0)
         pdf.set_font("helvetica", "", 8)
-        pdf.cell(0, 5, f"{d.get('rfc_origen', '')}", new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(0, 5, f"{d.get('rfc_origen', '')}", ln=1)
         
         pdf.set_font("helvetica", "B", 8)
-        pdf.cell(28, 5, "Fecha de Salida:", new_x="RIGHT", new_y="TOP")
+        pdf.cell(28, 5, "Fecha de Salida:", ln=0)
         pdf.set_font("helvetica", "", 8)
-        pdf.cell(0, 5, f"{d.get('fecha_salida', '')}", new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(0, 5, f"{d.get('fecha_salida', '')}", ln=1)
         
         pdf.set_font("helvetica", "B", 8)
-        pdf.cell(18, 5, "Dirección:", new_x="RIGHT", new_y="TOP")
+        pdf.cell(18, 5, "Dirección:", ln=0)
         pdf.set_font("helvetica", "", 8)
-        pdf.multi_cell(0, 5, f"{d.get('dir_origen', '')}", new_x="LMARGIN", new_y="NEXT")
+        pdf.multi_cell(0, 5, f"{d.get('dir_origen', '')}")
         pdf.ln(2)
 
         pdf.set_font("helvetica", "B", 8)
-        pdf.cell(18, 5, "DESTINO:", new_x="RIGHT", new_y="TOP")
+        pdf.cell(18, 5, "DESTINO:", ln=0)
         pdf.set_font("helvetica", "", 8)
-        pdf.cell(100, 5, f"{d.get('nombre_destino', '')}", new_x="RIGHT", new_y="TOP")
+        pdf.cell(100, 5, f"{d.get('nombre_destino', '')}", ln=0)
         pdf.set_font("helvetica", "B", 8)
-        pdf.cell(12, 5, "RFC:", new_x="RIGHT", new_y="TOP")
+        pdf.cell(12, 5, "RFC:", ln=0)
         pdf.set_font("helvetica", "", 8)
         rfc_dest_val = d.get('rfc_destino', '') if d.get('rfc_destino', '').strip() else "S/N (Público General)"
-        pdf.cell(0, 5, f"{rfc_dest_val}", new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(0, 5, f"{rfc_dest_val}", ln=1)
         
         pdf.set_font("helvetica", "B", 8)
-        pdf.cell(28, 5, "Llegada Estimada:", new_x="RIGHT", new_y="TOP")
+        pdf.cell(28, 5, "Llegada Estimada:", ln=0)
         pdf.set_font("helvetica", "", 8)
-        pdf.cell(0, 5, f"{d.get('fecha_llegada', '')}", new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(0, 5, f"{d.get('fecha_llegada', '')}", ln=1)
         
         pdf.set_font("helvetica", "B", 8)
-        pdf.cell(18, 5, "Dirección:", new_x="RIGHT", new_y="TOP")
+        pdf.cell(18, 5, "Dirección:", ln=0)
         pdf.set_font("helvetica", "", 8)
-        pdf.multi_cell(0, 5, f"{d.get('dir_destino', '')}", new_x="LMARGIN", new_y="NEXT")
+        pdf.multi_cell(0, 5, f"{d.get('dir_destino', '')}")
         pdf.ln(2)
 
         pdf.set_font("helvetica", "B", 8)
-        pdf.cell(42, 5, "Distancia Total Estimada:", new_x="RIGHT", new_y="TOP")
+        pdf.cell(42, 5, "Distancia Total Estimada:", ln=0)
         pdf.set_font("helvetica", "", 8)
-        pdf.cell(0, 5, f"{d.get('distancia_km', '')}", new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(0, 5, f"{d.get('distancia_km', '')}", ln=1)
         pdf.ln(3)
 
         # 5. Mercancía SAT
         seccion_pdf("5. DESCRIPCIÓN Y CLAVES SAT DE LA MERCANCÍA")
         pdf.set_font("helvetica", "", 8)
-        pdf.cell(0, 5, f"Producto: {d.get('desc_mercancia', '')} | Clave SAT: {d.get('clave_prod_sat', '')}", new_x="LMARGIN", new_y="NEXT")
-        pdf.cell(95, 5, f"Cantidad: {d.get('cantidad_mercancia', '')} {d.get('clave_unidad_sat', '')}", new_x="RIGHT", new_y="TOP")
-        pdf.cell(95, 5, f"Peso Total: {d.get('peso_mercancia', '')}", new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(0, 5, f"Producto: {d.get('desc_mercancia', '')} | Clave SAT: {d.get('clave_prod_sat', '')}", ln=1)
+        pdf.cell(95, 5, f"Cantidad: {d.get('cantidad_mercancia', '')} {d.get('clave_unidad_sat', '')}", ln=0)
+        pdf.cell(95, 5, f"Peso Total: {d.get('peso_mercancia', '')}", ln=1)
         pdf.ln(4)
 
-        # 6. SECCIÓN DE VALIDACIÓN Y CÓDIGO QR (QR Optimizado de 38 mm)
+        # 6. SECCIÓN DE VALIDACIÓN Y CÓDIGO QR
         seccion_pdf("6. VALIDACIÓN Y VERIFICACIÓN OPERATIVA")
         
         enlace_qr = "https://loginda.siat.sat.gob.mx/nidp/app/login?id=ciec&sid=0&option=credential&sid=0&target=https%3A%2F%2Fverificacfdi.facturaelectronica.sat.gob.mx%2Foauth2%2Fcallback%26scope%3Dmscontribuyente%26code_challenge%3DOfkQhIkHLKEVoxtqW3F3RnIR-cUvRqWF3NEUPFGPvDA%26code_challenge_method%3DS256%26state%3Dg9GL1UZNuFOWSrNeAdEUDRF0RATmkhaCjnz2YOldQ1ZgPIAx8nxrxm6gYV5G1eBLVRAx7nBtdUo9q96KfBfMWfdiXOKoG7l3HcjW78km4jpb7puSzBmW0gYKHClUT5op93de%2BGqEUdwbQXvy%2Bq%2B%2FR08agJatdq5sWNUI6A%2B9qQfRrIcsV6DW5LBStnxqskw4icV%2Fo52LwkOgjZ%2FZHQP46N2Jvxk01CXpItNYWoFSnug9voK72sLWEjiqxv8L6LRvz0Vym3cltWNSE%2FXA%2BzROnWevc0wtsaE5cqW1%2FqvEYcxD5az6nsdVasiSWl%2BeD7bCgZ%2FiFPeFIZhNocmdgS70YS1UQjhlKGue%2B%2BflJAB3XYoQcA0cNDL1QkrNTzd7J0OY8DEiqQBJyoAyC4w62vdIw1AiLzS9THpXuVm6Hd%2FBq56zyLRi9IGBxXn3NyWd0ns9DDGTslm2WAnS2YlAs8rU4Q2Ocu837Vf1T4r3mwOw0ppA6ZpsaAtARRh%2BNjf49BmiCBY%2BVJjbu2fJ60vLdEorUmbkyd7y4DUDqYMK6%2FF3WWs6QFHpX4Thuw2sPvVj8U4duCVgNp6CMkHBkOS2J1zG%2FKFuMNLlJSOeg%2FYSJ%2BgSwyn55wCqlPzpZCqIHwxAFh3gm4wHFWgpOArJZB1hMcrO9T98YF7GQ2uLZNm4vFjxgaU%3D"
@@ -308,20 +300,19 @@ def generar_pdf(d):
         if qr_bytes:
             y_inicial = pdf.get_y()
             try:
-                # QR de 38 mm para escaneo rápido y sin errores
                 pdf.image(qr_bytes, x=15, y=y_inicial, w=38)
             except:
                 pass
             pdf.set_x(56)
             pdf.set_font("helvetica", "B", 8)
-            pdf.cell(0, 4, f"IDCCP (Folio Carta Porte): {d.get('idccp', '')}", new_x="LMARGIN", new_y="NEXT")
+            pdf.cell(0, 4, f"IDCCP (Folio Carta Porte): {d.get('idccp', '')}", ln=1)
             pdf.set_x(56)
             pdf.set_font("helvetica", "", 7)
-            pdf.cell(0, 4, f"Estatus de Verificación: ACCESO AL PORTAL DE ACCESO / SAT", new_x="LMARGIN", new_y="NEXT")
+            pdf.cell(0, 4, f"Estatus de Verificación: ACCESO AL PORTAL DE ACCESO / SAT", ln=1)
             pdf.set_x(56)
-            pdf.cell(0, 4, f"Permiso SCT: {d.get('tipo_permiso_sct', '')} - {d.get('num_permiso_sct', '')}", new_x="LMARGIN", new_y="NEXT")
+            pdf.cell(0, 4, f"Permiso SCT: {d.get('tipo_permiso_sct', '')} - {d.get('num_permiso_sct', '')}", ln=1)
             pdf.set_x(56)
-            pdf.multi_cell(0, 4, "Este documento ampara el traslado operado con las especificaciones técnicas del catálogo SCT / SAT versión 3.1.", new_x="LMARGIN", new_y="NEXT")
+            pdf.multi_cell(0, 4, "Este documento ampara el traslado operado con las especificaciones técnicas del catálogo SCT / SAT versión 3.1.")
 
         return bytes(pdf.output(dest='S'))
     except Exception as e:
@@ -559,8 +550,6 @@ if accion == "Nueva Carta Porte":
             st.session_state.ultimo_registro_hash_naupagas = actual_hash
             st.session_state.registro_bloqueado_naupagas = True
             st.session_state.historial_naupagas.insert(0, datos_nueva_carta)
-            
-            # Guardar automáticamente en disco
             guardar_historial_disco(st.session_state.historial_naupagas)
             st.rerun()
 
@@ -634,6 +623,5 @@ elif accion == "Historial de Documentos":
 
             if indices_a_borrar is not None:
                 st.session_state.historial_naupagas.pop(indices_a_borrar)
-                # Actualizar el archivo JSON tras eliminar un registro
                 guardar_historial_disco(st.session_state.historial_naupagas)
                 st.rerun()
