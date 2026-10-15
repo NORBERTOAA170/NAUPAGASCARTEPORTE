@@ -1,5 +1,6 @@
 streamlit
-requests
+fpdf
+qrcode
+pillow
 geopy
-fpdf2
-Pillow
+requests
