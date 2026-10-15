@@ -314,13 +314,19 @@ def generar_pdf(d):
             pdf.set_x(56)
             pdf.multi_cell(0, 4, "Este documento ampara el traslado operado con las especificaciones técnicas del catálogo SCT / SAT versión 3.1.")
 
-        return bytes(pdf.output(dest='S'))
+        out = pdf.output(dest='S')
+        if isinstance(out, str):
+            return out.encode('latin1')
+        return bytes(out)
     except Exception as e:
         pdf_err = FPDF()
         pdf_err.add_page()
         pdf_err.set_font("helvetica", "B", 12)
         pdf_err.cell(0, 10, "Error al generar vista completa del PDF.", ln=True)
-        return bytes(pdf_err.output(dest='S'))
+        out_err = pdf_err.output(dest='S')
+        if isinstance(out_err, str):
+            return out_err.encode('latin1')
+        return bytes(out_err)
 
 
 # ================= AUTENTICACIÓN RÁPIDA =================
