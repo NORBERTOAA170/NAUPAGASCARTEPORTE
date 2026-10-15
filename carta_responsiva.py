@@ -7,7 +7,7 @@ import uuid
 import streamlit as st
 from PIL import Image
 
-# Librerías de mapas, QR y PDF
+# Librerías de mapas, QR y PDF (Asegurando qrcode e io)
 try:
     from geopy.geocoders import Nominatim
     from geopy.distance import geodesic
