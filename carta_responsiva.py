@@ -2,12 +2,13 @@ from datetime import datetime, time, date
 import time as time_module
 from zoneinfo import ZoneInfo
 import os
+import json
 import requests
 import uuid
 import streamlit as st
 from PIL import Image
 
-# Librerías de mapas, QR y PDF (Asegurando qrcode e io)
+# Librerías de mapas, QR y PDF
 try:
     from geopy.geocoders import Nominatim
     from geopy.distance import geodesic
@@ -36,13 +37,47 @@ st.set_page_config(
 )
 
 MASTER_PASSWORD = "NAUPA2026"
+ARCHIVO_HISTORIAL_JSON = "historial_naupagas.json"
 
-# Inicializar estados en la sesión si no existen
+# ================= FUNCIONES DE PERSISTENCIA LOCAL (JSON) =================
+def cargar_historial_disco():
+    if os.path.exists(ARCHIVO_HISTORIAL_JSON):
+        try:
+            with open(ARCHIVO_HISTORIAL_JSON, "r", encoding="utf-8") as f:
+                datos = json.load(f)
+                # Convertir la fecha de string a objeto date para los filtros
+                for item in datos:
+                    if "fecha_dt" in item and isinstance(item["fecha_dt"], str):
+                        try:
+                            item["fecha_dt"] = datetime.strptime(item["fecha_dt"], "%Y-%m-%d").date()
+                        except:
+                            item["fecha_dt"] = datetime.now().date()
+                return datos
+        except Exception:
+            return []
+    return []
+
+def guardar_historial_disco(historial):
+    try:
+        # Crear una copia serializable (convertir date a string)
+        datos_serializables = []
+        for item in historial:
+            item_copia = item.copy()
+            if "fecha_dt" in item_copia and isinstance(item_copia["fecha_dt"], date):
+                item_copia["fecha_dt"] = item_copia["fecha_dt"].strftime("%Y-%m-%d")
+            datos_serializables.append(item_copia)
+        
+        with open(ARCHIVO_HISTORIAL_JSON, "w", encoding="utf-8") as f:
+            json.dump(datos_serializables, f, ensure_ascii=False, indent=4)
+    except Exception as e:
+        print(f"Error al guardar historial: {e}")
+
+# Inicializar estados en la sesión
 if "auth_naupagas" not in st.session_state:
     st.session_state.auth_naupagas = False
 
 if "historial_naupagas" not in st.session_state:
-    st.session_state.historial_naupagas = []
+    st.session_state.historial_naupagas = cargar_historial_disco()
 
 if "ultimo_registro_hash_naupagas" not in st.session_state:
     st.session_state.ultimo_registro_hash_naupagas = None
@@ -524,6 +559,9 @@ if accion == "Nueva Carta Porte":
             st.session_state.ultimo_registro_hash_naupagas = actual_hash
             st.session_state.registro_bloqueado_naupagas = True
             st.session_state.historial_naupagas.insert(0, datos_nueva_carta)
+            
+            # Guardar automáticamente en disco
+            guardar_historial_disco(st.session_state.historial_naupagas)
             st.rerun()
 
 elif accion == "Historial de Documentos":
@@ -559,6 +597,11 @@ elif accion == "Historial de Documentos":
         registros_visibles = []
         for idx, carta in enumerate(st.session_state.historial_naupagas):
             f_carta = carta.get("fecha_dt", ahora_mx.date())
+            if isinstance(f_carta, str):
+                try:
+                    f_carta = datetime.strptime(f_carta, "%Y-%m-%d").date()
+                except:
+                    f_carta = ahora_mx.date()
             if fecha_inicio <= f_carta <= fecha_fin:
                 registros_visibles.append((idx, carta))
 
@@ -591,4 +634,6 @@ elif accion == "Historial de Documentos":
 
             if indices_a_borrar is not None:
                 st.session_state.historial_naupagas.pop(indices_a_borrar)
+                # Actualizar el archivo JSON tras eliminar un registro
+                guardar_historial_disco(st.session_state.historial_naupagas)
                 st.rerun()
