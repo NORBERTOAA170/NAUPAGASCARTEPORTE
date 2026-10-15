@@ -5,6 +5,7 @@ import os
 import json
 import requests
 import uuid
+import tempfile
 import streamlit as st
 from PIL import Image
 
@@ -24,7 +25,6 @@ except ImportError:
 
 try:
     import qrcode
-    import io
     QRCODE_DISPONIBLE = True
 except ImportError:
     QRCODE_DISPONIBLE = False
@@ -158,8 +158,8 @@ def calcular_distancia_km(origen_str, destino_str):
         return None
     return None
 
-# ================= FUNCIÓN PARA GENERAR CÓDIGO QR =================
-def generar_qr_bytes(contenido):
+# ================= FUNCIÓN PARA GENERAR CÓDIGO QR (COMPATIBLE PYFPDF 1.7.2) =================
+def generar_qr_tempfile(contenido):
     if not QRCODE_DISPONIBLE:
         return None
     try:
@@ -172,15 +172,18 @@ def generar_qr_bytes(contenido):
         qr.add_data(contenido)
         qr.make(fit=True)
         img = qr.make_image(fill_color="black", back_color="white")
-        img_bytes = io.BytesIO()
-        img.save(img_bytes, format='PNG')
-        img_bytes.seek(0)
-        return img_bytes
+        
+        # Crear un archivo temporal físico para PyFPDF 1.7.2
+        tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
+        img.save(tmp.name, format='PNG')
+        tmp.close()
+        return tmp.name
     except Exception:
         return None
 
 # ================= FUNCIÓN PARA GENERAR EL PDF =================
 def generar_pdf(d):
+    qr_path = None
     try:
         pdf = FPDF(orientation='P', unit='mm', format='A4')
         pdf.add_page()
@@ -295,12 +298,12 @@ def generar_pdf(d):
         
         enlace_qr = "https://loginda.siat.sat.gob.mx/nidp/app/login?id=ciec&sid=0&option=credential&sid=0&target=https%3A%2F%2Fverificacfdi.facturaelectronica.sat.gob.mx%2Foauth2%2Fcallback%26scope%3Dmscontribuyente%26code_challenge%3DOfkQhIkHLKEVoxtqW3F3RnIR-cUvRqWF3NEUPFGPvDA%26code_challenge_method%3DS256%26state%3Dg9GL1UZNuFOWSrNeAdEUDRF0RATmkhaCjnz2YOldQ1ZgPIAx8nxrxm6gYV5G1eBLVRAx7nBtdUo9q96KfBfMWfdiXOKoG7l3HcjW78km4jpb7puSzBmW0gYKHClUT5op93de%2BGqEUdwbQXvy%2Bq%2B%2FR08agJatdq5sWNUI6A%2B9qQfRrIcsV6DW5LBStnxqskw4icV%2Fo52LwkOgjZ%2FZHQP46N2Jvxk01CXpItNYWoFSnug9voK72sLWEjiqxv8L6LRvz0Vym3cltWNSE%2FXA%2BzROnWevc0wtsaE5cqW1%2FqvEYcxD5az6nsdVasiSWl%2BeD7bCgZ%2FiFPeFIZhNocmdgS70YS1UQjhlKGue%2B%2BflJAB3XYoQcA0cNDL1QkrNTzd7J0OY8DEiqQBJyoAyC4w62vdIw1AiLzS9THpXuVm6Hd%2FBq56zyLRi9IGBxXn3NyWd0ns9DDGTslm2WAnS2YlAs8rU4Q2Ocu837Vf1T4r3mwOw0ppA6ZpsaAtARRh%2BNjf49BmiCBY%2BVJjbu2fJ60vLdEorUmbkyd7y4DUDqYMK6%2FF3WWs6QFHpX4Thuw2sPvVj8U4duCVgNp6CMkHBkOS2J1zG%2FKFuMNLlJSOeg%2FYSJ%2BgSwyn55wCqlPzpZCqIHwxAFh3gm4wHFWgpOArJZB1hMcrO9T98YF7GQ2uLZNm4vFjxgaU%3D"
         
-        qr_bytes = generar_qr_bytes(enlace_qr)
+        qr_path = generar_qr_tempfile(enlace_qr)
         
-        if qr_bytes:
+        if qr_path and os.path.exists(qr_path):
             y_inicial = pdf.get_y()
             try:
-                pdf.image(qr_bytes, x=15, y=y_inicial, w=38)
+                pdf.image(qr_path, x=15, y=y_inicial, w=38)
             except:
                 pass
             pdf.set_x(56)
@@ -327,6 +330,13 @@ def generar_pdf(d):
         if isinstance(out_err, str):
             return out_err.encode('latin1')
         return bytes(out_err)
+    finally:
+        # Limpiar archivo temporal del QR si existe
+        if qr_path and os.path.exists(qr_path):
+            try:
+                os.remove(qr_path)
+            except:
+                pass
 
 
 # ================= AUTENTICACIÓN RÁPIDA =================
@@ -589,7 +599,7 @@ elif accion == "Historial de Documentos":
 
         st.markdown("---")
         
-        registros_visibles = []
+        streams_visibles = []
         for idx, carta in enumerate(st.session_state.historial_naupagas):
             f_carta = carta.get("fecha_dt", ahora_mx.date())
             if isinstance(f_carta, str):
@@ -598,13 +608,13 @@ elif accion == "Historial de Documentos":
                 except:
                     f_carta = ahora_mx.date()
             if fecha_inicio <= f_carta <= fecha_fin:
-                registros_visibles.append((idx, carta))
+                streams_visibles.append((idx, carta))
 
-        if not registros_visibles:
+        if not streams_visibles:
             st.warning(f"No se encontraron cartas registradas entre el {fecha_inicio.strftime('%d/%m/%Y')} y el {fecha_fin.strftime('%d/%m/%Y')}.")
         else:
             indices_a_borrar = None
-            for idx, carta in registros_visibles:
+            for idx, carta in streams_visibles:
                 with st.container(border=True):
                     col_h1, col_h2, col_h3 = st.columns([2.5, 3, 2.5])
                     with col_h1:
