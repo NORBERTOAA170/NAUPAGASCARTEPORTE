@@ -158,14 +158,11 @@ def calcular_distancia_km(origen_str, destino_str):
         return None
     return None
 
-# Función auxiliar para limpiar texto y evitar errores de codificación en FPDF
 def safe_str(val):
     if val is None:
         return ""
-    # Reemplaza caracteres especiales para que FPDF no falle
     return str(val).encode('latin-1', 'replace').decode('latin-1')
 
-# ================= FUNCIÓN PARA GENERAR CÓDIGO QR =================
 def generar_qr_tempfile(contenido):
     if not QRCODE_DISPONIBLE:
         return None
@@ -187,7 +184,6 @@ def generar_qr_tempfile(contenido):
     except Exception:
         return None
 
-# ================= FUNCIÓN PARA GENERAR EL PDF =================
 def generar_pdf(d):
     qr_path = None
     try:
@@ -409,7 +405,7 @@ if accion == "Nueva Carta Porte":
             tipo_licencia = st.selectbox("Tipo de Licencia", ["Federal", "Estatal", "Chofer / Vendedor"])
             num_licencia = st.text_input("Número de Licencia", placeholder="Número oficial")
 
-    # --- PARTE 3: DATOS DE LA UNIDAD ---
+    # --- PARTE 3: DATOS DE LA UNIDAD (SIN VIN) ---
     with st.container(border=True):
         st.subheader("3. ⛽ Datos de la Unidad")
         col_u1, col_u2 = st.columns(2)
@@ -420,7 +416,6 @@ if accion == "Nueva Carta Porte":
         with col_u2:
             marca_modelo = st.text_input("Marca / Modelo", placeholder="Ej. Ford F-350 2020")
             capacidad = st.text_input("Capacidad de la Unidad", placeholder="Ej. 5,000 Litros")
-            vin_chasis = st.text_input("Número de Serie / VIN", placeholder="Serie de la unidad")
 
     # --- PARTE 4: DATOS DE SEGUROS ---
     with st.container(border=True):
