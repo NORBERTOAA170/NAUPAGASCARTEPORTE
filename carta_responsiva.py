@@ -158,7 +158,14 @@ def calcular_distancia_km(origen_str, destino_str):
         return None
     return None
 
-# ================= FUNCIÓN PARA GENERAR CÓDIGO QR (COMPATIBLE PYFPDF 1.7.2) =================
+# Función auxiliar para limpiar texto y evitar errores de codificación en FPDF
+def safe_str(val):
+    if val is None:
+        return ""
+    # Reemplaza caracteres especiales para que FPDF no falle
+    return str(val).encode('latin-1', 'replace').decode('latin-1')
+
+# ================= FUNCIÓN PARA GENERAR CÓDIGO QR =================
 def generar_qr_tempfile(contenido):
     if not QRCODE_DISPONIBLE:
         return None
@@ -173,7 +180,6 @@ def generar_qr_tempfile(contenido):
         qr.make(fit=True)
         img = qr.make_image(fill_color="black", back_color="white")
         
-        # Crear un archivo temporal físico para PyFPDF 1.7.2
         tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
         img.save(tmp.name, format='PNG')
         tmp.close()
@@ -195,102 +201,102 @@ def generar_pdf(d):
                 pass
                 
         pdf.set_font("helvetica", "B", 14)
-        pdf.cell(0, 8, "NAUPAGAS S.A. DE C.V.", align="C", ln=True)
+        pdf.cell(0, 8, safe_str("NAUPAGAS S.A. DE C.V."), align="C", ln=True)
         pdf.set_font("helvetica", "B", 11)
-        pdf.cell(0, 6, "COMPLEMENTO CARTA PORTE 3.1 - TRÁNSITO FEDERAL", align="C", ln=True)
+        pdf.cell(0, 6, safe_str("COMPLEMENTO CARTA PORTE 3.1 - TRÁNSITO FEDERAL"), align="C", ln=True)
         pdf.set_font("helvetica", "", 8)
-        pdf.cell(0, 5, f"Fecha de Emisión: {d.get('fecha_registro', '')} | IDCCP: {d.get('idccp', '')}", align="C", ln=True)
+        pdf.cell(0, 5, safe_str(f"Fecha de Emisión: {d.get('fecha_registro', '')} | IDCCP: {d.get('idccp', '')}"), align="C", ln=True)
         pdf.ln(4)
 
         def seccion_pdf(titulo):
             pdf.set_fill_color(220, 225, 230)
             pdf.set_font("helvetica", "B", 9)
-            pdf.cell(0, 6, f"  {titulo}", fill=True, ln=True)
+            pdf.cell(0, 6, safe_str(f"  {titulo}"), fill=True, ln=True)
             pdf.ln(2)
 
         # 1. Datos del Emisor
         seccion_pdf("1. DATOS DEL EMISOR Y PERMISOS SCT")
         pdf.set_font("helvetica", "", 8)
-        pdf.cell(95, 5, f"Empresa / Razón Social: {d.get('nombre_emisor', '')}", ln=0)
-        pdf.cell(95, 5, f"RFC Emisor: {d.get('rfc_emisor', '')}", ln=1)
-        pdf.cell(95, 5, f"Tipo Permiso SCT: {d.get('tipo_permiso_sct', '')}", ln=0)
-        pdf.cell(95, 5, f"Número Permiso SCT: {d.get('num_permiso_sct', '')}", ln=1)
+        pdf.cell(95, 5, safe_str(f"Empresa / Razón Social: {d.get('nombre_emisor', '')}"), ln=0)
+        pdf.cell(95, 5, safe_str(f"RFC Emisor: {d.get('rfc_emisor', '')}"), ln=1)
+        pdf.cell(95, 5, safe_str(f"Tipo Permiso SCT: {d.get('tipo_permiso_sct', '')}"), ln=0)
+        pdf.cell(95, 5, safe_str(f"Número Permiso SCT: {d.get('num_permiso_sct', '')}"), ln=1)
         pdf.ln(3)
 
         # 2. Datos del Operador / Chofer
         seccion_pdf("2. DATOS DEL OPERADOR / CHOFER (FIGURA TRANSPORTE)")
         pdf.set_font("helvetica", "", 8)
-        pdf.cell(95, 5, f"Chofer: {d.get('nombre_chofer', '')}", ln=0)
-        pdf.cell(95, 5, f"RFC Chofer: {d.get('rfc_chofer', '')}", ln=1)
-        pdf.cell(95, 5, f"Tipo de Licencia: {d.get('tipo_licencia', '')}", ln=0)
-        pdf.cell(95, 5, f"Número de Licencia: {d.get('num_licencia', '')}", ln=1)
+        pdf.cell(95, 5, safe_str(f"Chofer: {d.get('nombre_chofer', '')}"), ln=0)
+        pdf.cell(95, 5, safe_str(f"RFC Chofer: {d.get('rfc_chofer', '')}"), ln=1)
+        pdf.cell(95, 5, safe_str(f"Tipo de Licencia: {d.get('tipo_licencia', '')}"), ln=0)
+        pdf.cell(95, 5, safe_str(f"Número de Licencia: {d.get('num_licencia', '')}"), ln=1)
         pdf.ln(3)
 
         # 3. Unidad y Seguro
         seccion_pdf("3. DATOS DE LA UNIDAD Y SEGURO DE RESPONSABILIDAD")
         pdf.set_font("helvetica", "", 8)
-        pdf.cell(95, 5, f"Unidad: {d.get('tipo_unidad', '')} - Eco: {d.get('eco_unidad', '')}", ln=0)
-        pdf.cell(95, 5, f"Placas: {d.get('placas', '')}", ln=1)
-        pdf.cell(95, 5, f"Marca/Modelo: {d.get('marca_modelo', '')} (Cap: {d.get('capacidad', '')})", ln=0)
-        pdf.cell(95, 5, f"Aseguradora: {d.get('aseguradora', '')} | Póliza: {d.get('num_poliza', '')}", ln=1)
+        pdf.cell(95, 5, safe_str(f"Unidad: {d.get('tipo_unidad', '')} - Eco: {d.get('eco_unidad', '')}"), ln=0)
+        pdf.cell(95, 5, safe_str(f"Placas: {d.get('placas', '')}"), ln=1)
+        pdf.cell(95, 5, safe_str(f"Marca/Modelo: {d.get('marca_modelo', '')} (Cap: {d.get('capacidad', '')})"), ln=0)
+        pdf.cell(95, 5, safe_str(f"Aseguradora: {d.get('aseguradora', '')} | Póliza: {d.get('num_poliza', '')}"), ln=1)
         pdf.ln(3)
 
         # 4. Origen y Destino
         seccion_pdf("4. RUTA DE TRÁNSITO (ORIGEN Y DESTINO)")
         
         pdf.set_font("helvetica", "B", 8)
-        pdf.cell(18, 5, "ORIGEN:", ln=0)
+        pdf.cell(18, 5, safe_str("ORIGEN:"), ln=0)
         pdf.set_font("helvetica", "", 8)
-        pdf.cell(100, 5, f"{d.get('nombre_origen', '')}", ln=0)
+        pdf.cell(100, 5, safe_str(f"{d.get('nombre_origen', '')}"), ln=0)
         pdf.set_font("helvetica", "B", 8)
-        pdf.cell(12, 5, "RFC:", ln=0)
+        pdf.cell(12, 5, safe_str("RFC:"), ln=0)
         pdf.set_font("helvetica", "", 8)
-        pdf.cell(0, 5, f"{d.get('rfc_origen', '')}", ln=1)
+        pdf.cell(0, 5, safe_str(f"{d.get('rfc_origen', '')}"), ln=1)
         
         pdf.set_font("helvetica", "B", 8)
-        pdf.cell(28, 5, "Fecha de Salida:", ln=0)
+        pdf.cell(28, 5, safe_str("Fecha de Salida:"), ln=0)
         pdf.set_font("helvetica", "", 8)
-        pdf.cell(0, 5, f"{d.get('fecha_salida', '')}", ln=1)
+        pdf.cell(0, 5, safe_str(f"{d.get('fecha_salida', '')}"), ln=1)
         
         pdf.set_font("helvetica", "B", 8)
-        pdf.cell(18, 5, "Dirección:", ln=0)
+        pdf.cell(18, 5, safe_str("Dirección:"), ln=0)
         pdf.set_font("helvetica", "", 8)
-        pdf.multi_cell(0, 5, f"{d.get('dir_origen', '')}")
+        pdf.multi_cell(0, 5, safe_str(f"{d.get('dir_origen', '')}"))
         pdf.ln(2)
 
         pdf.set_font("helvetica", "B", 8)
-        pdf.cell(18, 5, "DESTINO:", ln=0)
+        pdf.cell(18, 5, safe_str("DESTINO:"), ln=0)
         pdf.set_font("helvetica", "", 8)
-        pdf.cell(100, 5, f"{d.get('nombre_destino', '')}", ln=0)
+        pdf.cell(100, 5, safe_str(f"{d.get('nombre_destino', '')}"), ln=0)
         pdf.set_font("helvetica", "B", 8)
-        pdf.cell(12, 5, "RFC:", ln=0)
+        pdf.cell(12, 5, safe_str("RFC:"), ln=0)
         pdf.set_font("helvetica", "", 8)
         rfc_dest_val = d.get('rfc_destino', '') if d.get('rfc_destino', '').strip() else "S/N (Público General)"
-        pdf.cell(0, 5, f"{rfc_dest_val}", ln=1)
+        pdf.cell(0, 5, safe_str(f"{rfc_dest_val}"), ln=1)
         
         pdf.set_font("helvetica", "B", 8)
-        pdf.cell(28, 5, "Llegada Estimada:", ln=0)
+        pdf.cell(28, 5, safe_str("Llegada Estimada:"), ln=0)
         pdf.set_font("helvetica", "", 8)
-        pdf.cell(0, 5, f"{d.get('fecha_llegada', '')}", ln=1)
+        pdf.cell(0, 5, safe_str(f"{d.get('fecha_llegada', '')}"), ln=1)
         
         pdf.set_font("helvetica", "B", 8)
-        pdf.cell(18, 5, "Dirección:", ln=0)
+        pdf.cell(18, 5, safe_str("Dirección:"), ln=0)
         pdf.set_font("helvetica", "", 8)
-        pdf.multi_cell(0, 5, f"{d.get('dir_destino', '')}")
+        pdf.multi_cell(0, 5, safe_str(f"{d.get('dir_destino', '')}"))
         pdf.ln(2)
 
         pdf.set_font("helvetica", "B", 8)
-        pdf.cell(42, 5, "Distancia Total Estimada:", ln=0)
+        pdf.cell(42, 5, safe_str("Distancia Total Estimada:"), ln=0)
         pdf.set_font("helvetica", "", 8)
-        pdf.cell(0, 5, f"{d.get('distancia_km', '')}", ln=1)
+        pdf.cell(0, 5, safe_str(f"{d.get('distancia_km', '')}"), ln=1)
         pdf.ln(3)
 
         # 5. Mercancía SAT
         seccion_pdf("5. DESCRIPCIÓN Y CLAVES SAT DE LA MERCANCÍA")
         pdf.set_font("helvetica", "", 8)
-        pdf.cell(0, 5, f"Producto: {d.get('desc_mercancia', '')} | Clave SAT: {d.get('clave_prod_sat', '')}", ln=1)
-        pdf.cell(95, 5, f"Cantidad: {d.get('cantidad_mercancia', '')} {d.get('clave_unidad_sat', '')}", ln=0)
-        pdf.cell(95, 5, f"Peso Total: {d.get('peso_mercancia', '')}", ln=1)
+        pdf.cell(0, 5, safe_str(f"Producto: {d.get('desc_mercancia', '')} | Clave SAT: {d.get('clave_prod_sat', '')}"), ln=1)
+        pdf.cell(95, 5, safe_str(f"Cantidad: {d.get('cantidad_mercancia', '')} {d.get('clave_unidad_sat', '')}"), ln=0)
+        pdf.cell(95, 5, safe_str(f"Peso Total: {d.get('peso_mercancia', '')}"), ln=1)
         pdf.ln(4)
 
         # 6. SECCIÓN DE VALIDACIÓN Y CÓDIGO QR
@@ -308,14 +314,14 @@ def generar_pdf(d):
                 pass
             pdf.set_x(56)
             pdf.set_font("helvetica", "B", 8)
-            pdf.cell(0, 4, f"IDCCP (Folio Carta Porte): {d.get('idccp', '')}", ln=1)
+            pdf.cell(0, 4, safe_str(f"IDCCP (Folio Carta Porte): {d.get('idccp', '')}"), ln=1)
             pdf.set_x(56)
             pdf.set_font("helvetica", "", 7)
-            pdf.cell(0, 4, f"Estatus de Verificación: ACCESO AL PORTAL DE ACCESO / SAT", ln=1)
+            pdf.cell(0, 4, safe_str(f"Estatus de Verificación: ACCESO AL PORTAL DE ACCESO / SAT"), ln=1)
             pdf.set_x(56)
-            pdf.cell(0, 4, f"Permiso SCT: {d.get('tipo_permiso_sct', '')} - {d.get('num_permiso_sct', '')}", ln=1)
+            pdf.cell(0, 4, safe_str(f"Permiso SCT: {d.get('tipo_permiso_sct', '')} - {d.get('num_permiso_sct', '')}"), ln=1)
             pdf.set_x(56)
-            pdf.multi_cell(0, 4, "Este documento ampara el traslado operado con las especificaciones técnicas del catálogo SCT / SAT versión 3.1.")
+            pdf.multi_cell(0, 4, safe_str("Este documento ampara el traslado operado con las especificaciones técnicas del catálogo SCT / SAT versión 3.1."))
 
         out = pdf.output(dest='S')
         if isinstance(out, str):
@@ -325,13 +331,12 @@ def generar_pdf(d):
         pdf_err = FPDF()
         pdf_err.add_page()
         pdf_err.set_font("helvetica", "B", 12)
-        pdf_err.cell(0, 10, "Error al generar vista completa del PDF.", ln=True)
+        pdf_err.cell(0, 10, safe_str(f"Error técnico PDF: {str(e)[:45]}"), ln=True)
         out_err = pdf_err.output(dest='S')
         if isinstance(out_err, str):
             return out_err.encode('latin1')
         return bytes(out_err)
     finally:
-        # Limpiar archivo temporal del QR si existe
         if qr_path and os.path.exists(qr_path):
             try:
                 os.remove(qr_path)
