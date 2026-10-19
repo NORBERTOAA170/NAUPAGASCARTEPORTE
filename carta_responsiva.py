@@ -129,9 +129,10 @@ def consultar_cp_mexico(cp):
             if places:
                 colonia = places[0].get("place name", "")
                 estado = places[0].get("state", "")
+                # CORRECCIÓN: Asignar el estado o usar la colonia como referencia general limpia sin sobreescribir mal
                 return {
                     "colonia": colonia,
-                    "municipio": colonia,
+                    "municipio": estado,  # Usar estado/localidad general para evitar cruces erróneos en Nominatim
                     "estado": estado,
                     "pais": "México"
                 }
