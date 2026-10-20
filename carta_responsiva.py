@@ -338,7 +338,8 @@ def generar_pdf(d):
             pdf.set_x(56)
             pdf.multi_cell(0, 4, safe_str("Este documento ampara el traslado operado con las especificaciones técnicas del catálogo SCT / SAT versión 3.1."))
 
-        pdf.ln(8)
+        # Espacio seguro ampliado para evitar que se encime con el QR
+        pdf.ln(15)
         pdf.set_font("helvetica", "B", 8)
         pdf.multi_cell(0, 4, safe_str("SI USTED TIENE UNA DUDA O PREGUNTA SOBRE ESTA CARTA PORTE, FAVOR DE CONTACTARNOS AL NÚMERO 282 – 103 - 3534"), align="C")
 
@@ -549,9 +550,6 @@ if accion == "Nueva Carta Porte":
             with col_cil2:
                 cant_cil_30 = st.number_input("Cantidad de Cilindros de 30 KG", min_value=0, value=15, step=1)
 
-            # Cálculo para cilindros:
-            # Total piezas = cant_20 + cant_30
-            # Peso neto de gas = (cant_20 * 20) + (cant_30 * 30)
             total_piezas = cant_cil_20 + cant_cil_30
             peso_neto_gas = (cant_cil_20 * 20.0) + (cant_cil_30 * 30.0)
 
