@@ -38,8 +38,9 @@ st.set_page_config(
 
 MASTER_PASSWORD = "NAUPA2026"
 ARCHIVO_HISTORIAL_JSON = "historial_naupagas.json"
+ARCHIVO_FOLIO_JSON = "folio_naupagas.json"
 
-# ================= FUNCIONES DE PERSISTENCIA LOCAL (JSON) =================
+# ================= FUNCIONES DE PERSISTENCIA Y FOLIOS =================
 def cargar_historial_disco():
     if os.path.exists(ARCHIVO_HISTORIAL_JSON):
         try:
@@ -69,6 +70,22 @@ def guardar_historial_disco(historial):
             json.dump(datos_serializables, f, ensure_ascii=False, indent=4)
     except Exception as e:
         print(f"Error al guardar historial: {e}")
+
+def obtener_siguiente_folio():
+    folio_num = 1
+    if os.path.exists(ARCHIVO_FOLIO_JSON):
+        try:
+            with open(ARCHIVO_FOLIO_JSON, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                folio_num = data.get("ultimo_folio", 0) + 1
+        except:
+            folio_num = 1
+    try:
+        with open(ARCHIVO_FOLIO_JSON, "w", encoding="utf-8") as f:
+            json.dump({"ultimo_folio": folio_num}, f)
+    except:
+        pass
+    return f"{folio_num:07d}"
 
 # Inicializar estados en la sesión
 if "auth_naupagas" not in st.session_state:
@@ -129,10 +146,9 @@ def consultar_cp_mexico(cp):
             if places:
                 colonia = places[0].get("place name", "")
                 estado = places[0].get("state", "")
-                # CORRECCIÓN: Asignar el estado o usar la colonia como referencia general limpia sin sobreescribir mal
                 return {
                     "colonia": colonia,
-                    "municipio": estado,  # Usar estado/localidad general para evitar cruces erróneos en Nominatim
+                    "municipio": estado,
                     "estado": estado,
                     "pais": "México"
                 }
@@ -202,7 +218,10 @@ def generar_pdf(d):
         pdf.set_font("helvetica", "B", 11)
         pdf.cell(0, 6, safe_str("COMPLEMENTO CARTA PORTE 3.1 - TRÁNSITO FEDERAL"), align="C", ln=True)
         pdf.set_font("helvetica", "", 8)
-        pdf.cell(0, 5, safe_str(f"Fecha de Emisión: {d.get('fecha_registro', '')} | IDCCP: {d.get('idccp', '')}"), align="C", ln=True)
+        
+        # Mostrar Folio y Fecha/IDCCP
+        folio_val = d.get('folio', '0000001')
+        pdf.cell(0, 5, safe_str(f"FOLIO: {folio_val} | Fecha de Emisión: {d.get('fecha_registro', '')} | IDCCP: {d.get('idccp', '')}"), align="C", ln=True)
         pdf.ln(4)
 
         def seccion_pdf(titulo):
@@ -311,7 +330,7 @@ def generar_pdf(d):
                 pass
             pdf.set_x(56)
             pdf.set_font("helvetica", "B", 8)
-            pdf.cell(0, 4, safe_str(f"IDCCP (Folio Carta Porte): {d.get('idccp', '')}"), ln=1)
+            pdf.cell(0, 4, safe_str(f"Folio: {folio_val} | IDCCP: {d.get('idccp', '')}"), ln=1)
             pdf.set_x(56)
             pdf.set_font("helvetica", "", 7)
             pdf.cell(0, 4, safe_str(f"Estatus de Verificación: ACCESO AL PORTAL DE ACCESO / SAT"), ln=1)
@@ -319,6 +338,11 @@ def generar_pdf(d):
             pdf.cell(0, 4, safe_str(f"Permiso SCT: {d.get('tipo_permiso_sct', '')} - {d.get('num_permiso_sct', '')}"), ln=1)
             pdf.set_x(56)
             pdf.multi_cell(0, 4, safe_str("Este documento ampara el traslado operado con las especificaciones técnicas del catálogo SCT / SAT versión 3.1."))
+
+        # Leyenda en negritas al pie del PDF
+        pdf.ln(8)
+        pdf.set_font("helvetica", "B", 8)
+        pdf.multi_cell(0, 4, safe_str("SI USTED TIENE UNA DUDA O PREGUNTA SOBRE ESTA CARTA PORTE, FAVOR DE CONTACTARNOS AL NÚMERO 282 – 103 - 3534"), align="C")
 
         out = pdf.output(dest='S')
         if isinstance(out, str):
@@ -528,8 +552,10 @@ if accion == "Nueva Carta Porte":
             str_llegada = f"{f_llegada_date.strftime('%d/%m/%Y')} {f_llegada_time.strftime('%H:%M')}"
 
             idccp_generado = f"CCC{str(uuid.uuid4()).upper()[:20]}"
+            folio_generado = obtener_siguiente_folio()
 
             datos_nueva_carta = {
+                "folio": folio_generado,
                 "idccp": idccp_generado,
                 "nombre_emisor": nombre_emisor,
                 "rfc_emisor": rfc_emisor,
@@ -619,18 +645,19 @@ elif accion == "Historial de Documentos":
                 with st.container(border=True):
                     col_h1, col_h2, col_h3 = st.columns([2.5, 3, 2.5])
                     with col_h1:
+                        st.write(f"🔢 **Folio:** {carta.get('folio', 'N/A')}")
                         st.write(f"📅 **Fecha:** {carta['fecha_registro']}")
                         st.write(f"⛽ **Unidad:** {carta['tipo_unidad']} ({carta['eco_unidad']})")
-                        st.write(f"🆔 **IDCCP:** `{carta.get('idccp', 'N/A')}`")
                     with col_h2:
                         st.write(f"👤 **Chofer:** {carta['nombre_chofer']}")
                         st.write(f"🛣️ **Ruta:** {carta['nombre_origen']} ➔ {carta['nombre_destino']}")
+                        st.write(f"🆔 **IDCCP:** `{carta.get('idccp', 'N/A')}`")
                     with col_h3:
                         pdf_hist_bytes = generar_pdf(carta)
                         st.download_button(
                             label="📄 Descargar PDF SAT",
                             data=pdf_hist_bytes,
-                            file_name=f"Naupagas_Carta_{carta['eco_unidad']}_{idx}.pdf",
+                            file_name=f"Naupagas_Folio_{carta.get('folio', '0000001')}.pdf",
                             mime="application/pdf",
                             key=f"dl_naupagas_{idx}"
                         )
