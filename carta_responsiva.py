@@ -219,7 +219,6 @@ def generar_pdf(d):
         pdf.cell(0, 6, safe_str("COMPLEMENTO CARTA PORTE 3.1 - TRÁNSITO FEDERAL"), align="C", ln=True)
         pdf.set_font("helvetica", "", 8)
         
-        # Mostrar Folio y Fecha/IDCCP
         folio_val = d.get('folio', '0000001')
         pdf.cell(0, 5, safe_str(f"FOLIO: {folio_val} | Fecha de Emisión: {d.get('fecha_registro', '')} | IDCCP: {d.get('idccp', '')}"), align="C", ln=True)
         pdf.ln(4)
@@ -339,7 +338,6 @@ def generar_pdf(d):
             pdf.set_x(56)
             pdf.multi_cell(0, 4, safe_str("Este documento ampara el traslado operado con las especificaciones técnicas del catálogo SCT / SAT versión 3.1."))
 
-        # Leyenda en negritas al pie del PDF
         pdf.ln(8)
         pdf.set_font("helvetica", "B", 8)
         pdf.multi_cell(0, 4, safe_str("SI USTED TIENE UNA DUDA O PREGUNTA SOBRE ESTA CARTA PORTE, FAVOR DE CONTACTARNOS AL NÚMERO 282 – 103 - 3534"), align="C")
@@ -440,7 +438,7 @@ if accion == "Nueva Carta Porte":
             placas = st.text_input("Placas", placeholder="Ej. XX-00-XXX")
         with col_u2:
             marca_modelo = st.text_input("Marca / Modelo", placeholder="Ej. Ford F-350 2020")
-            capacidad = st.text_input("Capacidad de la Unidad", placeholder="Ej. 5,000 Litros")
+            capacidad = st.text_input("Capacidad de la Unidad", placeholder="Ej. 12,900 Litros")
 
     # --- PARTE 4: DATOS DE SEGUROS ---
     with st.container(border=True):
@@ -504,18 +502,33 @@ if accion == "Nueva Carta Porte":
                 
             calle_destino = st.text_input("Calle y Número de Llegada", placeholder="Ej. Av. Principal #10")
 
-    # --- PARTE 6: MERCANCÍA Y CLAVES SAT ---
+    # --- PARTE 6: MERCANCÍA Y CLAVES SAT (CÁLCULO AUTOMÁTICO MAGNETEL) ---
     with st.container(border=True):
-        st.subheader("6. 📦 Descripción y Claves SAT de la Mercancía")
+        st.subheader("6. 📦 Descripción y Claves SAT de la Mercancía (Medidor Magnetel)")
+        
+        col_calc1, col_calc2 = st.columns(2)
+        with col_calc1:
+            capacidad_total_num = st.number_input("Capacidad Total de la Pipa (Litros)", min_value=0.0, value=12900.0, step=100.0)
+        with col_calc2:
+            porcentaje_magnetel = st.slider("Porcentaje de Llenado (%) - Magnetel", min_value=0.0, max_value=100.0, value=70.0, step=0.5)
+
+        # Cálculo automático de Volumen (Litros) y Masa (KG con factor 0.54)
+        volumen_calculado_lts = capacidad_total_num * (porcentaje_magnetel / 100.0)
+        peso_calculado_kg = volumen_calculado_lts * 0.54
+
+        st.info(f"📊 **Resultado Automático:** {volumen_calculado_lts:,.2f} Litros | **Peso calculado:** {peso_calculado_kg:,.2f} KG (Factor 0.54)")
+
         col_m1, col_m2, col_m3 = st.columns(3)
         with col_m1:
-            cantidad_mercancia = st.text_input("Cantidad", placeholder="Ej. 5,000")
-            clave_unidad_sat = st.selectbox("Clave Unidad SAT", ["LTR - Litros", "KGM - Kilogramos"])
+            cantidad_mercancia = f"{volumen_calculado_lts:,.2f} Litros"
+            st.text_input("Cantidad Calculada", value=cantidad_mercancia, disabled=True)
+            clave_unidad_sat = "LTR - Litros"
         with col_m2:
             desc_mercancia = st.text_input("Descripción / Producto", value="Gas Licuado de Petróleo (Gas LP)")
             clave_prod_sat = st.text_input("Clave Producto SAT", value="15111510 (Gas LP)")
         with col_m3:
-            peso_mercancia = st.text_input("Peso Total (KG / Litros)", placeholder="Ej. 2,500 KG")
+            peso_mercancia = f"{peso_calculado_kg:,.2f} KG"
+            st.text_input("Peso Total Calculado", value=peso_mercancia, disabled=True)
 
     # --- CAMPO DE DISTANCIA ---
     with st.container(border=True):
@@ -580,11 +593,11 @@ if accion == "Nueva Carta Porte":
                 "nombre_destino": nombre_destino,
                 "fecha_llegada": str_llegada,
                 "dir_destino": f"{calle_destino}, Col. {colonia_destino}, C.P. {cp_destino}, {municipio_destino}, {estado_destino}",
-                "cantidad_mercancia": cantidad_mercancia,
-                "clave_unidad_sat": clave_unidad_sat.split(" - ")[0],
+                "cantidad_mercancia": f"{volumen_calculado_lts:,.2f} Litros",
+                "clave_unidad_sat": "LTR",
                 "desc_mercancia": desc_mercancia,
                 "clave_prod_sat": clave_prod_sat,
-                "peso_mercancia": peso_mercancia,
+                "peso_mercancia": f"{peso_calculado_kg:,.2f} KG",
                 "distancia_km": distancia_final,
                 "fecha_registro": ahora_mx.strftime("%d/%m/%Y %H:%M"),
                 "fecha_dt": ahora_mx.date()
