@@ -502,7 +502,7 @@ if accion == "Nueva Carta Porte":
                 
             calle_destino = st.text_input("Calle y Número de Llegada", placeholder="Ej. Av. Principal #10")
 
-    # --- PARTE 6: MERCANCÍA Y CLAVES SAT (CÁLCULO AUTOMÁTICO MAGNETEL) ---
+    # --- PARTE 6: MERCANCÍA Y CLAVES SAT (CÁLCULO DIRECTO POR ESCRITURA) ---
     with st.container(border=True):
         st.subheader("6. 📦 Descripción y Claves SAT de la Mercancía (Medidor Magnetel)")
         
@@ -510,7 +510,7 @@ if accion == "Nueva Carta Porte":
         with col_calc1:
             capacidad_total_num = st.number_input("Capacidad Total de la Pipa (Litros)", min_value=0.0, value=12900.0, step=100.0)
         with col_calc2:
-            porcentaje_magnetel = st.slider("Porcentaje de Llenado (%) - Magnetel", min_value=0.0, max_value=100.0, value=70.0, step=0.5)
+            porcentaje_magnetel = st.number_input("Porcentaje de Llenado (%) - Magnetel", min_value=0.0, max_value=100.0, value=70.0, step=0.5)
 
         # Cálculo automático de Volumen (Litros) y Masa (KG con factor 0.54)
         volumen_calculado_lts = capacidad_total_num * (porcentaje_magnetel / 100.0)
