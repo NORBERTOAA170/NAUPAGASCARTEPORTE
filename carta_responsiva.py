@@ -457,7 +457,7 @@ if accion == "Nueva Carta Porte":
         with col_s2:
             num_poliza = st.text_input("Número de Póliza", placeholder="Ej. POL-987654321")
 
-    # --- PARTE 5: ORIGEN Y DESTINO (CON OPCIÓN DE VARIOS CLIENTES) ---
+    # --- PARTE 5: ORIGEN Y DESTINO (DINÁMICO SEGÚN MODALIDAD) ---
     with st.container(border=True):
         st.subheader("5. 📍 Ruta de Tránsito (Origen y Destino)")
         col_origen, col_destino = st.columns(2)
@@ -489,11 +489,8 @@ if accion == "Nueva Carta Porte":
         with col_destino:
             st.markdown("#### 🛬 DESTINO")
             
-            # Selector para elegir entre Cliente Específico o Varios Clientes / Ruta General
+            # Selector para elegir la modalidad
             tipo_modo_destino = st.radio("Modalidad de Destino:", ["Cliente Específico (C.P. / Domicilio)", "Varios Clientes (Ruta General / Zona Libre)"], horizontal=False)
-            
-            rfc_destino = st.text_input("RFC Llegada / Cliente (Opcional)", placeholder="RFC de destino (Vacío si es público general)")
-            nombre_destino = st.text_input("Nombre / Empresa de Llegada", placeholder="Ej. Cliente Destino o Ruta Múltiple")
             
             col_f3, col_f4 = st.columns(2)
             with col_f3:
@@ -502,6 +499,9 @@ if accion == "Nueva Carta Porte":
                 f_llegada_time = st.time_input("Hora Estimada Llegada", value=time(18, 0))
 
             if tipo_modo_destino == "Cliente Específico (C.P. / Domicilio)":
+                rfc_destino = st.text_input("RFC Llegada / Cliente (Opcional)", placeholder="RFC de destino (Vacío si es público general)")
+                nombre_destino = st.text_input("Nombre / Empresa de Llegada", placeholder="Ej. Cliente Destino")
+                
                 cp_destino = st.text_input("CP Destino", max_chars=5, placeholder="Ej. 54680, 91000")
                 info_d = consultar_cp_mexico(cp_destino)
                 
@@ -516,9 +516,16 @@ if accion == "Nueva Carta Porte":
                 calle_destino = st.text_input("Calle y Número de Llegada", placeholder="Ej. Av. Principal #10")
                 dir_destino_final = f"{calle_destino}, Col. {colonia_destino}, C.P. {cp_destino}, {municipio_destino}, {estado_destino}"
             else:
-                # Opción de varios clientes / ruta libre
-                zona_libre_destino = st.text_input("Destinos / Zona de Reparto", placeholder="Ej. Banderilla, Xalapa, Las Vigas")
-                estado_libre_destino = st.text_input("Estado / Región", placeholder="Ej. Veracruz")
+                # Ocultar RFC y nombre de empresa para varios clientes
+                rfc_destino = ""
+                nombre_destino = "Ruta Varios Clientes"
+                
+                col_m_lib1, col_m_lib2 = st.columns(2)
+                with col_m_lib1:
+                    zona_libre_destino = st.text_input("Destinos / Zona de Reparto", value="Banderilla, Xalapa, Las Vigas", placeholder="Ej. Banderilla, Xalapa, Las Vigas")
+                with col_m_lib2:
+                    estado_libre_destino = st.text_input("Estado / Región", value="Veracruz", placeholder="Ej. Veracruz")
+                    
                 dir_destino_final = f"Ruta multi-cliente / Zona de entrega: {zona_libre_destino}, {estado_libre_destino}"
                 municipio_destino = zona_libre_destino
                 estado_destino = estado_libre_destino
