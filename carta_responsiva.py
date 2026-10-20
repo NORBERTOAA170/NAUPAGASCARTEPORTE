@@ -428,17 +428,20 @@ if accion == "Nueva Carta Porte":
             tipo_licencia = st.selectbox("Tipo de Licencia", ["Federal", "Estatal", "Chofer / Vendedor"])
             num_licencia = st.text_input("Número de Licencia", placeholder="Número oficial")
 
-    # --- PARTE 3: DATOS DE LA UNIDAD (SIN VIN) ---
+    # --- PARTE 3: DATOS DE LA UNIDAD (CONECTADO) ---
     with st.container(border=True):
         st.subheader("3. ⛽ Datos de la Unidad")
         col_u1, col_u2 = st.columns(2)
         with col_u1:
             tipo_unidad = st.selectbox("Tipo de Unidad", ["Autotanque (Pipa)", "Vehículo Repartidor (Cilindrera)"])
-            eco_unidad = st.text_input("Número Económico", placeholder="Ej. PIPA-01")
+            eco_unidad = st.text_input("Número Económico", placeholder="Ej. PIPA-01 o CIL-05")
             placas = st.text_input("Placas", placeholder="Ej. XX-00-XXX")
         with col_u2:
             marca_modelo = st.text_input("Marca / Modelo", placeholder="Ej. Ford F-350 2020")
-            capacidad = st.text_input("Capacidad descriptiva de la unidad", value="12,900 Litros", placeholder="Ej. 12,900 Litros")
+            if tipo_unidad == "Autotanque (Pipa)":
+                capacidad = st.text_input("Capacidad descriptiva de la unidad", value="12,900 Litros", placeholder="Ej. 12,900 Litros")
+            else:
+                capacidad = st.text_input("Capacidad descriptiva de la unidad", value="Vehículo Repartidor Cilindros", placeholder="Ej. Cilindros 20kg y 30kg")
 
     # --- PARTE 4: DATOS DE SEGUROS ---
     with st.container(border=True):
@@ -502,39 +505,69 @@ if accion == "Nueva Carta Porte":
                 
             calle_destino = st.text_input("Calle y Número de Llegada", placeholder="Ej. Av. Principal #10")
 
-    # --- PARTE 6: MERCANCÍA Y CLAVES SAT (CATÁLOGO DE CAPACIDADES Y MAGNETEL LIMPIO) ---
+    # --- PARTE 6: MERCANCÍA Y CLAVES SAT (DINÁMICA: PIPA O CILINDRERA 20 Y 30 KG) ---
     with st.container(border=True):
-        st.subheader("6. 📦 Descripción y Claves SAT de la Mercancía (Medidor Magnetel)")
+        st.subheader("6. 📦 Descripción y Claves SAT de la Mercancía")
         
-        opciones_capacidades = [4000.0, 4400.0, 4500.0, 5000.0, 12900.0, 13900.0, 24000.0, "Otra (Personalizada)"]
-        
-        col_calc1, col_calc2 = st.columns(2)
-        with col_calc1:
-            capacidad_seleccionada = st.selectbox("Capacidad Total de la Pipa (Litros)", options=opciones_capacidades, index=4)
-            if capacidad_seleccionada == "Otra (Personalizada)":
-                capacidad_total_num = st.number_input("Especifique capacidad (Litros)", min_value=0.0, value=10000.0, step=100.0)
-            else:
-                capacidad_total_num = float(capacidad_seleccionada)
-        with col_calc2:
-            porcentaje_magnetel = st.number_input("Porcentaje de Llenado (%) - Magnetel", min_value=0.0, max_value=100.0, value=70.0, step=0.5)
+        if tipo_unidad == "Autotanque (Pipa)":
+            st.markdown("#### ⛽ Configuración para Pipa (Medidor Magnetel)")
+            opciones_capacidades = [4000.0, 4400.0, 4500.0, 5000.0, 12900.0, 13900.0, 24000.0, "Otra (Personalizada)"]
+            
+            col_calc1, col_calc2 = st.columns(2)
+            with col_calc1:
+                capacidad_seleccionada = st.selectbox("Capacidad Total de la Pipa (Litros)", options=opciones_capacidades, index=4)
+                if capacidad_seleccionada == "Otra (Personalizada)":
+                    capacidad_total_num = st.number_input("Especifique capacidad (Litros)", min_value=0.0, value=10000.0, step=100.0)
+                else:
+                    capacidad_total_num = float(capacidad_seleccionada)
+            with col_calc2:
+                porcentaje_magnetel = st.number_input("Porcentaje de Llenado (%) - Magnetel", min_value=0.0, max_value=100.0, value=70.0, step=0.5)
 
-        # Cálculo automático de Volumen (Litros) y Masa (KG con factor 0.54)
-        volumen_calculado_lts = capacidad_total_num * (porcentaje_magnetel / 100.0)
-        peso_calculado_kg = volumen_calculado_lts * 0.54
+            volumen_calculado_lts = capacidad_total_num * (porcentaje_magnetel / 100.0)
+            peso_calculado_kg = volumen_calculado_lts * 0.54
 
-        st.info(f"📊 **Resultado Automático:** {volumen_calculado_lts:,.2f} Litros | **Peso calculado:** {peso_calculado_kg:,.2f} KG (Factor 0.54)")
+            st.info(f"📊 **Resultado Automático Pipa:** {volumen_calculado_lts:,.2f} Litros | **Peso calculado:** {peso_calculado_kg:,.2f} KG (Factor 0.54)")
 
-        col_m1, col_m2, col_m3 = st.columns(3)
-        with col_m1:
-            cantidad_mercancia = f"{volumen_calculado_lts:,.2f} Litros"
-            st.text_input("Cantidad Calculada", value=cantidad_mercancia, disabled=True)
-            clave_unidad_sat = "LTR - Litros"
-        with col_m2:
-            desc_mercancia = st.text_input("Descripción / Producto", value="Gas Licuado de Petróleo (Gas LP)")
-            clave_prod_sat = st.text_input("Clave Producto SAT", value="15111510 (Gas LP)")
-        with col_m3:
-            peso_mercancia = f"{peso_calculado_kg:,.2f} KG"
-            st.text_input("Peso Total Calculado", value=peso_mercancia, disabled=True)
+            col_m1, col_m2, col_m3 = st.columns(3)
+            with col_m1:
+                cantidad_texto = f"{volumen_calculado_lts:,.2f} Litros"
+                st.text_input("Cantidad Calculada", value=cantidad_texto, disabled=True)
+                clave_unidad_sat = "LTR - Litros"
+            with col_m2:
+                desc_mercancia = st.text_input("Descripción / Producto", value="Gas Licuado de Petróleo (Gas LP)")
+                clave_prod_sat = st.text_input("Clave Producto SAT", value="15111510 (Gas LP)")
+            with col_m3:
+                peso_texto = f"{peso_calculado_kg:,.2f} KG"
+                st.text_input("Peso Total Calculado", value=peso_texto, disabled=True)
+
+        else:
+            st.markdown("#### 🛢️ Configuración para Vehículo Repartidor (Cilindros de 20 kg y 30 kg)")
+            
+            col_cil1, col_cil2 = st.columns(2)
+            with col_cil1:
+                cant_cil_20 = st.number_input("Cantidad de Cilindros de 20 KG", min_value=0, value=20, step=1)
+            with col_cil2:
+                cant_cil_30 = st.number_input("Cantidad de Cilindros de 30 KG", min_value=0, value=15, step=1)
+
+            # Cálculo para cilindros:
+            # Total piezas = cant_20 + cant_30
+            # Peso neto de gas = (cant_20 * 20) + (cant_30 * 30)
+            total_piezas = cant_cil_20 + cant_cil_30
+            peso_neto_gas = (cant_cil_20 * 20.0) + (cant_cil_30 * 30.0)
+
+            st.info(f"📊 **Total Envases:** {total_piezas} Cilindros ({cant_cil_20} de 20kg, {cant_cil_30} de 30kg) | **Peso Neto de Gas:** {peso_neto_gas:,.2f} KG")
+
+            col_m1, col_m2, col_m3 = st.columns(3)
+            with col_m1:
+                cantidad_texto = f"{total_piezas} Piezas (Cilindros)"
+                st.text_input("Cantidad Calculada", value=cantidad_texto, disabled=True)
+                clave_unidad_sat = "H87 - Pieza"
+            with col_m2:
+                desc_mercancia = st.text_input("Descripción / Producto", value="Gas Licuado de Petróleo (Gas LP en Cilindros)")
+                clave_prod_sat = st.text_input("Clave Producto SAT", value="15111510 (Gas LP)")
+            with col_m3:
+                peso_texto = f"{peso_neto_gas:,.2f} KG"
+                st.text_input("Peso Total Neto Gas", value=peso_texto, disabled=True)
 
     # --- CAMPO DE DISTANCIA ---
     with st.container(border=True):
@@ -598,12 +631,12 @@ if accion == "Nueva Carta Porte":
                 "rfc_destino": rfc_destino,
                 "nombre_destino": nombre_destino,
                 "fecha_llegada": str_llegada,
-                "dir_destino": f"{calle_destino}, Col. {colonia_destino}, C.P. {cp_destino}, {municipio_destino}, {estado_destino}",
-                "cantidad_mercancia": f"{volumen_calculado_lts:,.2f} Litros",
-                "clave_unidad_sat": "LTR",
+                "dir_destino": f"{calle_destino}, Col. {colonia_destino}, C.P. {cp_destino}, {municipio_destino}, {estado_origen}",
+                "cantidad_mercancia": cantidad_texto,
+                "clave_unidad_sat": clave_unidad_sat,
                 "desc_mercancia": desc_mercancia,
                 "clave_prod_sat": clave_prod_sat,
-                "peso_mercancia": f"{peso_calculado_kg:,.2f} KG",
+                "peso_mercancia": peso_texto,
                 "distancia_km": distancia_final,
                 "fecha_registro": ahora_mx.strftime("%d/%m/%Y %H:%M"),
                 "fecha_dt": ahora_mx.date()
