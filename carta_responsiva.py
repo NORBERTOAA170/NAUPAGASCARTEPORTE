@@ -438,7 +438,8 @@ if accion == "Nueva Carta Porte":
             placas = st.text_input("Placas", placeholder="Ej. XX-00-XXX")
         with col_u2:
             marca_modelo = st.text_input("Marca / Modelo", placeholder="Ej. Ford F-350 2020")
-            capacidad = st.text_input("Capacidad de la Unidad", placeholder="Ej. 12,900 Litros")
+            # Capacidad informativa en texto libre para la unidad
+            capacidad = st.text_input("Capacidad descriptiva de la unidad", value="12,900 Litros", placeholder="Ej. 12,900 Litros")
 
     # --- PARTE 4: DATOS DE SEGUROS ---
     with st.container(border=True):
@@ -502,15 +503,26 @@ if accion == "Nueva Carta Porte":
                 
             calle_destino = st.text_input("Calle y Número de Llegada", placeholder="Ej. Av. Principal #10")
 
-    # --- PARTE 6: MERCANCÍA Y CLAVES SAT (CÁLCULO DIRECTO POR ESCRITURA) ---
+    # --- PARTE 6: MERCANCÍA Y CLAVES SAT (CATÁLOGO DE CAPACIDADES Y MAGNETEL) ---
     with st.container(border=True):
         st.subheader("6. 📦 Descripción y Claves SAT de la Mercancía (Medidor Magnetel)")
         
-        col_calc1, col_calc2 = st.columns(2)
+        # Catálogo de capacidades basado en la imagen y requerimiento
+        opciones_capacidades = [4000.0, 4400.0, 4500.0, 5000.0, 12900.0, 13900.0, 24000.0, "Otra (Personalizada)"]
+        
+        col_calc1, col_calc2, col_calc3 = st.columns([1.5, 1.5, 1])
         with col_calc1:
-            capacidad_total_num = st.number_input("Capacidad Total de la Pipa (Litros)", min_value=0.0, value=12900.0, step=100.0)
+            capacidad_seleccionada = st.selectbox("Capacidad Total de la Pipa (Litros)", options=opciones_capacidades, index=4) # Por defecto 12900
+        
         with col_calc2:
-            porcentaje_magnetel = st.number_input("Porcentaje de Llenado (%) - Magnetel", min_value=0.0, max_value=100.0, value=70.0, step=0.5)
+            if capacidad_seleccionada == "Otra (Personalizada)":
+                capacidad_total_num = st.number_input("Especifique capacidad (Litros)", min_value=0.0, value=10000.0, step=100.0)
+            else:
+                capacidad_total_num = float(capacidad_seleccionada)
+                st.text_input("Capacidad Seleccionada (Lts)", value=f"{capacidad_total_num:,.0f} Lts", disabled=True)
+
+        with col_calc3:
+            porcentaje_magnetel = st.number_input("Porcentaje (%)", min_value=0.0, max_value=100.0, value=70.0, step=0.5)
 
         # Cálculo automático de Volumen (Litros) y Masa (KG con factor 0.54)
         volumen_calculado_lts = capacidad_total_num * (porcentaje_magnetel / 100.0)
