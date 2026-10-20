@@ -338,7 +338,6 @@ def generar_pdf(d):
             pdf.set_x(56)
             pdf.multi_cell(0, 4, safe_str("Este documento ampara el traslado operado con las especificaciones técnicas del catálogo SCT / SAT versión 3.1."))
 
-        # Aseguramos que el cursor baje con holgura debajo del cuadro QR (38mm de alto) antes de la nota
         y_actual = pdf.get_y()
         y_limite_qr = y_inicial + 40
         if y_actual < y_limite_qr:
@@ -346,7 +345,6 @@ def generar_pdf(d):
 
         pdf.ln(4)
         pdf.set_font("helvetica", "B", 8)
-        # Nota con guion normal "-" en vez de carácter ancho para evitar el "?"
         pdf.multi_cell(0, 4, safe_str("SI USTED TIENE UNA DUDA O PREGUNTA SOBRE ESTA CARTA PORTE, FAVOR DE CONTACTARNOS AL NÚMERO 282 - 103 - 3534"), align="C")
 
         out = pdf.output(dest='S')
@@ -435,7 +433,7 @@ if accion == "Nueva Carta Porte":
             tipo_licencia = st.selectbox("Tipo de Licencia", ["Federal", "Estatal", "Chofer / Vendedor"])
             num_licencia = st.text_input("Número de Licencia", placeholder="Número oficial")
 
-    # --- PARTE 3: DATOS DE LA UNIDAD (CONECTADO) ---
+    # --- PARTE 3: DATOS DE LA UNIDAD ---
     with st.container(border=True):
         st.subheader("3. ⛽ Datos de la Unidad")
         col_u1, col_u2 = st.columns(2)
@@ -459,7 +457,7 @@ if accion == "Nueva Carta Porte":
         with col_s2:
             num_poliza = st.text_input("Número de Póliza", placeholder="Ej. POL-987654321")
 
-    # --- PARTE 5: ORIGEN Y DESTINO ---
+    # --- PARTE 5: ORIGEN Y DESTINO (CON OPCIÓN DE VARIOS CLIENTES) ---
     with st.container(border=True):
         st.subheader("5. 📍 Ruta de Tránsito (Origen y Destino)")
         col_origen, col_destino = st.columns(2)
@@ -490,27 +488,40 @@ if accion == "Nueva Carta Porte":
 
         with col_destino:
             st.markdown("#### 🛬 DESTINO")
+            
+            # Selector para elegir entre Cliente Específico o Varios Clientes / Ruta General
+            tipo_modo_destino = st.radio("Modalidad de Destino:", ["Cliente Específico (C.P. / Domicilio)", "Varios Clientes (Ruta General / Zona Libre)"], horizontal=False)
+            
             rfc_destino = st.text_input("RFC Llegada / Cliente (Opcional)", placeholder="RFC de destino (Vacío si es público general)")
-            nombre_destino = st.text_input("Nombre / Empresa de Llegada", placeholder="Ej. Cliente Destino")
+            nombre_destino = st.text_input("Nombre / Empresa de Llegada", placeholder="Ej. Cliente Destino o Ruta Múltiple")
             
             col_f3, col_f4 = st.columns(2)
             with col_f3:
                 f_llegada_date = st.date_input("Fecha Estimada Llegada", value=ahora_mx.date())
             with col_f4:
                 f_llegada_time = st.time_input("Hora Estimada Llegada", value=time(18, 0))
-            
-            cp_destino = st.text_input("CP Destino", max_chars=5, placeholder="Ej. 54680, 91000")
-            info_d = consultar_cp_mexico(cp_destino)
-            
-            col_d1, col_d2 = st.columns(2)
-            with col_d1:
-                colonia_destino = st.text_input("Colonia Destino", value=info_d["colonia"], placeholder="Colonia")
-                municipio_destino = st.text_input("Municipio Destino", value=info_d["municipio"], placeholder="Municipio")
-            with col_d2:
-                estado_destino = st.text_input("Estado Destino", value=info_d["estado"], placeholder="Estado")
-                pais_destino = st.text_input("País Destino", value=info_d["pais"])
+
+            if tipo_modo_destino == "Cliente Específico (C.P. / Domicilio)":
+                cp_destino = st.text_input("CP Destino", max_chars=5, placeholder="Ej. 54680, 91000")
+                info_d = consultar_cp_mexico(cp_destino)
                 
-            calle_destino = st.text_input("Calle y Número de Llegada", placeholder="Ej. Av. Principal #10")
+                col_d1, col_d2 = st.columns(2)
+                with col_d1:
+                    colonia_destino = st.text_input("Colonia Destino", value=info_d["colonia"], placeholder="Colonia")
+                    municipio_destino = st.text_input("Municipio Destino", value=info_d["municipio"], placeholder="Municipio")
+                with col_d2:
+                    estado_destino = st.text_input("Estado Destino", value=info_d["estado"], placeholder="Estado")
+                    pais_destino = st.text_input("País Destino", value=info_d["pais"])
+                    
+                calle_destino = st.text_input("Calle y Número de Llegada", placeholder="Ej. Av. Principal #10")
+                dir_destino_final = f"{calle_destino}, Col. {colonia_destino}, C.P. {cp_destino}, {municipio_destino}, {estado_destino}"
+            else:
+                # Opción de varios clientes / ruta libre
+                zona_libre_destino = st.text_input("Destinos / Zona de Reparto", placeholder="Ej. Banderilla, Xalapa, Las Vigas")
+                estado_libre_destino = st.text_input("Estado / Región", placeholder="Ej. Veracruz")
+                dir_destino_final = f"Ruta multi-cliente / Zona de entrega: {zona_libre_destino}, {estado_libre_destino}"
+                municipio_destino = zona_libre_destino
+                estado_destino = estado_libre_destino
 
     # --- PARTE 6: MERCANCÍA Y CLAVES SAT (DINÁMICA: PIPA O CILINDRERA 20 Y 30 KG) ---
     with st.container(border=True):
@@ -635,7 +646,7 @@ if accion == "Nueva Carta Porte":
                 "rfc_destino": rfc_destino,
                 "nombre_destino": nombre_destino,
                 "fecha_llegada": str_llegada,
-                "dir_destino": f"{calle_destino}, Col. {colonia_destino}, C.P. {cp_destino}, {municipio_destino}, {estado_origen}",
+                "dir_destino": dir_destino_final,
                 "cantidad_mercancia": cantidad_texto,
                 "clave_unidad_sat": clave_unidad_sat,
                 "desc_mercancia": desc_mercancia,
