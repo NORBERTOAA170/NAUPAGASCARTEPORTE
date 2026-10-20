@@ -106,6 +106,7 @@ CATALOGO_LOCAL_CP = {
     "91403": {"colonia": "El Sabinal", "municipio": "Perote", "estado": "Veracruz", "pais": "México"},
     "91405": {"colonia": "Fovissste", "municipio": "Perote", "estado": "Veracruz", "pais": "México"},
     "91285": {"colonia": "Tenextepec", "municipio": "Perote", "estado": "Veracruz", "pais": "México"},
+    "91282": {"colonia": "El Limon", "municipio": "Perote", "estado": "Veracruz Llave", "pais": "México"},
     "91000": {"colonia": "Xalapa Enríquez Centro", "municipio": "Xalapa", "estado": "Veracruz", "pais": "México"},
     "91190": {"colonia": "Ánimas", "municipio": "Xalapa", "estado": "Veracruz", "pais": "México"},
     "91110": {"colonia": "Badillo", "municipio": "Xalapa", "estado": "Veracruz", "pais": "México"},
@@ -457,40 +458,66 @@ if accion == "Nueva Carta Porte":
         with col_s2:
             num_poliza = st.text_input("Número de Póliza", placeholder="Ej. POL-987654321")
 
-    # --- PARTE 5: ORIGEN Y DESTINO (DINÁMICO SEGÚN MODALIDAD) ---
+    # --- PARTE 5: ORIGEN Y DESTINO (CON OPCIONES DINÁMICAS) ---
     with st.container(border=True):
         st.subheader("5. 📍 Ruta de Tránsito (Origen y Destino)")
         col_origen, col_destino = st.columns(2)
 
         with col_origen:
             st.markdown("#### 🛫 ORIGEN")
-            rfc_origen = st.text_input("RFC Salida / Planta", placeholder="RFC de origen")
-            nombre_origen = st.text_input("Nombre / Empresa de Salida", placeholder="Ej. NAUPAGAS Planta Perote")
+            
+            # Selector de modalidad para Origen
+            tipo_modo_origen = st.radio("Modalidad de Origen:", ["Planta NAUPAGAS (Oficial)", "Otro Origen (Manual)"], horizontal=False, key="radio_origen")
             
             col_f1, col_f2 = st.columns(2)
             with col_f1:
                 f_salida_date = st.date_input("Fecha de Salida", value=ahora_mx.date())
             with col_f2:
                 f_salida_time = st.time_input("Hora de Salida", value=ahora_mx.time())
-            
-            cp_origen = st.text_input("CP Origen", max_chars=5, placeholder="Ej. 91400, 42188")
-            info_o = consultar_cp_mexico(cp_origen)
-            
-            col_o1, col_o2 = st.columns(2)
-            with col_o1:
-                colonia_origen = st.text_input("Colonia Origen", value=info_o["colonia"], placeholder="Colonia")
-                municipio_origen = st.text_input("Municipio Origen", value=info_o["municipio"], placeholder="Municipio")
-            with col_o2:
-                estado_origen = st.text_input("Estado Origen", value=info_o["estado"], placeholder="Estado")
-                pais_origen = st.text_input("País Origen", value=info_o["pais"])
+
+            if tipo_modo_origen == "Planta NAUPAGAS (Oficial)":
+                rfc_origen = "NAU1205188P5"
+                nombre_origen = "NAUPAGAS"
+                cp_origen = "91282"
+                colonia_origen = "El Limon"
+                municipio_origen = "Perote"
+                estado_origen = "Veracruz Llave"
+                pais_origen = "México"
+                calle_origen = "CARRETERA FEDERAL MÉXICO – VERACRUZ KM. 92.8"
                 
-            calle_origen = st.text_input("Calle y Número de Salida", placeholder="Ej. Carretera Principal Km 2")
+                st.text_input("RFC Salida / Planta", value=rfc_origen, disabled=True)
+                st.text_input("Nombre / Empresa de Salida", value=nombre_origen, disabled=True)
+                st.text_input("CP Origen", value=cp_origen, disabled=True)
+                col_o1, col_o2 = st.columns(2)
+                with col_o1:
+                    st.text_input("Colonia Origen", value=colonia_origen, disabled=True)
+                    st.text_input("Municipio Origen", value=municipio_origen, disabled=True)
+                with col_o2:
+                    st.text_input("Estado Origen", value=estado_origen, disabled=True)
+                    st.text_input("País Origen", value=pais_origen, disabled=True)
+                st.text_input("Calle y Número de Salida", value=calle_origen, disabled=True)
+            else:
+                rfc_origen = st.text_input("RFC Salida / Planta", placeholder="RFC de origen")
+                nombre_origen = st.text_input("Nombre / Empresa de Salida", placeholder="Ej. Proveedor o Bodega Alterna")
+                cp_origen = st.text_input("CP Origen", max_chars=5, placeholder="Ej. 91400, 42188")
+                info_o = consultar_cp_mexico(cp_origen)
+                
+                col_o1, col_o2 = st.columns(2)
+                with col_o1:
+                    colonia_origen = st.text_input("Colonia Origen", value=info_o["colonia"], placeholder="Colonia")
+                    municipio_origen = st.text_input("Municipio Origen", value=info_o["municipio"], placeholder="Municipio")
+                with col_o2:
+                    estado_origen = st.text_input("Estado Origen", value=info_o["estado"], placeholder="Estado")
+                    pais_origen = st.text_input("País Origen", value=info_o["pais"])
+                    
+                calle_origen = st.text_input("Calle y Número de Salida", placeholder="Ej. Carretera Principal Km 2")
+
+            dir_origen_final = f"{calle_origen}, Col. {colonia_origen}, C.P. {cp_origen}, {municipio_origen}, {estado_origen}"
 
         with col_destino:
             st.markdown("#### 🛬 DESTINO")
             
-            # Selector para elegir la modalidad
-            tipo_modo_destino = st.radio("Modalidad de Destino:", ["Cliente Específico (C.P. / Domicilio)", "Varios Clientes (Ruta General / Zona Libre)"], horizontal=False)
+            tipo_modo_destino = st.radio("Modalidad de Destino:", ["Cliente Específico (C.P. / Domicilio)", "Varios Clientes (Ruta General / Zona Libre)"], horizontal=False, key="radio_destino")
             
             col_f3, col_f4 = st.columns(2)
             with col_f3:
@@ -516,7 +543,6 @@ if accion == "Nueva Carta Porte":
                 calle_destino = st.text_input("Calle y Número de Llegada", placeholder="Ej. Av. Principal #10")
                 dir_destino_final = f"{calle_destino}, Col. {colonia_destino}, C.P. {cp_destino}, {municipio_destino}, {estado_destino}"
             else:
-                # Ocultar RFC y nombre de empresa para varios clientes
                 rfc_destino = ""
                 nombre_destino = "Ruta Varios Clientes"
                 
@@ -530,7 +556,7 @@ if accion == "Nueva Carta Porte":
                 municipio_destino = zona_libre_destino
                 estado_destino = estado_libre_destino
 
-    # --- PARTE 6: MERCANCÍA Y CLAVES SAT (DINÁMICA: PIPA O CILINDRERA 20 Y 30 KG) ---
+    # --- PARTE 6: MERCANCÍA Y CLAVES SAT ---
     with st.container(border=True):
         st.subheader("6. 📦 Descripción y Claves SAT de la Mercancía")
         
@@ -649,7 +675,7 @@ if accion == "Nueva Carta Porte":
                 "rfc_origen": rfc_origen,
                 "nombre_origen": nombre_origen,
                 "fecha_salida": str_salida,
-                "dir_origen": f"{calle_origen}, Col. {colonia_origen}, C.P. {cp_origen}, {municipio_origen}, {estado_origen}",
+                "dir_origen": dir_origen_final,
                 "rfc_destino": rfc_destino,
                 "nombre_destino": nombre_destino,
                 "fecha_llegada": str_llegada,
