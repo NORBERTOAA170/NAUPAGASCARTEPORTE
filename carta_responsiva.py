@@ -338,10 +338,16 @@ def generar_pdf(d):
             pdf.set_x(56)
             pdf.multi_cell(0, 4, safe_str("Este documento ampara el traslado operado con las especificaciones técnicas del catálogo SCT / SAT versión 3.1."))
 
-        # Espacio seguro ampliado para evitar que se encime con el QR
-        pdf.ln(15)
+        # Aseguramos que el cursor baje con holgura debajo del cuadro QR (38mm de alto) antes de la nota
+        y_actual = pdf.get_y()
+        y_limite_qr = y_inicial + 40
+        if y_actual < y_limite_qr:
+            pdf.set_y(y_limite_qr)
+
+        pdf.ln(4)
         pdf.set_font("helvetica", "B", 8)
-        pdf.multi_cell(0, 4, safe_str("SI USTED TIENE UNA DUDA O PREGUNTA SOBRE ESTA CARTA PORTE, FAVOR DE CONTACTARNOS AL NÚMERO 282 – 103 - 3534"), align="C")
+        # Nota con guion normal "-" en vez de carácter ancho para evitar el "?"
+        pdf.multi_cell(0, 4, safe_str("SI USTED TIENE UNA DUDA O PREGUNTA SOBRE ESTA CARTA PORTE, FAVOR DE CONTACTARNOS AL NÚMERO 282 - 103 - 3534"), align="C")
 
         out = pdf.output(dest='S')
         if isinstance(out, str):
