@@ -14,14 +14,7 @@ try:
 except ImportError:
     SUPABASE_DISPONIBLE = False
 
-# Librerías de mapas, QR y PDF
-try:
-    from geopy.geocoders import Nominatim
-    from geopy.distance import geodesic
-    GEOPY_DISPONIBLE = True
-except ImportError:
-    GEOPY_DISPONIBLE = False
-
+# Librerías de QR y PDF
 try:
     from fpdf import FPDF
     FPDF_DISPONIBLE = True
@@ -129,26 +122,12 @@ def consultar_cp_mexico(cp):
 
     return {"colonia": "", "municipio": "", "estado": "", "pais": "México"}
 
-def calcular_distancia_km(origen_str, destino_str):
-    if not GEOPY_DISPONIBLE:
-        return None
-    try:
-        geolocator = Nominatim(user_agent="naupagas_carta_porte_app")
-        loc_origen = geolocator.geocode(f"{origen_str}, Mexico")
-        loc_destino = geolocator.geocode(f"{destino_str}, Mexico")
-        if loc_origen and loc_destino:
-            coords_origen = (loc_origen.latitude, loc_origen.longitude)
-            coords_destino = (loc_destino.latitude, loc_destino.longitude)
-            distancia_recta = geodesic(coords_origen, coords_destino).km
-            return round(distancia_recta * 1.27, 1)
-    except:
-        return None
-    return None
-
 def safe_str(val):
     if val is None:
         return ""
-    return str(val).encode('latin-1', 'replace').decode('latin-1')
+    # Reemplazamos guiones largos/especiales por guion normal para evitar el '?'
+    texto = str(val).replace("–", "-").replace("—", "-")
+    return texto.encode('latin-1', 'replace').decode('latin-1')
 
 def generar_qr_tempfile(contenido):
     if not QRCODE_DISPONIBLE:
@@ -260,12 +239,6 @@ def generar_pdf(d):
         pdf.cell(18, 5, safe_str("Dirección:"), ln=0)
         pdf.set_font("helvetica", "", 8)
         pdf.multi_cell(0, 5, safe_str(f"{d.get('dir_destino', '')}"))
-        pdf.ln(2)
-
-        pdf.set_font("helvetica", "B", 8)
-        pdf.cell(42, 5, safe_str("Distancia Total Estimada:"), ln=0)
-        pdf.set_font("helvetica", "", 8)
-        pdf.cell(0, 5, safe_str(f"{d.get('distancia_km', '')}"), ln=1)
         pdf.ln(3)
 
         # 5. Mercancía
@@ -276,10 +249,15 @@ def generar_pdf(d):
         pdf.cell(95, 5, safe_str(f"Peso Total: {d.get('peso_mercancia', '')}"), ln=1)
         pdf.ln(4)
 
-        # 6. Validación y QR
+        # 6. Validación y QR OFICIAL SAT
         seccion_pdf("6. VALIDACIÓN Y VERIFICACIÓN OPERATIVA")
-        enlace_qr = "https://verificacfdi.facturaelectronica.sat.gob.mx"
-        qr_path = generar_qr_tempfile(enlace_qr)
+        
+        # URL oficial de consulta pública SAT para CFDI/Carta Porte
+        idccp_val = d.get('idccp', '')
+        rfc_em = d.get('rfc_emisor', 'NGA1608221S4')
+        enlace_qr_sat = f"https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx?id={idccp_val}&re={rfc_em}"
+        
+        qr_path = generar_qr_tempfile(enlace_qr_sat)
         
         if qr_path and os.path.exists(qr_path):
             y_inicial = pdf.get_y()
@@ -289,10 +267,10 @@ def generar_pdf(d):
                 pass
             pdf.set_x(56)
             pdf.set_font("helvetica", "B", 8)
-            pdf.cell(0, 4, safe_str(f"Folio: {folio_val} | IDCCP: {d.get('idccp', '')}"), ln=1)
+            pdf.cell(0, 4, safe_str(f"Folio: {folio_val} | IDCCP: {idccp_val}"), ln=1)
             pdf.set_x(56)
             pdf.set_font("helvetica", "", 7)
-            pdf.cell(0, 4, safe_str(f"Estatus de Verificación: ACCESO AL PORTAL DE ACCESO / SAT"), ln=1)
+            pdf.cell(0, 4, safe_str("Estatus de Verificación: ACCESO AL PORTAL DE CONSULTA SAT"), ln=1)
             pdf.set_x(56)
             pdf.cell(0, 4, safe_str(f"Permiso Distribución Gas LP: {d.get('num_permiso_sct', '')}"), ln=1)
             pdf.set_x(56)
@@ -438,7 +416,7 @@ if accion == "Nueva Carta Porte":
                 municipio_origen = "Perote"
                 estado_origen = "Veracruz Llave"
                 pais_origen = "México"
-                calle_origen = "CARRETERA FEDERAL MÉXICO – VERACRUZ KM. 92.8"
+                calle_origen = "CARRETERA FEDERAL MÉXICO - VERACRUZ KM. 92.8"
                 
                 st.text_input("RFC Salida / Planta", value=rfc_origen, disabled=True)
                 st.text_input("Nombre / Empresa de Salida", value=nombre_origen, disabled=True)
@@ -501,13 +479,11 @@ if accion == "Nueva Carta Porte":
                 nombre_destino = "Ruta Varios Clientes"
                 col_m_lib1, col_m_lib2 = st.columns(2)
                 with col_m_lib1:
-                    zona_libre_destino = st.text_input("Destinos / Zona de Reparto", value="Banderilla, Xalapa, Las Vigas", placeholder="Ej. Banderilla, Xalapa, Las Vigas")
+                    zona_libre_destino = st.text_input("Destinos / Zona de Reparto", value="Guadalupe Victoria, Veracruz", placeholder="Ej. Banderilla, Xalapa, Las Vigas")
                 with col_m_lib2:
                     estado_libre_destino = st.text_input("Estado / Región", value="Veracruz", placeholder="Ej. Veracruz")
                     
-                dir_destino_final = f"Ruta multi-cliente / Zona de entrega: {zona_libre_destino}, {estado_libre_destino}"
-                municipio_destino = zona_libre_destino
-                estado_destino = estado_libre_destino
+                dir_destino_final = f"Ruta multi-cliente / Zona de entrega: {zona_libre_destino}"
 
     # 6. Mercancía
     with st.container(border=True):
@@ -529,7 +505,7 @@ if accion == "Nueva Carta Porte":
             volumen_calculado_lts = capacidad_total_num * (porcentaje_magnetel / 100.0)
             peso_calculado_kg = volumen_calculado_lts * 0.54
 
-            st.info(f"📊 **Resultado Automático Pipa:** {volumen_calculado_lts:,.2f} Litros | **Peso calculated:** {peso_calculado_kg:,.2f} KG (Factor 0.54)")
+            st.info(f"📊 **Resultado Automático Pipa:** {volumen_calculado_lts:,.2f} Litros | **Peso calculado:** {peso_calculado_kg:,.2f} KG (Factor 0.54)")
 
             col_m1, col_m2, col_m3 = st.columns(3)
             with col_m1:
@@ -568,11 +544,6 @@ if accion == "Nueva Carta Porte":
                 peso_texto = f"{peso_neto_gas:,.2f} KG"
                 st.text_input("Peso Total Neto Gas", value=peso_texto, disabled=True)
 
-    # Distancia
-    with st.container(border=True):
-        st.subheader("📏 Distancia del Viaje")
-        km_input = st.text_input("Distancia Estimada (KM)", placeholder="Ej. 275 km (Automático si dejas vacío)")
-
     st.markdown("---")
     
     str_salida_check = f"{f_salida_date.strftime('%d/%m/%Y')} {f_salida_time.strftime('%H:%M')}"
@@ -591,14 +562,6 @@ if accion == "Nueva Carta Porte":
         if not nombre_chofer or not rfc_chofer or not num_poliza or not desc_mercancia:
             st.warning("⚠️ Por favor completa los datos obligatorios del chofer, póliza y mercancía.")
         else:
-            distancia_final = km_input
-            if not distancia_final and municipio_origen and municipio_destino:
-                km_calculados = calcular_distancia_km(f"{municipio_origen}, {estado_origen}", f"{municipio_destino}, {estado_destino}")
-                if km_calculados:
-                    distancia_final = f"{km_calculados} km (Aprox.)"
-                else:
-                    distancia_final = "No calculada"
-
             str_salida = f"{f_salida_date.strftime('%d/%m/%Y')} {f_salida_time.strftime('%H:%M')}"
             str_llegada = f"{f_llegada_date.strftime('%d/%m/%Y')} {f_llegada_time.strftime('%H:%M')}"
 
@@ -637,7 +600,6 @@ if accion == "Nueva Carta Porte":
                 "desc_mercancia": desc_mercancia,
                 "clave_prod_sat": clave_prod_sat,
                 "peso_mercancia": peso_texto,
-                "distancia_km": distancia_final,
                 "fecha_registro": ahora_mx.strftime("%d/%m/%Y %H:%M"),
                 "fecha_dt": ahora_mx.date()
             }
