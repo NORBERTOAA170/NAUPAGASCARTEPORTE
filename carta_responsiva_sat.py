@@ -62,6 +62,7 @@ CATALOGO_CHOFERES = [
     {"nombre": "ALEJANDRO CORTES ENRIQUEZ", "licencia": "UB0CKTB9E", "rfc": "COEA940428134", "tipo": "Estatal"},
     {"nombre": "DAVID EUGENIO ROMERO", "licencia": "UB0N3KQAQ", "rfc": "EURD970221PQ0", "tipo": "Estatal"},
     {"nombre": "JOSE ARMANDO HERNANDEZ MIRANDA", "licencia": "UB0N3BE6L", "rfc": "HEMA970620NI4", "tipo": "Estatal"}
+    {"nombre": "JOSE EUGENIO ROMERO", "licencia": "UB0CKUCUH", "rfc": "EURJ040215KN5", "tipo": "Estatal"}
 ]
 
 # ================= FUNCIONES DE NUBE (SUPABASE) =================
