@@ -1,6 +1,5 @@
 streamlit
 fpdf
-geopy
 requests
 qrcode
 supabase
