@@ -523,21 +523,18 @@ if accion == "Nueva Carta Porte":
                 porcentaje_magnetel = st.number_input("Porcentaje de Llenado (%) - Magnetel", min_value=0.0, max_value=100.0, value=70.0, step=0.5)
 
             volumen_calculado_lts = capacidad_total_num * (porcentaje_magnetel / 100.0)
-            peso_calculado_kg = volumen_calculado_lts * 0.54
 
-            st.info(f"📊 **Resultado Automático Pipa:** {volumen_calculado_lts:,.2f} Litros | **Peso calculado:** {peso_calculado_kg:,.2f} KG (Factor 0.54)")
+            st.info(f"📊 **Resultado Automático Pipa:** {volumen_calculado_lts:,.2f} Litros")
 
-            col_m1, col_m2, col_m3 = st.columns(3)
+            col_m1, col_m2 = st.columns(2)
             with col_m1:
                 cantidad_texto = f"{volumen_calculado_lts:,.2f} Litros"
                 st.text_input("Cantidad Calculada", value=cantidad_texto, disabled=True)
                 clave_unidad_sat = "LTR - Litros"
+                peso_texto = "N/A (Medición en Litros)"
             with col_m2:
                 desc_mercancia = st.text_input("Descripción / Producto", value="Gas Licuado de Petróleo (Gas LP)")
                 clave_prod_sat = st.text_input("Clave Producto SAT", value="15111510 (Gas LP)")
-            with col_m3:
-                peso_texto = f"{peso_calculado_kg:,.2f} KG"
-                st.text_input("Peso Total Calculado", value=peso_texto, disabled=True)
 
         else:
             st.markdown("#### 🛢️ Configuración para Vehículo Repartidor (Cilindros de 20 kg y 30 kg)")
@@ -562,31 +559,8 @@ if accion == "Nueva Carta Porte":
                 clave_prod_sat = st.text_input("Clave Producto SAT", value="15111510 (Gas LP)")
             with col_m3:
                 peso_texto = f"{peso_neto_gas:,.2f} KG"
-                st.text_input("Peso Total Neto Gas", value=peso_texto, disabled=True)
-
-    st.markdown("---")
-    
-    str_salida_check = f"{f_salida_date.strftime('%d/%m/%Y')} {f_salida_time.strftime('%H:%M')}"
-    actual_hash = f"{eco_unidad.strip().upper()}-{nombre_chofer.strip().upper()}-{str_salida_check}"
-
-    if st.session_state.get("ultimo_registro_hash_naupagas") != actual_hash:
-        st.session_state.registro_bloqueado_naupagas = False
-
-    if st.session_state.registro_bloqueado_naupagas:
-        st.success("✅ Esta carta ya fue registrada con éxito en el Historial y guardada en Supabase.")
-        submitted_carta = False
-    else:
-        submitted_carta = st.button("Generar y Registrar Carta Porte", type="primary", use_container_width=True)
-
-    if submitted_carta:
-        if not nombre_chofer or not rfc_chofer or not num_poliza or not desc_mercancia:
-            st.warning("⚠️ Por favor completa los datos obligatorios del chofer, póliza y mercancía.")
-        else:
-            str_salida = f"{f_salida_date.strftime('%d/%m/%Y')} {f_salida_time.strftime('%H:%M')}"
-            str_llegada = f"{f_llegada_date.strftime('%d/%m/%Y')} {f_llegada_time.strftime('%H:%M')}"
-
-            idccp_generado = f"CCC{str(uuid.uuid4()).upper()[:20]}"
-            
+                st.text_input("Peso Total Neto Gas", value=peso_texto, disabled=True)  
+                
             # OBTENER FOLIO DE LA NUBE
             folio_generado = obtener_siguiente_folio_nube()
 
