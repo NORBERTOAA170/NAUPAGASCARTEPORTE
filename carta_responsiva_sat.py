@@ -38,7 +38,7 @@ MASTER_PASSWORD = "NAUPA2026"
 
 # ================= CREDENCIALES DE SUPABASE (NUBE) =================
 SUPABASE_URL = "https://qikmlgbnwbdmuqziemia.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpa21sZ2Jud2JkbXVxemllbWlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MTg0NzUsImV4cCI6MjEwODA5NDQ3NX0.s7J6uZxohN49BocGUwBqc02S7jZFbMOoeF9Om-DYTfQ"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpa21sZ2Jud2JkbXVxemllbWlhIkwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MTg0NzUsImV4cCI6MjEwODA5NDQ3NX0.s7J6uZxohN49BocGUwBqc02S7jZFbMOoeF9Om-DYTfQ"
 
 @st.cache_resource
 def init_supabase():
@@ -98,12 +98,6 @@ def cargar_historial_nube():
 # Inicializar estados de la sesión
 if "auth_naupagas" not in st.session_state:
     st.session_state.auth_naupagas = False
-
-if "ultimo_registro_hash_naupagas" not in st.session_state:
-    st.session_state.ultimo_registro_hash_naupagas = None
-
-if "registro_bloqueado_naupagas" not in st.session_state:
-    st.session_state.registro_bloqueado_naupagas = False
 
 # ================= CATÁLOGO LOCAL DE C.P. VERIFICADO =================
 CATALOGO_LOCAL_CP = {
@@ -569,19 +563,8 @@ if accion == "Nueva Carta Porte":
 
     st.markdown("---")
     
-    str_salida_check = f"{f_salida_date.strftime('%d/%m/%Y')} {f_salida_time.strftime('%H:%M')}"
-    actual_hash = f"{eco_unidad.strip().upper()}-{nombre_chofer.strip().upper()}-{str_salida_check}"
-
-    if st.session_state.get("ultimo_registro_hash_naupagas") != actual_hash:
-        st.session_state.registro_bloqueado_naupagas = False
-
-    if st.session_state.registro_bloqueado_naupagas:
-        st.success("✅ Esta carta ya fue registrada con éxito en el Historial y guardada en Supabase.")
-        submitted_carta = False
-    else:
-        submitted_carta = st.button("Generar y Registrar Carta Porte", type="primary", use_container_width=True)
-
-    if submitted_carta:
+    # Botón siempre disponible para generar cuantas veces gustes
+    if st.button("Generar y Registrar Carta Porte", type="primary", use_container_width=True):
         if not nombre_chofer or not rfc_chofer or not num_poliza or not desc_mercancia:
             st.warning("⚠️ Por favor completa los datos obligatorios del chofer, póliza y mercancía.")
         else:
@@ -630,9 +613,8 @@ if accion == "Nueva Carta Porte":
             exito = guardar_carta_en_nube(datos_nueva_carta)
 
             if exito:
-                st.session_state.ultimo_registro_hash_naupagas = actual_hash
-                st.session_state.registro_bloqueado_naupagas = True
-                st.rerun()
+                st.success(f"¡Carta Porte con Folio {folio_generado} generada y guardada con éxito en la nube!")
+                st.balloons()
 
 elif accion == "Historial de Documentos":
     st.title("📁 NAUPAGAS - Historial de Cartas Generadas")
