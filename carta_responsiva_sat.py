@@ -38,7 +38,7 @@ MASTER_PASSWORD = "NAUPA2026"
 
 # ================= CREDENCIALES DE SUPABASE (NUBE) =================
 SUPABASE_URL = "https://qikmlgbnwbdmuqziemia.supabase.co"
-SUPABASE_KEY = "sb_publishable_rOwFvX8TV6gMkroqjZZpbQ__9VaGRLd"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpa21sZ2Jud2JkbXVxemllbWlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MTg0NzUsImV4cCI6MjEwODA5NDQ3NX0.s7J6uZxohN49BocGUwBqc02S7jZFbMOoeF9Om-DYTfQ"
 
 @st.cache_resource
 def init_supabase():
@@ -68,6 +68,7 @@ def obtener_siguiente_folio_nube():
             supabase.table("folios_naupagas").insert({"id": 1, "ultimo_folio": 1}).execute()
             return "0000001"
     except Exception as e:
+        st.error(f"⚠️ Error al obtener folio de Supabase: {e}")
         return "0000001"
 
 def guardar_carta_en_nube(datos):
@@ -75,8 +76,13 @@ def guardar_carta_en_nube(datos):
     if supabase is not None:
         try:
             supabase.table("cartas_naupagas").insert(datos).execute()
+            return True
         except Exception as e:
-            st.error(f"Error al guardar en la nube: {e}")
+            st.error(f"❌ Error al guardar en Supabase: {e}")
+            return False
+    else:
+        st.error("⚠️ La conexión con Supabase no está activa.")
+        return False
 
 def cargar_historial_nube():
     """Carga todas las cartas registradas ordenadas desde la más reciente."""
@@ -85,6 +91,7 @@ def cargar_historial_nube():
             response = supabase.table("cartas_naupagas").select("*").order("id", desc=True).execute()
             return response.data or []
         except Exception as e:
+            st.error(f"⚠️ Error al cargar historial de Supabase: {e}")
             return []
     return []
 
@@ -617,11 +624,12 @@ if accion == "Nueva Carta Porte":
             }
 
             # GUARDAR PERMANENTE EN SUPABASE
-            guardar_carta_en_nube(datos_nueva_carta)
+            exito = guardar_carta_en_nube(datos_nueva_carta)
 
-            st.session_state.ultimo_registro_hash_naupagas = actual_hash
-            st.session_state.registro_bloqueado_naupagas = True
-            st.rerun()
+            if exito:
+                st.session_state.ultimo_registro_hash_naupagas = actual_hash
+                st.session_state.registro_bloqueado_naupagas = True
+                st.rerun()
 
 elif accion == "Historial de Documentos":
     st.title("📁 NAUPAGAS - Historial de Cartas Generadas")
