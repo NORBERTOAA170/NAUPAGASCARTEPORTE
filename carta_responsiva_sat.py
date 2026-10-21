@@ -9,7 +9,7 @@ import streamlit as st
 
 # Supabase SDK para sincronización en la nube
 try:
-    from supabase import create_client, Client
+    from supabase import create_client
     SUPABASE_DISPONIBLE = True
 except ImportError:
     SUPABASE_DISPONIBLE = False
@@ -45,16 +45,14 @@ MASTER_PASSWORD = "NAUPA2026"
 
 # ================= CREDENCIALES DE SUPABASE (NUBE) =================
 SUPABASE_URL = "https://qikmlgbnwbdmuqziemia.supabase.co"
-# PEGA AQUÍ TU LLAVE PUBLISHABLE (la que empieza con sb_publishable_...):
 SUPABASE_KEY = "sb_publishable_rOwFvX8TV6gMkroqjZZpbQ__9VaGRLd"
 
 @st.cache_resource
 def init_supabase():
-    if SUPABASE_DISPONIBLE and "PEGA_AQUI" not in SUPABASE_KEY:
+    if SUPABASE_DISPONIBLE and SUPABASE_KEY and "AQUI_PEGA" not in SUPABASE_KEY:
         try:
             return create_client(SUPABASE_URL, SUPABASE_KEY)
         except Exception as e:
-            st.error(f"Error al conectar con la nube de Supabase: {e}")
             return None
     return None
 
@@ -64,7 +62,6 @@ supabase = init_supabase()
 def obtener_siguiente_folio_nube():
     """Obtiene e incrementa el folio de forma atómica en Supabase (Nube)."""
     if supabase is None:
-        st.warning("⚠️ Nota: Conexión local temporal activa. Se recomienda vincular la SUPABASE_KEY.")
         return "0000001"
     
     try:
@@ -78,7 +75,6 @@ def obtener_siguiente_folio_nube():
             supabase.table("folios_naupagas").insert({"id": 1, "ultimo_folio": 1}).execute()
             return "0000001"
     except Exception as e:
-        st.error(f"Error al sincronizar folio en la nube: {e}")
         return "0000001"
 
 # Inicializar estados de la sesión
