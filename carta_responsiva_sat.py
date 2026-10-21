@@ -39,6 +39,7 @@ MASTER_PASSWORD = "NAUPA2026"
 # ================= CREDENCIALES DE SUPABASE (NUBE) =================
 SUPABASE_URL = "https://qikmlgbnwbdmuqziemia.supabase.co"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFpa21sZ2Jud2JkbXVxemllbWlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MTg0NzUsImV4cCI6MjEwODA5NDQ3NX0.s7J6uZxohN49BocGUwBqc02S7jZFbMOoeF9Om-DYTfQ"
+
 @st.cache_resource
 def init_supabase():
     if SUPABASE_DISPONIBLE and SUPABASE_KEY:
@@ -93,6 +94,17 @@ def cargar_historial_nube():
             st.error(f"⚠️ Error al cargar historial de Supabase: {e}")
             return []
     return []
+
+def eliminar_carta_nube(carta_id):
+    """Elimina un registro del historial en Supabase por su ID único."""
+    if supabase is not None:
+        try:
+            supabase.table("cartas_naupagas").delete().eq("id", carta_id).execute()
+            return True
+        except Exception as e:
+            st.error(f"❌ Error al eliminar de Supabase: {e}")
+            return False
+    return False
 
 # Inicializar estados de la sesión
 if "auth_naupagas" not in st.session_state:
@@ -562,7 +574,6 @@ if accion == "Nueva Carta Porte":
 
     st.markdown("---")
     
-    # Botón siempre disponible para generar cuantas veces gustes
     if st.button("Generar y Registrar Carta Porte", type="primary", use_container_width=True):
         if not nombre_chofer or not rfc_chofer or not num_poliza or not desc_mercancia:
             st.warning("⚠️ Por favor completa los datos obligatorios del chofer, póliza y mercancía.")
@@ -617,31 +628,70 @@ if accion == "Nueva Carta Porte":
 
 elif accion == "Historial de Documentos":
     st.title("📁 NAUPAGAS - Historial de Cartas Generadas")
-    st.write("Consulta y descarga registros almacenados permanentemente en la nube.")
+    st.write("Consulta, filtra por fechas y administra los registros almacenados en la nube.")
     st.markdown("---")
+
+    # FILTROS DE FECHA EN EL HISTORIAL
+    col_f_1, col_f_2 = st.columns(2)
+    with col_f_1:
+        filtro_inicio = st.date_input("Filtrar desde la fecha:", value=None)
+    with col_f_2:
+        filtro_fin = st.date_input("Filtrar hasta la fecha:", value=None)
 
     historial_nube = cargar_historial_nube()
 
     if not historial_nube:
-        st.info("No hay cartas registradas en la base de datos. Genera una nueva en el menú de la izquierda.")
+        st.info("No hay cartas registradas en la base de datos.")
     else:
-        for idx, carta in enumerate(historial_nube):
-            with st.container(border=True):
-                col_h1, col_h2, col_h3 = st.columns([2.5, 3, 2.5])
-                with col_h1:
-                    st.write(f"🔢 **Folio Nube:** {carta.get('folio', 'N/A')}")
-                    st.write(f"📅 **Fecha:** {carta.get('fecha_registro', 'N/A')}")
-                    st.write(f"⛽ **Unidad:** {carta.get('tipo_unidad', '')} ({carta.get('eco_unidad', '')})")
-                with col_h2:
-                    st.write(f"👤 **Chofer:** {carta.get('nombre_chofer', '')}")
-                    st.write(f"🛣️ **Ruta:** {carta.get('nombre_origen', '')} ➔ {carta.get('nombre_destino', '')}")
-                    st.write(f"🆔 **IDCCP:** `{carta.get('idccp', 'N/A')}`")
-                with col_h3:
-                    pdf_hist_bytes = generar_pdf(carta)
-                    st.download_button(
-                        label="📄 Descargar PDF SAT",
-                        data=pdf_hist_bytes,
-                        file_name=f"Naupagas_Folio_{carta.get('folio', '0000001')}.pdf",
-                        mime="application/pdf",
-                        key=f"dl_naupagas_{idx}"
-                    )
+        # Aplicar filtro de fechas si están seleccionadas
+        cartas_filtradas = []
+        for carta in historial_nube:
+            f_reg_str = carta.get('fecha_registro', '')
+            try:
+                # Extraer solo la fecha (DD/MM/YYYY) de la cadena de registro
+                f_reg_date = datetime.strptime(f_reg_str.split()[0], "%d/%m/%Y").date()
+                
+                incluir = True
+                if filtro_inicio and f_reg_date < filtro_inicio:
+                    incluir = False
+                if filtro_fin and f_reg_date > filtro_fin:
+                    incluir = False
+                
+                if incluir:
+                    cartas_filtradas.append(carta)
+            except Exception:
+                cartas_filtradas.append(carta) # Si hay detalle de formato, la incluimos por seguridad
+
+        if not cartas_filtradas:
+            st.warning("⚠️ No se encontraron cartas en el rango de fechas seleccionado.")
+        else:
+            st.write(f"Mostrando **{len(cartas_filtradas)}** registro(s):")
+            
+            for idx, carta in enumerate(cartas_filtradas):
+                with st.container(border=True):
+                    col_h1, col_h2, col_h3 = st.columns([2.5, 3, 2.5])
+                    with col_h1:
+                        st.write(f"🔢 **Folio Nube:** {carta.get('folio', 'N/A')}")
+                        st.write(f"📅 **Fecha:** {carta.get('fecha_registro', 'N/A')}")
+                        st.write(f"⛽ **Unidad:** {carta.get('tipo_unidad', '')} ({carta.get('eco_unidad', '')})")
+                    with col_h2:
+                        st.write(f"👤 **Chofer:** {carta.get('nombre_chofer', '')}")
+                        st.write(f"🛣️ **Ruta:** {carta.get('nombre_origen', '')} ➔ {carta.get('nombre_destino', '')}")
+                        st.write(f"🆔 **IDCCP:** `{carta.get('idccp', 'N/A')}`")
+                    with col_h3:
+                        pdf_hist_bytes = generar_pdf(carta)
+                        st.download_button(
+                            label="📄 Descargar PDF SAT",
+                            data=pdf_hist_bytes,
+                            file_name=f"Naupagas_Folio_{carta.get('folio', '0000001')}.pdf",
+                            mime="application/pdf",
+                            key=f"dl_naupagas_{idx}"
+                        )
+                        
+                        # BOTÓN DE ELIMINAR POR SI SE EQUIVOCAN
+                        if st.button("🗑️ Eliminar Registro", key=f"del_carta_{carta.get('id')}", type="secondary"):
+                            if eliminar_carta_nube(carta.get('id')):
+                                st.success(f"Carta Folio {carta.get('folio')} eliminada correctamente.")
+                                st.rerun()
+                            else:
+                                st.error("No se pudo eliminar el registro.")
