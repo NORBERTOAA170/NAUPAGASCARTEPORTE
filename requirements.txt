@@ -1,5 +1,5 @@
 streamlit
-fpdf2
+fpdf
 geopy
 requests
 qrcode
