@@ -37,7 +37,7 @@ except ImportError:
 # ================= CONFIGURACIÓN DE LA PÁGINA =================
 st.set_page_config(
     page_title="NAUPAGAS - Módulo Carta Porte 3.1",
-    page_icon="logo.jpg",
+    page_icon="🚚",
     layout="wide"
 )
 
@@ -45,7 +45,7 @@ MASTER_PASSWORD = "NAUPA2026"
 
 # ================= CREDENCIALES DE SUPABASE (NUBE) =================
 SUPABASE_URL = "https://qikmlgbnwbdmuqziemia.supabase.co"
-SUPABASE_KEY = "sb_publishable_rOwFvX8TV6gMkroqjZZpbQ__9VaGRLd"
+SUPABASE_KEY = "sb_publishable_AQUI_PEGA_TU_LLAVE_REAL"
 
 @st.cache_resource
 def init_supabase():
@@ -171,12 +171,6 @@ def generar_pdf(d):
         pdf = FPDF(orientation='P', unit='mm', format='A4')
         pdf.add_page()
         
-        if os.path.exists("logo.jpg"):
-            try:
-                pdf.image("logo.jpg", 10, 10, 25)
-            except:
-                pass
-                
         pdf.set_font("helvetica", "B", 14)
         pdf.cell(0, 8, safe_str("NAUPAGAS S.A. DE C.V."), align="C", ln=True)
         pdf.set_font("helvetica", "B", 11)
@@ -331,10 +325,7 @@ def generar_pdf(d):
 if not st.session_state.auth_naupagas:
     col1, col2, col3 = st.columns([1, 1.5, 1])
     with col2:
-        if os.path.exists("logo.jpg"):
-            st.image("logo.jpg", use_container_width=True)
-        else:
-            st.markdown("<h1 style='text-align: center;'>🚚</h1>", unsafe_allow_html=True)
+        st.markdown("<h1 style='text-align: center;'>🚚</h1>", unsafe_allow_html=True)
             
     st.markdown("<h2 style='text-align: center; color: #004080;'>NAUPAGAS S.A. DE C.V.</h2>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; color: gray;'>Módulo de Generación de Carta Porte 3.1</p>", unsafe_allow_html=True)
@@ -352,9 +343,6 @@ if not st.session_state.auth_naupagas:
 
 # ================= MENÚ PRINCIPAL =================
 with st.sidebar:
-    if os.path.exists("logo.jpg"):
-        st.image("logo.jpg", use_container_width=True)
-    st.markdown("---")
     st.markdown("### 🎛️ Menú de Navegación")
     accion = st.radio("Selecciona una opción:", ["Nueva Carta Porte", "Historial de Documentos"])
     st.markdown("---")
