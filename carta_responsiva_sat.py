@@ -266,8 +266,14 @@ def generar_pdf(d):
         seccion_pdf("5. DESCRIPCIÓN Y CLAVES SAT DE LA MERCANCÍA")
         pdf.set_font("helvetica", "", 8)
         pdf.cell(0, 5, safe_str(f"Producto: {d.get('desc_mercancia', '')} | Clave SAT: {d.get('clave_prod_sat', '')}"), ln=1)
-        pdf.cell(95, 5, safe_str(f"Cantidad: {d.get('cantidad_mercancia', '')} {d.get('clave_unidad_sat', '')}"), ln=0)
-        pdf.cell(95, 5, safe_str(f"Peso Total: {d.get('peso_mercancia', '')}"), ln=1)
+        
+        peso_val = d.get('peso_mercancia', '')
+        if peso_val and peso_val != "N/A":
+            pdf.cell(95, 5, safe_str(f"Cantidad: {d.get('cantidad_mercancia', '')} ({d.get('clave_unidad_sat', '')})"), ln=0)
+            pdf.cell(95, 5, safe_str(f"Peso Total: {peso_val}"), ln=1)
+        else:
+            pdf.cell(0, 5, safe_str(f"Cantidad: {d.get('cantidad_mercancia', '')} ({d.get('clave_unidad_sat', '')})"), ln=1)
+            
         pdf.ln(4)
 
         # 6. Validación y QR OFICIAL SAT
@@ -531,7 +537,7 @@ if accion == "Nueva Carta Porte":
                 cantidad_texto = f"{volumen_calculado_lts:,.2f} Litros"
                 st.text_input("Cantidad Calculada", value=cantidad_texto, disabled=True)
                 clave_unidad_sat = "LTR - Litros"
-                peso_texto = "N/A (Medición en Litros)"
+                peso_texto = "N/A"
             with col_m2:
                 desc_mercancia = st.text_input("Descripción / Producto", value="Gas Licuado de Petróleo (Gas LP)")
                 clave_prod_sat = st.text_input("Clave Producto SAT", value="15111510 (Gas LP)")
@@ -559,8 +565,31 @@ if accion == "Nueva Carta Porte":
                 clave_prod_sat = st.text_input("Clave Producto SAT", value="15111510 (Gas LP)")
             with col_m3:
                 peso_texto = f"{peso_neto_gas:,.2f} KG"
-                st.text_input("Peso Total Neto Gas", value=peso_texto, disabled=True)  
-                
+                st.text_input("Peso Total Neto Gas", value=peso_texto, disabled=True)
+
+    st.markdown("---")
+    
+    str_salida_check = f"{f_salida_date.strftime('%d/%m/%Y')} {f_salida_time.strftime('%H:%M')}"
+    actual_hash = f"{eco_unidad.strip().upper()}-{nombre_chofer.strip().upper()}-{str_salida_check}"
+
+    if st.session_state.get("ultimo_registro_hash_naupagas") != actual_hash:
+        st.session_state.registro_bloqueado_naupagas = False
+
+    if st.session_state.registro_bloqueado_naupagas:
+        st.success("✅ Esta carta ya fue registrada con éxito en el Historial y guardada en Supabase.")
+        submitted_carta = False
+    else:
+        submitted_carta = st.button("Generar y Registrar Carta Porte", type="primary", use_container_width=True)
+
+    if submitted_carta:
+        if not nombre_chofer or not rfc_chofer or not num_poliza or not desc_mercancia:
+            st.warning("⚠️ Por favor completa los datos obligatorios del chofer, póliza y mercancía.")
+        else:
+            str_salida = f"{f_salida_date.strftime('%d/%m/%Y')} {f_salida_time.strftime('%H:%M')}"
+            str_llegada = f"{f_llegada_date.strftime('%d/%m/%Y')} {f_llegada_time.strftime('%H:%M')}"
+
+            idccp_generado = f"CCC{str(uuid.uuid4()).upper()[:20]}"
+            
             # OBTENER FOLIO DE LA NUBE
             folio_generado = obtener_siguiente_folio_nube()
 
