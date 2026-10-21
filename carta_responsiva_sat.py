@@ -285,8 +285,7 @@ def generar_pdf(d):
         seccion_pdf("6. VALIDACIÓN Y VERIFICACIÓN OPERATIVA")
         
         idccp_val = d.get('idccp', '')
-        rfc_em = d.get('rfc_emisor', 'NGA1608221S4')
-        enlace_qr_sat = f"https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx?id={idccp_val}&re={rfc_em}"
+        enlace_qr_sat = "https://l1nq.com/3aqpov5"
         
         qr_path = generar_qr_tempfile(enlace_qr_sat)
         
