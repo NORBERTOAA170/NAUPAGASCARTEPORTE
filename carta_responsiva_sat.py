@@ -45,7 +45,7 @@ MASTER_PASSWORD = "NAUPA2026"
 
 # ================= CREDENCIALES DE SUPABASE (NUBE) =================
 SUPABASE_URL = "https://qikmlgbnwbdmuqziemia.supabase.co"
-SUPABASE_KEY = "sb_publishable_AQUI_PEGA_TU_LLAVE_REAL"
+SUPABASE_KEY = "sb_publishable_rOwFvX8TV6gMkroqjZZpbQ__9VaGRLd"
 
 @st.cache_resource
 def init_supabase():
