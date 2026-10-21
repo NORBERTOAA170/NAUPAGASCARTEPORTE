@@ -643,12 +643,10 @@ elif accion == "Historial de Documentos":
     if not historial_nube:
         st.info("No hay cartas registradas en la base de datos.")
     else:
-        # Aplicar filtro de fechas si están seleccionadas
         cartas_filtradas = []
         for carta in historial_nube:
             f_reg_str = carta.get('fecha_registro', '')
             try:
-                # Extraer solo la fecha (DD/MM/YYYY) de la cadena de registro
                 f_reg_date = datetime.strptime(f_reg_str.split()[0], "%d/%m/%Y").date()
                 
                 incluir = True
@@ -660,7 +658,7 @@ elif accion == "Historial de Documentos":
                 if incluir:
                     cartas_filtradas.append(carta)
             except Exception:
-                cartas_filtradas.append(carta) # Si hay detalle de formato, la incluimos por seguridad
+                cartas_filtradas.append(carta)
 
         if not cartas_filtradas:
             st.warning("⚠️ No se encontraron cartas en el rango de fechas seleccionado.")
@@ -688,10 +686,15 @@ elif accion == "Historial de Documentos":
                             key=f"dl_naupagas_{idx}"
                         )
                         
-                        # BOTÓN DE ELIMINAR POR SI SE EQUIVOCAN
-                        if st.button("🗑️ Eliminar Registro", key=f"del_carta_{carta.get('id')}", type="secondary"):
-                            if eliminar_carta_nube(carta.get('id')):
-                                st.success(f"Carta Folio {carta.get('folio')} eliminada correctamente.")
-                                st.rerun()
-                            else:
-                                st.error("No se pudo eliminar el registro.")
+                        # ELIMINAR CON CONTRASEÑA MAESTRA
+                        with st.expander("🗑️ Eliminar este registro"):
+                            pass_borrar = st.text_input("Contraseña de autorización", type="password", key=f"pass_del_{carta.get('id')}")
+                            if st.button("Confirmar Eliminación", key=f"btn_del_{carta.get('id')}", type="primary"):
+                                if pass_borrar == MASTER_PASSWORD:
+                                    if eliminar_carta_nube(carta.get('id')):
+                                        st.success(f"Carta Folio {carta.get('folio')} eliminada.")
+                                        st.rerun()
+                                    else:
+                                        st.error("Error al eliminar en Supabase.")
+                                else:
+                                    st.error("❌ Contraseña incorrecta. No se pudo eliminar.")
