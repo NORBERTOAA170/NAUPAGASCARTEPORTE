@@ -1,6 +1,6 @@
 streamlit
-fpdf
-qrcode
-pillow
+fpdf2
 geopy
 requests
+qrcode
+supabase
