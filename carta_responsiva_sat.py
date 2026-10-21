@@ -51,9 +51,9 @@ def init_supabase():
 
 supabase = init_supabase()
 
-# ================= FUNCIONES DE FOLIO Y PERSISTENCIA NUBE =================
+# ================= FUNCIONES DE NUBE (SUPABASE) =================
 def obtener_siguiente_folio_nube():
-    """Obtiene e incrementa el folio de forma atómica en Supabase (Nube)."""
+    """Obtiene e incrementa el folio de forma atómica en Supabase."""
     if supabase is None:
         return "0000001"
     
@@ -70,12 +70,27 @@ def obtener_siguiente_folio_nube():
     except Exception as e:
         return "0000001"
 
+def guardar_carta_en_nube(datos):
+    """Guarda los datos completos de la carta porte en la base de datos."""
+    if supabase is not None:
+        try:
+            supabase.table("cartas_naupagas").insert(datos).execute()
+        except Exception as e:
+            st.error(f"Error al guardar en la nube: {e}")
+
+def cargar_historial_nube():
+    """Carga todas las cartas registradas ordenadas desde la más reciente."""
+    if supabase is not None:
+        try:
+            response = supabase.table("cartas_naupagas").select("*").order("id", desc=True).execute()
+            return response.data or []
+        except Exception as e:
+            return []
+    return []
+
 # Inicializar estados de la sesión
 if "auth_naupagas" not in st.session_state:
     st.session_state.auth_naupagas = False
-
-if "historial_naupagas" not in st.session_state:
-    st.session_state.historial_naupagas = []
 
 if "ultimo_registro_hash_naupagas" not in st.session_state:
     st.session_state.ultimo_registro_hash_naupagas = None
@@ -125,7 +140,6 @@ def consultar_cp_mexico(cp):
 def safe_str(val):
     if val is None:
         return ""
-    # Reemplazamos guiones largos/especiales por guion normal para evitar el '?'
     texto = str(val).replace("–", "-").replace("—", "-")
     return texto.encode('latin-1', 'replace').decode('latin-1')
 
@@ -227,7 +241,7 @@ def generar_pdf(d):
         pdf.set_font("helvetica", "B", 8)
         pdf.cell(12, 5, safe_str("RFC:"), ln=0)
         pdf.set_font("helvetica", "", 8)
-        rfc_dest_val = d.get('rfc_destino', '') if d.get('rfc_destino', '').strip() else "S/N (Público General)"
+        rfc_dest_val = d.get('rfc_destino', '') if str(d.get('rfc_destino', '')).strip() else "S/N (Público General)"
         pdf.cell(0, 5, safe_str(f"{rfc_dest_val}"), ln=1)
         
         pdf.set_font("helvetica", "B", 8)
@@ -252,7 +266,6 @@ def generar_pdf(d):
         # 6. Validación y QR OFICIAL SAT
         seccion_pdf("6. VALIDACIÓN Y VERIFICACIÓN OPERATIVA")
         
-        # URL oficial de consulta pública SAT para CFDI/Carta Porte
         idccp_val = d.get('idccp', '')
         rfc_em = d.get('rfc_emisor', 'NGA1608221S4')
         enlace_qr_sat = f"https://verificacfdi.facturaelectronica.sat.gob.mx/default.aspx?id={idccp_val}&re={rfc_em}"
@@ -553,7 +566,7 @@ if accion == "Nueva Carta Porte":
         st.session_state.registro_bloqueado_naupagas = False
 
     if st.session_state.registro_bloqueado_naupagas:
-        st.success("✅ Esta carta ya fue registrada con éxito en el Historial. Modifica la información si deseas generar una nueva.")
+        st.success("✅ Esta carta ya fue registrada con éxito en el Historial y guardada en Supabase.")
         submitted_carta = False
     else:
         submitted_carta = st.button("Generar y Registrar Carta Porte", type="primary", use_container_width=True)
@@ -567,7 +580,7 @@ if accion == "Nueva Carta Porte":
 
             idccp_generado = f"CCC{str(uuid.uuid4()).upper()[:20]}"
             
-            # OBTENER FOLIO DE LA NUBE (SUPABASE)
+            # OBTENER FOLIO DE LA NUBE
             folio_generado = obtener_siguiente_folio_nube()
 
             datos_nueva_carta = {
@@ -600,33 +613,36 @@ if accion == "Nueva Carta Porte":
                 "desc_mercancia": desc_mercancia,
                 "clave_prod_sat": clave_prod_sat,
                 "peso_mercancia": peso_texto,
-                "fecha_registro": ahora_mx.strftime("%d/%m/%Y %H:%M"),
-                "fecha_dt": ahora_mx.date()
+                "fecha_registro": ahora_mx.strftime("%d/%m/%Y %H:%M")
             }
+
+            # GUARDAR PERMANENTE EN SUPABASE
+            guardar_carta_en_nube(datos_nueva_carta)
 
             st.session_state.ultimo_registro_hash_naupagas = actual_hash
             st.session_state.registro_bloqueado_naupagas = True
-            st.session_state.historial_naupagas.insert(0, datos_nueva_carta)
             st.rerun()
 
 elif accion == "Historial de Documentos":
     st.title("📁 NAUPAGAS - Historial de Cartas Generadas")
-    st.write("Consulta, filtra por fecha o descarga registros de esta sesión.")
+    st.write("Consulta y descarga registros almacenados permanentemente en la nube.")
     st.markdown("---")
 
-    if not st.session_state.historial_naupagas:
-        st.info("No hay cartas registradas en esta sesión. Genera una nueva en el menú de la izquierda.")
+    historial_nube = cargar_historial_nube()
+
+    if not historial_nube:
+        st.info("No hay cartas registradas en la base de datos. Genera una nueva en el menú de la izquierda.")
     else:
-        for idx, carta in enumerate(st.session_state.historial_naupagas):
+        for idx, carta in enumerate(historial_nube):
             with st.container(border=True):
                 col_h1, col_h2, col_h3 = st.columns([2.5, 3, 2.5])
                 with col_h1:
                     st.write(f"🔢 **Folio Nube:** {carta.get('folio', 'N/A')}")
-                    st.write(f"📅 **Fecha:** {carta['fecha_registro']}")
-                    st.write(f"⛽ **Unidad:** {carta['tipo_unidad']} ({carta['eco_unidad']})")
+                    st.write(f"📅 **Fecha:** {carta.get('fecha_registro', 'N/A')}")
+                    st.write(f"⛽ **Unidad:** {carta.get('tipo_unidad', '')} ({carta.get('eco_unidad', '')})")
                 with col_h2:
-                    st.write(f"👤 **Chofer:** {carta['nombre_chofer']}")
-                    st.write(f"🛣️ **Ruta:** {carta['nombre_origen']} ➔ {carta['nombre_destino']}")
+                    st.write(f"👤 **Chofer:** {carta.get('nombre_chofer', '')}")
+                    st.write(f"🛣️ **Ruta:** {carta.get('nombre_origen', '')} ➔ {carta.get('nombre_destino', '')}")
                     st.write(f"🆔 **IDCCP:** `{carta.get('idccp', 'N/A')}`")
                 with col_h3:
                     pdf_hist_bytes = generar_pdf(carta)
