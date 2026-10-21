@@ -399,19 +399,19 @@ if accion == "Nueva Carta Porte":
         
         num_permiso_sct = st.text_input("Permiso de Distribución de Gas LP", value="LP/20474/DIST/PLA/2017")
 
-    # 2. Chofer (CATÁLOGO INTEGRADO)
+    # 2. Chofer (CATÁLOGO INTEGRADO SIN DUPLICADOS)
     with st.container(border=True):
         st.subheader("2. 👤 Datos del Operador / Chofer (Figura Transporte)")
         
         nombres_choferes = [c["nombre"] for c in CATALOGO_CHOFERES]
         chofer_seleccionado = st.selectbox("Seleccione al Chofer del Catálogo", options=nombres_choferes)
         
-        # Buscar datos del chofer seleccionado
+        # Buscar datos del chofer seleccionado y asignar nombre directamente
         datos_chofer_actual = next((c for c in CATALOGO_CHOFERES if c["nombre"] == chofer_seleccionado), CATALOGO_CHOFERES[0])
+        nombre_chofer = chofer_seleccionado
 
         col_c1, col_c2 = st.columns(2)
         with col_c1:
-            nombre_chofer = st.text_input("Nombre Completo del Chofer", value=datos_chofer_actual["nombre"])
             rfc_chofer = st.text_input("RFC del Chofer", value=datos_chofer_actual["rfc"])
         with col_c2:
             tipo_licencia = st.text_input("Tipo de Licencia", value=datos_chofer_actual["tipo"])
