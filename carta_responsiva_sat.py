@@ -3,7 +3,6 @@ import time as time_module
 from zoneinfo import ZoneInfo
 import os
 import requests
-import uuid
 import tempfile
 import streamlit as st
 
@@ -29,7 +28,7 @@ except ImportError:
 
 # ================= CONFIGURACIÓN DE LA PÁGINA =================
 st.set_page_config(
-    page_title="NAUPAGAS - Módulo Carta Porte 3.1",
+    page_title="NAUPAGAS - Módulo Carta Porte",
     page_icon="🚚",
     layout="wide"
 )
@@ -185,11 +184,11 @@ def generar_pdf(d):
         pdf.set_font("helvetica", "B", 14)
         pdf.cell(0, 8, safe_str("NAUPAGAS S.A. DE C.V."), align="C", ln=True)
         pdf.set_font("helvetica", "B", 11)
-        pdf.cell(0, 6, safe_str("COMPLEMENTO CARTA PORTE 3.1 - TRÁNSITO FEDERAL"), align="C", ln=True)
+        pdf.cell(0, 6, safe_str("CARTA PORTE"), align="C", ln=True)
         pdf.set_font("helvetica", "", 8)
         
         folio_val = d.get('folio', '0000001')
-        pdf.cell(0, 5, safe_str(f"FOLIO: {folio_val} | Fecha de Emisión: {d.get('fecha_registro', '')} | IDCCP: {d.get('idccp', '')}"), align="C", ln=True)
+        pdf.cell(0, 5, safe_str(f"FOLIO: {folio_val} | Fecha de Emisión: {d.get('fecha_registro', '')}"), align="C", ln=True)
         pdf.ln(4)
 
         def seccion_pdf(titulo):
@@ -281,13 +280,11 @@ def generar_pdf(d):
             
         pdf.ln(4)
 
-        # 6. Validación y QR OFICIAL SAT
+        # 6. Validación y QR
         seccion_pdf("6. VALIDACIÓN Y VERIFICACIÓN OPERATIVA")
         
-        idccp_val = d.get('idccp', '')
-        enlace_qr_sat = "https://l1nq.com/3aqpov5"
-        
-        qr_path = generar_qr_tempfile(enlace_qr_sat)
+        enlace_qr = "https://l1nq.com/3aqpov5"
+        qr_path = generar_qr_tempfile(enlace_qr)
         
         if qr_path and os.path.exists(qr_path):
             y_inicial = pdf.get_y()
@@ -297,14 +294,14 @@ def generar_pdf(d):
                 pass
             pdf.set_x(56)
             pdf.set_font("helvetica", "B", 8)
-            pdf.cell(0, 4, safe_str(f"Folio: {folio_val} | IDCCP: {idccp_val}"), ln=1)
+            pdf.cell(0, 4, safe_str(f"Folio: {folio_val}"), ln=1)
             pdf.set_x(56)
             pdf.set_font("helvetica", "", 7)
-            pdf.cell(0, 4, safe_str("Estatus de Verificación: ACCESO AL PORTAL DE CONSULTA SAT"), ln=1)
+            pdf.cell(0, 4, safe_str("Estatus de Verificación: ACCESO AL PORTAL DE CONSULTA"), ln=1)
             pdf.set_x(56)
             pdf.cell(0, 4, safe_str(f"Permiso Distribución Gas LP: {d.get('num_permiso_sct', '')}"), ln=1)
             pdf.set_x(56)
-            pdf.multi_cell(0, 4, safe_str("Este documento ampara el traslado operado con las especificaciones técnicas del catálogo SCT / SAT versión 3.1."))
+            pdf.multi_cell(0, 4, safe_str("Este documento ampara el traslado operado con las especificaciones técnicas requeridas."))
 
         y_actual = pdf.get_y()
         y_limite_qr = y_inicial + 40
@@ -345,7 +342,7 @@ if not st.session_state.auth_naupagas:
             st.markdown("<h1 style='text-align: center;'>🚚</h1>", unsafe_allow_html=True)
             
     st.markdown("<h2 style='text-align: center; color: #004080;'>NAUPAGAS S.A. DE C.V.</h2>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: gray;'>Módulo de Generación de Carta Porte 3.1</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: gray;'>Módulo de Generación de Carta Porte</p>", unsafe_allow_html=True)
     
     col_a1, col_a2, col_a3 = st.columns([1, 1.2, 1])
     with col_a2:
@@ -373,7 +370,7 @@ ahora_mx = datetime.now(ZoneInfo("America/Mexico_City"))
 
 # ================= FORMULARIO PRINCIPAL =================
 if accion == "Nueva Carta Porte":
-    st.title("📄 NAUPAGAS - Generador de Carta Porte 3.1")
+    st.title("📄 NAUPAGAS - Generador de Carta Porte")
     st.write("Complete los campos oficiales requeridos para el tránsito seguro de la unidad.")
     st.markdown("---")
 
@@ -517,7 +514,7 @@ if accion == "Nueva Carta Porte":
 
     # 6. Mercancía
     with st.container(border=True):
-        st.subheader("6. 📦 Descripción y Claves SAT de la Mercancía")
+        st.subheader("6. 📦 Descripción y Claves de la Mercancía")
         if tipo_unidad == "Autotanque (Pipa)":
             st.markdown("#### ⛽ Configuración para Pipa (Medidor Magnetel)")
             opciones_capacidades = [4000.0, 4400.0, 4500.0, 5000.0, 12900.0, 13900.0, 24000.0, "Otra (Personalizada)"]
@@ -544,7 +541,7 @@ if accion == "Nueva Carta Porte":
                 peso_texto = "N/A"
             with col_m2:
                 desc_mercancia = st.text_input("Descripción / Producto", value="Gas Licuado de Petróleo (Gas LP)")
-                clave_prod_sat = st.text_input("Clave Producto SAT", value="15111510 (Gas LP)")
+                clave_prod_sat = st.text_input("Clave Producto", value="15111510 (Gas LP)")
 
         else:
             st.markdown("#### 🛢️ Configuración para Vehículo Repartidor (Cilindros de 20 kg y 30 kg)")
@@ -566,7 +563,7 @@ if accion == "Nueva Carta Porte":
                 clave_unidad_sat = "H87 - Pieza"
             with col_m2:
                 desc_mercancia = st.text_input("Descripción / Producto", value="Gas Licuado de Petróleo (Gas LP en Cilindros)")
-                clave_prod_sat = st.text_input("Clave Producto SAT", value="15111510 (Gas LP)")
+                clave_prod_sat = st.text_input("Clave Producto", value="15111510 (Gas LP)")
             with col_m3:
                 peso_texto = f"{peso_neto_gas:,.2f} KG"
                 st.text_input("Peso Total Neto Gas", value=peso_texto, disabled=True)
@@ -579,15 +576,12 @@ if accion == "Nueva Carta Porte":
         else:
             str_salida = f"{f_salida_date.strftime('%d/%m/%Y')} {f_salida_time.strftime('%H:%M')}"
             str_llegada = f"{f_llegada_date.strftime('%d/%m/%Y')} {f_llegada_time.strftime('%H:%M')}"
-
-            idccp_generado = f"CCC{str(uuid.uuid4()).upper()[:20]}"
             
             # OBTENER FOLIO DE LA NUBE
             folio_generado = obtener_siguiente_folio_nube()
 
             datos_nueva_carta = {
                 "folio": folio_generado,
-                "idccp": idccp_generado,
                 "nombre_emisor": nombre_emisor,
                 "rfc_emisor": rfc_emisor,
                 "num_permiso_sct": num_permiso_sct,
@@ -674,11 +668,10 @@ elif accion == "Historial de Documentos":
                     with col_h2:
                         st.write(f"👤 **Chofer:** {carta.get('nombre_chofer', '')}")
                         st.write(f"🛣️ **Ruta:** {carta.get('nombre_origen', '')} ➔ {carta.get('nombre_destino', '')}")
-                        st.write(f"🆔 **IDCCP:** `{carta.get('idccp', 'N/A')}`")
                     with col_h3:
                         pdf_hist_bytes = generar_pdf(carta)
                         st.download_button(
-                            label="📄 Descargar PDF SAT",
+                            label="📄 Descargar PDF",
                             data=pdf_hist_bytes,
                             file_name=f"Naupagas_Folio_{carta.get('folio', '0000001')}.pdf",
                             mime="application/pdf",
