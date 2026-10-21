@@ -367,7 +367,7 @@ if accion == "Nueva Carta Porte":
             rfc_emisor = st.text_input("RFC del Emisor", value="NGA1608221S4")
         num_permiso_sct = st.text_input("Permiso de Distribución de Gas LP", value="LP/20474/DIST/PLA/2017")
 
-    # 2. Chofer con selector de Catálogo o Personalizado
+    # 2. Chofer con selector de Catálogo o Personalizado en 2x2 exacto
     with st.container(border=True):
         st.subheader("2. 👤 Datos del Operador / Chofer (Figura Transporte)")
         
@@ -378,24 +378,23 @@ if accion == "Nueva Carta Porte":
             chofer_seleccionado = st.selectbox("Seleccione al Chofer del Catálogo", options=nombres_choferes)
             datos_chofer_actual = next((c for c in CATALOGO_CHOFERES if c["nombre"] == chofer_seleccionado), CATALOGO_CHOFERES[0])
             
-            nombre_chofer = chofer_seleccionado
-            rfc_val = datos_chofer_actual["rfc"]
-            tipo_val = datos_chofer_actual["tipo"]
-            lic_val = datos_chofer_actual["licencia"]
+            # Rectángulo ordenado en 2x2 para Catálogo
+            col_c1, col_c2 = st.columns(2)
+            with col_c1:
+                nombre_chofer = st.text_input("Nombre Seleccionado / Registrado", value=chofer_seleccionado, disabled=True)
+                rfc_chofer = st.text_input("RFC del Chofer (Oficial)", value=datos_chofer_actual["rfc"], disabled=True)
+            with col_c2:
+                tipo_licencia = st.text_input("Tipo de Licencia (Oficial)", value=datos_chofer_actual["tipo"], disabled=True)
+                num_licencia = st.text_input("Número de Licencia (Oficial)", value=datos_chofer_actual["licencia"], disabled=True)
         else:
-            nombre_chofer = st.text_input("Nombre Completo del Chofer", placeholder="Nombre completo")
-            rfc_val = st.text_input("RFC del Chofer", placeholder="XAXX010101000")
-            tipo_val = st.selectbox("Tipo de Licencia", ["Federal", "Estatal", "Chofer / Vendedor"])
-            lic_val = st.text_input("Número de Licencia", placeholder="Número oficial")
-
-        # Rectángulo ordenado en 2x2
-        col_c1, col_c2 = st.columns(2)
-        with col_c1:
-            st.text_input("Nombre Seleccionado / Registrado", value=nombre_chofer, disabled=True, key="dsp_nombre")
-            rfc_chofer = st.text_input("RFC del Chofer (Oficial)", value=rfc_val, key="dsp_rfc")
-        with col_c2:
-            tipo_licencia = st.text_input("Tipo de Licencia (Oficial)", value=tipo_val, key="dsp_tipo")
-            num_licencia = st.text_input("Número de Licencia (Oficial)", value=lic_val, key="dsp_lic")
+            # Rectángulo ordenado en 2x2 para Personalizado (Editable)
+            col_c1, col_c2 = st.columns(2)
+            with col_c1:
+                nombre_chofer = st.text_input("Nombre Completo del Chofer", placeholder="Nombre completo del chofer")
+                rfc_chofer = st.text_input("RFC del Chofer", placeholder="XAXX010101000")
+            with col_c2:
+                tipo_licencia = st.selectbox("Tipo de Licencia", ["Federal", "Estatal", "Chofer / Vendedor"])
+                num_licencia = st.text_input("Número de Licencia", placeholder="Número oficial de licencia")
 
     with st.container(border=True):
         st.subheader("3. ⛽ Datos de la Unidad")
