@@ -50,6 +50,20 @@ def init_supabase():
 
 supabase = init_supabase()
 
+# ================= CATÁLOGO DE OPERADORES =================
+CATALOGO_CHOFERES = [
+    {"nombre": "ALFONSO GONZALEZ ORTIZ", "licencia": "LFD00008878", "rfc": "GOOA900609TC5", "tipo": "Federal"},
+    {"nombre": "MARCO ANTONIO ALVARADO DURAN", "licencia": "MT123507", "rfc": "AADM6906159J4", "tipo": "Estatal"},
+    {"nombre": "RAUL ORTIZ SERRANO", "licencia": "UB033Q0QH", "rfc": "OISR060903TN7", "tipo": "Estatal"},
+    {"nombre": "RODRIGO LOPEZ ALCANTARA", "licencia": "UB0CKN1S4", "rfc": "LOAR911225J2", "tipo": "Estatal"},
+    {"nombre": "HERACLIO ARMANDO MACHUCA SILVA", "licencia": "UB003R85C", "rfc": "MASH580804", "tipo": "Estatal"},
+    {"nombre": "CARLOS GONZALEZ ORTIZ", "licencia": "UB0N3KX2K", "rfc": "GOOC820603QN0", "tipo": "Estatal"},
+    {"nombre": "PORFIRIO HERNANDEZ CAMPUZANO", "licencia": "UB0CKQOY4", "rfc": "HECP8606053H1", "tipo": "Estatal"},
+    {"nombre": "ALEJANDRO CORTES ENRIQUEZ", "licencia": "UB0CKTB9E", "rfc": "COEA940428134", "tipo": "Estatal"},
+    {"nombre": "DAVID EUGENIO ROMERO", "licencia": "UB0N3KQAQ", "rfc": "EURD970221PQ0", "tipo": "Estatal"},
+    {"nombre": "JOSE ARMANDO HERNANDEZ MIRANDA", "licencia": "UB0N3BE6L", "rfc": "HEMA970620NI4", "tipo": "Estatal"}
+]
+
 # ================= FUNCIONES DE NUBE (SUPABASE) =================
 def obtener_siguiente_folio_nube():
     """Obtiene e incrementa el folio de forma atómica en Supabase."""
@@ -267,7 +281,7 @@ def generar_pdf(d):
         pdf.ln(3)
 
         # 5. Mercancía
-        seccion_pdf("5. DESCRIPCIÓN Y CLAVES SAT DE LA MERCANCÍA")
+        seccion_pdf("5. DESCRIPCIÓN Y CLAVES DE LA MERCANCÍA")
         pdf.set_font("helvetica", "", 8)
         pdf.cell(0, 5, safe_str(f"Producto: {d.get('desc_mercancia', '')} | Clave SAT: {d.get('clave_prod_sat', '')}"), ln=1)
         
@@ -385,16 +399,23 @@ if accion == "Nueva Carta Porte":
         
         num_permiso_sct = st.text_input("Permiso de Distribución de Gas LP", value="LP/20474/DIST/PLA/2017")
 
-    # 2. Chofer
+    # 2. Chofer (CATÁLOGO INTEGRADO)
     with st.container(border=True):
         st.subheader("2. 👤 Datos del Operador / Chofer (Figura Transporte)")
+        
+        nombres_choferes = [c["nombre"] for c in CATALOGO_CHOFERES]
+        chofer_seleccionado = st.selectbox("Seleccione al Chofer del Catálogo", options=nombres_choferes)
+        
+        # Buscar datos del chofer seleccionado
+        datos_chofer_actual = next((c for c in CATALOGO_CHOFERES if c["nombre"] == chofer_seleccionado), CATALOGO_CHOFERES[0])
+
         col_c1, col_c2 = st.columns(2)
         with col_c1:
-            nombre_chofer = st.text_input("Nombre Completo del Chofer", placeholder="Juan Pérez Gómez")
-            rfc_chofer = st.text_input("RFC del Chofer", placeholder="XAXX010101000")
+            nombre_chofer = st.text_input("Nombre Completo del Chofer", value=datos_chofer_actual["nombre"])
+            rfc_chofer = st.text_input("RFC del Chofer", value=datos_chofer_actual["rfc"])
         with col_c2:
-            tipo_licencia = st.selectbox("Tipo de Licencia", ["Federal", "Estatal", "Chofer / Vendedor"])
-            num_licencia = st.text_input("Número de Licencia", placeholder="Número oficial")
+            tipo_licencia = st.text_input("Tipo de Licencia", value=datos_chofer_actual["tipo"])
+            num_licencia = st.text_input("Número de Licencia", value=datos_chofer_actual["licencia"])
 
     # 3. Unidad
     with st.container(border=True):
