@@ -49,7 +49,7 @@ SUPABASE_KEY = "sb_publishable_rOwFvX8TV6gMkroqjZZpbQ__9VaGRLd"
 
 @st.cache_resource
 def init_supabase():
-    if SUPABASE_DISPONIBLE and SUPABASE_KEY and "AQUI_PEGA" not in SUPABASE_KEY:
+    if SUPABASE_DISPONIBLE and SUPABASE_KEY:
         try:
             return create_client(SUPABASE_URL, SUPABASE_KEY)
         except Exception as e:
@@ -171,6 +171,12 @@ def generar_pdf(d):
         pdf = FPDF(orientation='P', unit='mm', format='A4')
         pdf.add_page()
         
+        if os.path.exists("logo.jpg"):
+            try:
+                pdf.image("logo.jpg", 10, 10, 25)
+            except:
+                pass
+
         pdf.set_font("helvetica", "B", 14)
         pdf.cell(0, 8, safe_str("NAUPAGAS S.A. DE C.V."), align="C", ln=True)
         pdf.set_font("helvetica", "B", 11)
@@ -325,7 +331,10 @@ def generar_pdf(d):
 if not st.session_state.auth_naupagas:
     col1, col2, col3 = st.columns([1, 1.5, 1])
     with col2:
-        st.markdown("<h1 style='text-align: center;'>🚚</h1>", unsafe_allow_html=True)
+        if os.path.exists("logo.jpg"):
+            st.image("logo.jpg", use_container_width=True)
+        else:
+            st.markdown("<h1 style='text-align: center;'>🚚</h1>", unsafe_allow_html=True)
             
     st.markdown("<h2 style='text-align: center; color: #004080;'>NAUPAGAS S.A. DE C.V.</h2>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; color: gray;'>Módulo de Generación de Carta Porte 3.1</p>", unsafe_allow_html=True)
@@ -343,6 +352,8 @@ if not st.session_state.auth_naupagas:
 
 # ================= MENÚ PRINCIPAL =================
 with st.sidebar:
+    if os.path.exists("logo.jpg"):
+        st.image("logo.jpg", use_container_width=True)
     st.markdown("### 🎛️ Menú de Navegación")
     accion = st.radio("Selecciona una opción:", ["Nueva Carta Porte", "Historial de Documentos"])
     st.markdown("---")
@@ -518,7 +529,7 @@ if accion == "Nueva Carta Porte":
             volumen_calculado_lts = capacidad_total_num * (porcentaje_magnetel / 100.0)
             peso_calculado_kg = volumen_calculado_lts * 0.54
 
-            st.info(f"📊 **Resultado Automático Pipa:** {volumen_calculado_lts:,.2f} Litros | **Peso calculado:** {peso_calculado_kg:,.2f} KG (Factor 0.54)")
+            st.info(f"📊 **Resultado Automático Pipa:** {volumen_calculado_lts:,.2f} Litros | **Peso calculated:** {peso_calculado_kg:,.2f} KG (Factor 0.54)")
 
             col_m1, col_m2, col_m3 = st.columns(3)
             with col_m1:
