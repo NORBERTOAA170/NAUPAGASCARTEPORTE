@@ -739,21 +739,21 @@ if accion == "Nueva Carta Porte":
     with st.container(border=True):
         st.subheader("6. 📦 Descripción y Claves de la Mercancía")
         if tipo_unidad == "Autotanque (Pipa)":
-            st.markdown("#### ⛽ Configuración para Pipa (Medidor Magnetel)")
+            st.markdown("#### ⛽ Configuración para Pipa")
             
             col_calc1, col_calc2 = st.columns(2)
             with col_calc1:
                 capacidad_total_num = st.number_input("Capacidad Total de la Pipa (Litros)", min_value=0.0, value=def_capacidad_num, step=100.0)
             with col_calc2:
-                porcentaje_magnetel = st.number_input("Porcentaje de Llenado (%) - Magnetel", min_value=0.0, max_value=100.0, value=70.0, step=0.5)
+                porcentaje_llenado = st.number_input("Porcentaje de Llenado (%)", min_value=0.0, max_value=100.0, value=70.0, step=0.5)
 
-            volumen_calculado_lts = capacidad_total_num * (porcentaje_magnetel / 100.0)
+            volumen_calculado_lts = capacidad_total_num * (porcentaje_llenado / 100.0)
 
-            st.info(f"📊 **Resultado Automático Pipa:** {volumen_calculado_lts:,.2f} Litros")
+            st.info(f"📊 **Resultado Automático Pipa:** {volumen_calculado_lts:,.2f} Litros (Porcentaje: {porcentaje_llenado:.1f}%)")
 
             col_m1, col_m2 = st.columns(2)
             with col_m1:
-                cantidad_texto = f"{volumen_calculado_lts:,.2f} Litros"
+                cantidad_texto = f"{volumen_calculado_lts:,.2f} Litros (Porcentaje: {porcentaje_llenado:.1f}%)"
                 st.text_input("Cantidad Calculada", value=cantidad_texto, disabled=True)
                 clave_unidad_sat = "LTR - Litros"
                 peso_texto = "N/A"
@@ -762,7 +762,7 @@ if accion == "Nueva Carta Porte":
                 clave_prod_sat = st.text_input("Clave Producto", value="15111510 (Gas LP)")
 
         else:
-            st.markdown("#### 🛢️ Configuración para Vehículo Repartidor (Cilindros de 20 kg y 30 kg)")
+            st.markdown("#### 🛢️ Configuración para Vehículo Repartidor (Cilindros)")
             col_cil1, col_cil2 = st.columns(2)
             with col_cil1:
                 cant_cil_20 = st.number_input("Cantidad de Cilindros de 20 KG", min_value=0, value=20, step=1)
@@ -776,7 +776,7 @@ if accion == "Nueva Carta Porte":
 
             col_m1, col_m2, col_m3 = st.columns(3)
             with col_m1:
-                cantidad_texto = f"{total_piezas} Piezas (Cilindros)"
+                cantidad_texto = f"{total_piezas} Piezas ({cant_cil_20} de 20kg, {cant_cil_30} de 30kg)"
                 st.text_input("Cantidad Calculada", value=cantidad_texto, disabled=True)
                 clave_unidad_sat = "H87 - Pieza"
             with col_m2:
