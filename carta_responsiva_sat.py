@@ -749,11 +749,11 @@ if accion == "Nueva Carta Porte":
 
             volumen_calculado_lts = capacidad_total_num * (porcentaje_llenado / 100.0)
 
-            st.info(f"📊 **Resultado Automático Pipa:** {volumen_calculado_lts:,.2f} Litros (Porcentaje: {porcentaje_llenado:.1f}%)")
+            cantidad_texto = f"{volumen_calculado_lts:,.2f} Litros (Porcentaje: {porcentaje_llenado:.1f}%)"
+            st.info(f"📊 **Resultado Automático Pipa:** {cantidad_texto}")
 
             col_m1, col_m2 = st.columns(2)
             with col_m1:
-                cantidad_texto = f"{volumen_calculado_lts:,.2f} Litros (Porcentaje: {porcentaje_llenado:.1f}%)"
                 st.text_input("Cantidad Calculada", value=cantidad_texto, disabled=True)
                 clave_unidad_sat = "LTR - Litros"
                 peso_texto = "N/A"
@@ -767,16 +767,16 @@ if accion == "Nueva Carta Porte":
             with col_cil1:
                 cant_cil_20 = st.number_input("Cantidad de Cilindros de 20 KG", min_value=0, value=20, step=1)
             with col_cil2:
-                cant_cil_30 = st.number_input("Cantidad de Cilindros de 30 KG", min_value=0, value=15, step=1)
+                cant_cil_30 = st.number_input("Cantidad de Cilindros de 30 KG", min_value=0, value=1, step=1)
 
             total_piezas = cant_cil_20 + cant_cil_30
             peso_neto_gas = (cant_cil_20 * 20.0) + (cant_cil_30 * 30.0)
 
-            st.info(f"📊 **Total Envases:** {total_piezas} Cilindros ({cant_cil_20} de 20kg, {cant_cil_30} de 30kg) | **Peso Neto de Gas:** {peso_neto_gas:,.2f} KG")
+            cantidad_texto = f"{total_piezas} Piezas ({cant_cil_20} de 20kg, {cant_cil_30} de 30kg)"
+            st.info(f"📊 **Total Envases:** {cantidad_texto} | **Peso Neto de Gas:** {peso_neto_gas:,.2f} KG")
 
             col_m1, col_m2, col_m3 = st.columns(3)
             with col_m1:
-                cantidad_texto = f"{total_piezas} Piezas ({cant_cil_20} de 20kg, {cant_cil_30} de 30kg)"
                 st.text_input("Cantidad Calculada", value=cantidad_texto, disabled=True)
                 clave_unidad_sat = "H87 - Pieza"
             with col_m2:
