@@ -281,7 +281,7 @@ def cargar_historial_nube():
     return []
 
 def eliminar_carta_nube(carta_id):
-    """Guarda/elimina un registro del historial en Supabase por su ID único."""
+    """Elimina un registro del historial en Supabase por su ID único."""
     if supabase is not None:
         try:
             supabase.table("cartas_naupagas").delete().eq("id", carta_id).execute()
@@ -571,9 +571,9 @@ if accion == "Nueva Carta Porte":
         with col_e1:
             nombre_emisor = st.text_input("Razón Social / Empresa Emisora", value="NAUPAGAS S.A. de C.V.")
         with col_e2:
-            rfc_emisor = st.text_input("RFC del Emisor", value="")
+            rfc_emisor = st.text_input("RFC del Emisor", value="NGA1608221S4")
         
-        num_permiso_sct = st.text_input("Permiso de Distribución de Gas LP", value="")
+        num_permiso_sct = st.text_input("Permiso de Distribución de Gas LP", value="LP/20474/DIST/PLA/2017")
 
     # Variables por defecto para auto-llenado
     def_eco = ""
@@ -659,7 +659,7 @@ if accion == "Nueva Carta Porte":
                 hora_salida_str = st.text_input("Hora de Salida (HH:MM)", value=ahora_mx.strftime("%H:%M"))
 
             if tipo_modo_origen == "Planta NAUPAGAS (Oficial)":
-                rfc_origen = ""
+                rfc_origen = "NGA1608221S4"
                 nombre_origen = "NAUPAGAS"
                 cp_origen = "91282"
                 colonia_origen = "El Limon"
