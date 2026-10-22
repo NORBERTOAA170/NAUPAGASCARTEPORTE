@@ -29,11 +29,11 @@ except ImportError:
 # ================= CONFIGURACIÓN DE LA PÁGINA =================
 st.set_page_config(
     page_title="NAUPAGAS - Módulo Carta Porte",
-    page_icon="🚚",
+    page_icon="🔥",
     layout="wide"
 )
 
-MASTER_PASSWORD = "NAUPA2026"
+MASTER_PASSWORD = "NAUPAGAS2026"
 
 # ================= CREDENCIALES DE SUPABASE (NUBE) =================
 SUPABASE_URL = "https://qikmlgbnwbdmuqziemia.supabase.co"
@@ -50,26 +50,198 @@ def init_supabase():
 
 supabase = init_supabase()
 
-# ================= CATÁLOGO DE OPERADORES =================
-CATALOGO_CHOFERES = [
-    {"nombre": "ALFONSO GONZALEZ ORTIZ", "licencia": "LFD00008878", "rfc": "GOOA900609TC5", "tipo": "Federal"},
-    {"nombre": "MARCO ANTONIO ALVARADO DURAN", "licencia": "MT123507", "rfc": "AADM6906159J4", "tipo": "Estatal"},
-    {"nombre": "RAUL ORTIZ SERRANO", "licencia": "UB033Q0QH", "rfc": "OISR060903TN7", "tipo": "Estatal"},
-    {"nombre": "RODRIGO LOPEZ ALCANTARA", "licencia": "UB0CKN1S4", "rfc": "LOAR911225J2", "tipo": "Estatal"},
-    {"nombre": "HERACLIO ARMANDO MACHUCA SILVA", "licencia": "UB003R85C", "rfc": "MASH580804", "tipo": "Estatal"},
-    {"nombre": "CARLOS GONZALEZ ORTIZ", "licencia": "UB0N3KX2K", "rfc": "GOOC820603QN0", "tipo": "Estatal"},
-    {"nombre": "PORFIRIO HERNANDEZ CAMPUZANO", "licencia": "UB0CKQOY4", "rfc": "HECP8606053H1", "tipo": "Estatal"},
-    {"nombre": "ALEJANDRO CORTES ENRIQUEZ", "licencia": "UB0CKTB9E", "rfc": "COEA940428134", "tipo": "Estatal"},
-    {"nombre": "DAVID EUGENIO ROMERO", "licencia": "UB0N3KQAQ", "rfc": "EURD970221PQ0", "tipo": "Estatal"},
-    {"nombre": "JOSE ARMANDO HERNANDEZ MIRANDA", "licencia": "UB0N3BE6L", "rfc": "HEMA970620NI4", "tipo": "Estatal"},
-    {"nombre": "JOSE EUGENIO ROMERO", "licencia": "UB0CKUCUH", "rfc": "EURJ040215KN5", "tipo": "Estatal"},
-    {"nombre": "ROSENDO SESENA HERNANDEZ", "licencia": "UB0CKMSYG", "rfc": "SEHR690624115", "tipo": "Estatal"}
+# ================= CATÁLOGO DE OPERADORES Y UNIDADES DE NAUPAGAS =================
+CATALOGO_CHOFERES_NAUPA = [
+    {
+        "nombre": "ALFONSO GONZALEZ ORTIZ",
+        "licencia": "LFD00008878",
+        "rfc": "GOOA900609TC5",
+        "tipo": "Federal",
+        "eco": "4",
+        "placas": "18AF4Y",
+        "marca": "FREIGHTLINER M2 106 35K",
+        "capacidad_txt": "24000 Lts",
+        "capacidad_num": 24000.0,
+        "aseguradora": "Qualitas",
+        "poliza": "7150014491"
+    },
+    {
+        "nombre": "MARCO ANTONIO ALVARADO DURAN",
+        "licencia": "MT123507",
+        "rfc": "AADM6906159J4",
+        "tipo": "Estatal",
+        "eco": "",
+        "placas": "XX2879A",
+        "marca": "FREIGHTLINER M2 106 35K",
+        "capacidad_txt": "12900 Lts",
+        "capacidad_num": 12900.0,
+        "aseguradora": "Qualitas",
+        "poliza": "7150014122"
+    },
+    {
+        "nombre": "RAUL ORTIZ SERRANO",
+        "licencia": "UB033Q0QH",
+        "rfc": "OISR060903TN7",
+        "tipo": "Estatal",
+        "eco": "",
+        "placas": "",
+        "marca": "",
+        "capacidad_txt": "",
+        "capacidad_num": 0.0,
+        "aseguradora": "",
+        "poliza": ""
+    },
+    {
+        "nombre": "RODRIGO LOPEZ ALCANTARA",
+        "licencia": "UB0CKN1S4",
+        "rfc": "LOAR911225J2",
+        "tipo": "Estatal",
+        "eco": "1",
+        "placas": "XU91794",
+        "marca": "CS FORD F-500 CHASIS CABINA",
+        "capacidad_txt": "4000 Lts",
+        "capacidad_num": 4000.0,
+        "aseguradora": "Qualitas",
+        "poliza": "7150015083"
+    },
+    {
+        "nombre": "HERACLIO ARMANDO MACHUCA SILVA",
+        "licencia": "UB003R85C",
+        "rfc": "MASH580804",
+        "tipo": "Estatal",
+        "eco": "5",
+        "placas": "XF4338B",
+        "marca": "CHRYSLER RAM 4000",
+        "capacidad_txt": "4000 Lts",
+        "capacidad_num": 4000.0,
+        "aseguradora": "Qualitas",
+        "poliza": "7150013784"
+    },
+    {
+        "nombre": "CARLOS GONZALEZ ORTIZ",
+        "licencia": "UB0N3KX2K",
+        "rfc": "GOOC820603QN0",
+        "tipo": "Estatal",
+        "eco": "6",
+        "placas": "XT4418B",
+        "marca": "CHEVROLET SILVERADO",
+        "capacidad_txt": "4500 Lts",
+        "capacidad_num": 4500.0,
+        "aseguradora": "Qualitas",
+        "poliza": "7150015633"
+    },
+    {
+        "nombre": "PORFIRIO HERNANDEZ CAMPUZANO",
+        "licencia": "UBOCKQOY4",
+        "rfc": "HECP8606053H1",
+        "tipo": "Estatal",
+        "eco": "23",
+        "placas": "YB8730B",
+        "marca": "CS CHRYSLER RAM 4000 5.7L",
+        "capacidad_txt": "4000 Lts",
+        "capacidad_num": 4000.0,
+        "aseguradora": "Qualitas",
+        "poliza": "7150013987"
+    },
+    {
+        "nombre": "ALEJANDRO CORTES ENRIQUEZ",
+        "licencia": "UBOCKTB9E",
+        "rfc": "COEA940428134",
+        "tipo": "Estatal",
+        "eco": "",
+        "placas": "",
+        "marca": "",
+        "capacidad_txt": "",
+        "capacidad_num": 0.0,
+        "aseguradora": "",
+        "poliza": ""
+    },
+    {
+        "nombre": "DAVID EUGENIO ROMERO",
+        "licencia": "UB0N3KQAQ",
+        "rfc": "EURD970221PQ0",
+        "tipo": "Estatal",
+        "eco": "",
+        "placas": "XP3908B",
+        "marca": "CHRYSLER RAM 4000",
+        "capacidad_txt": "4000 Lts",
+        "capacidad_num": 4000.0,
+        "aseguradora": "Qualitas",
+        "poliza": "7150015604"
+    },
+    {
+        "nombre": "JOSE ARMANDO HERNANDEZ MIRANDA",
+        "licencia": "UB0N3BE6L",
+        "rfc": "HEMA970620NI4",
+        "tipo": "Estatal",
+        "eco": "",
+        "placas": "",
+        "marca": "",
+        "capacidad_txt": "",
+        "capacidad_num": 0.0,
+        "aseguradora": "",
+        "poliza": ""
+    },
+    {
+        "nombre": "JOSE EUGENIO ROMERO",
+        "licencia": "UBOCKUCUH",
+        "rfc": "EURJ040215KN5",
+        "tipo": "Estatal",
+        "eco": "10",
+        "placas": "XX9342A",
+        "marca": "CS FORD F-350 CHASIS CABINA",
+        "capacidad_txt": "4000 Lts",
+        "capacidad_num": 4000.0,
+        "aseguradora": "Qualitas",
+        "poliza": "7150014152"
+    },
+    {
+        "nombre": "ROSENDO SESENA HERNANDEZ",
+        "licencia": "UBOCKMSYG",
+        "rfc": "SEHR690624115",
+        "tipo": "Estatal",
+        "eco": "CILINDRERA 6",
+        "placas": "XX2755A",
+        "marca": "TOYOTA HILUX",
+        "capacidad_txt": "CILINDRERA",
+        "capacidad_num": 0.0,
+        "aseguradora": "Qualitas",
+        "poliza": "7150013591"
+    },
+    {
+        "nombre": "SAUL UBIRACI GALLARDO",
+        "licencia": "UB0N3L5GY",
+        "rfc": "GAHS570419GB2",
+        "tipo": "Estatal",
+        "eco": "CILINDRERA 3",
+        "placas": "XX2756A",
+        "marca": "TOYOTA HILUX",
+        "capacidad_txt": "CILINDRERA",
+        "capacidad_num": 0.0,
+        "aseguradora": "AXA",
+        "poliza": "YBJ006730000"
+    },
+    {
+        "nombre": "MARTIN GONZALEZ LEON",
+        "licencia": "UB003RH9Z",
+        "rfc": "GOLM751110157",
+        "tipo": "Estatal",
+        "eco": "2",
+        "placas": "XV0965A",
+        "marca": "CHRYSLER",
+        "capacidad_txt": "12900 Lts",
+        "capacidad_num": 12900.0,
+        "aseguradora": "Qualitas",
+        "poliza": "7150014122"
+    }
 ]
 
 # ================= FUNCIONES DE NUBE (SUPABASE) =================
 def obtener_siguiente_folio_nube():
+    """Obtiene e incrementa el folio de forma atómica en Supabase para Naupagas."""
     if supabase is None:
         return "0000001"
+    
     try:
         response = supabase.table("folios_naupagas").select("ultimo_folio").eq("id", 1).execute()
         if response.data and len(response.data) > 0:
@@ -85,6 +257,7 @@ def obtener_siguiente_folio_nube():
         return "0000001"
 
 def guardar_carta_en_nube(datos):
+    """Guarda los datos completos de la carta porte en la base de datos de Naupagas."""
     if supabase is not None:
         try:
             supabase.table("cartas_naupagas").insert(datos).execute()
@@ -97,6 +270,7 @@ def guardar_carta_en_nube(datos):
         return False
 
 def cargar_historial_nube():
+    """Carga todas las cartas registradas ordenadas desde la más reciente."""
     if supabase is not None:
         try:
             response = supabase.table("cartas_naupagas").select("*").order("id", desc=True).execute()
@@ -107,18 +281,21 @@ def cargar_historial_nube():
     return []
 
 def eliminar_carta_nube(carta_id):
+    """Guarda/elimina un registro del historial en Supabase por su ID único."""
     if supabase is not None:
         try:
             supabase.table("cartas_naupagas").delete().eq("id", carta_id).execute()
             return True
         except Exception as e:
-            st.error(f"❌ Error al eliminar de Supabase: {e}")
+            st.error(f"⚠️ Error al eliminar de Supabase: {e}")
             return False
     return False
 
+# Inicializar estados de la sesión
 if "auth_naupagas" not in st.session_state:
     st.session_state.auth_naupagas = False
 
+# ================= CATÁLOGO LOCAL DE C.P. VERIFICADO =================
 CATALOGO_LOCAL_CP = {
     "91400": {"colonia": "Perote Centro", "municipio": "Perote", "estado": "Veracruz", "pais": "México"},
     "91403": {"colonia": "El Sabinal", "municipio": "Perote", "estado": "Veracruz", "pais": "México"},
@@ -138,8 +315,10 @@ def consultar_cp_mexico(cp):
     cp = str(cp).strip()
     if not cp or len(cp) != 5 or not cp.isdigit():
         return {"colonia": "", "municipio": "", "estado": "", "pais": "México"}
+    
     if cp in CATALOGO_LOCAL_CP:
         return CATALOGO_LOCAL_CP[cp]
+    
     try:
         url = f"https://api.zippopotam.us/MX/{cp}"
         resp = requests.get(url, timeout=3.0)
@@ -152,6 +331,7 @@ def consultar_cp_mexico(cp):
                 return {"colonia": colonia, "municipio": estado, "estado": estado, "pais": "México"}
     except Exception:
         pass
+
     return {"colonia": "", "municipio": "", "estado": "", "pais": "México"}
 
 def safe_str(val):
@@ -180,16 +360,21 @@ def generar_pdf(d):
     try:
         pdf = FPDF(orientation='P', unit='mm', format='A4')
         pdf.add_page()
-        if os.path.exists("logo.jpg"):
+        
+        # LOGO: NAUPAGAS (logo.jpg a 38mm de ancho arriba a la izquierda)
+        logo_path = "logo.jpg"
+        if os.path.exists(logo_path):
             try:
-                pdf.image("logo.jpg", 10, 10, 25)
+                pdf.image(logo_path, 10, 8, 38)
             except:
                 pass
+
         pdf.set_font("helvetica", "B", 14)
         pdf.cell(0, 8, safe_str("NAUPAGAS S.A. DE C.V."), align="C", ln=True)
         pdf.set_font("helvetica", "B", 11)
         pdf.cell(0, 6, safe_str("CARTA PORTE"), align="C", ln=True)
         pdf.set_font("helvetica", "", 8)
+        
         folio_val = d.get('folio', '0000001')
         pdf.cell(0, 5, safe_str(f"FOLIO: {folio_val} | Fecha de Emisión: {d.get('fecha_registro', '')}"), align="C", ln=True)
         pdf.ln(4)
@@ -200,6 +385,7 @@ def generar_pdf(d):
             pdf.cell(0, 6, safe_str(f"  {titulo}"), fill=True, ln=True)
             pdf.ln(2)
 
+        # 1. Emisor y Permisos
         seccion_pdf("1. DATOS DEL EMISOR Y PERMISO DE DISTRIBUCIÓN")
         pdf.set_font("helvetica", "", 8)
         pdf.cell(95, 5, safe_str(f"Empresa / Razón Social: {d.get('nombre_emisor', '')}"), ln=0)
@@ -207,6 +393,7 @@ def generar_pdf(d):
         pdf.cell(0, 5, safe_str(f"Permiso Distribución Gas LP: {d.get('num_permiso_sct', '')}"), ln=1)
         pdf.ln(3)
 
+        # 2. Chofer
         seccion_pdf("2. DATOS DEL OPERADOR / CHOFER (FIGURA TRANSPORTE)")
         pdf.set_font("helvetica", "", 8)
         pdf.cell(95, 5, safe_str(f"Chofer: {d.get('nombre_chofer', '')}"), ln=0)
@@ -215,6 +402,7 @@ def generar_pdf(d):
         pdf.cell(95, 5, safe_str(f"Número de Licencia: {d.get('num_licencia', '')}"), ln=1)
         pdf.ln(3)
 
+        # 3. Unidad
         seccion_pdf("3. DATOS DE LA UNIDAD Y SEGURO DE RESPONSABILIDAD")
         pdf.set_font("helvetica", "", 8)
         pdf.cell(95, 5, safe_str(f"Unidad: {d.get('tipo_unidad', '')} - Eco: {d.get('eco_unidad', '')}"), ln=0)
@@ -223,6 +411,7 @@ def generar_pdf(d):
         pdf.cell(95, 5, safe_str(f"Aseguradora: {d.get('aseguradora', '')} | Póliza: {d.get('num_poliza', '')}"), ln=1)
         pdf.ln(3)
 
+        # 4. Ruta
         seccion_pdf("4. RUTA DE TRÁNSITO (ORIGEN Y DESTINO)")
         pdf.set_font("helvetica", "B", 8)
         pdf.cell(18, 5, safe_str("ORIGEN:"), ln=0)
@@ -232,10 +421,12 @@ def generar_pdf(d):
         pdf.cell(12, 5, safe_str("RFC:"), ln=0)
         pdf.set_font("helvetica", "", 8)
         pdf.cell(0, 5, safe_str(f"{d.get('rfc_origen', '')}"), ln=1)
+        
         pdf.set_font("helvetica", "B", 8)
         pdf.cell(28, 5, safe_str("Fecha de Salida:"), ln=0)
         pdf.set_font("helvetica", "", 8)
         pdf.cell(0, 5, safe_str(f"{d.get('fecha_salida', '')}"), ln=1)
+        
         pdf.set_font("helvetica", "B", 8)
         pdf.cell(18, 5, safe_str("Dirección:"), ln=0)
         pdf.set_font("helvetica", "", 8)
@@ -251,30 +442,38 @@ def generar_pdf(d):
         pdf.set_font("helvetica", "", 8)
         rfc_dest_val = d.get('rfc_destino', '') if str(d.get('rfc_destino', '')).strip() else "S/N (Público General)"
         pdf.cell(0, 5, safe_str(f"{rfc_dest_val}"), ln=1)
+        
         pdf.set_font("helvetica", "B", 8)
         pdf.cell(28, 5, safe_str("Llegada Estimada:"), ln=0)
         pdf.set_font("helvetica", "", 8)
         pdf.cell(0, 5, safe_str(f"{d.get('fecha_llegada', '')}"), ln=1)
+        
         pdf.set_font("helvetica", "B", 8)
         pdf.cell(18, 5, safe_str("Dirección:"), ln=0)
         pdf.set_font("helvetica", "", 8)
         pdf.multi_cell(0, 5, safe_str(f"{d.get('dir_destino', '')}"))
         pdf.ln(3)
 
+        # 5. Mercancía
         seccion_pdf("5. DESCRIPCIÓN Y CLAVES DE LA MERCANCÍA")
         pdf.set_font("helvetica", "", 8)
         pdf.cell(0, 5, safe_str(f"Producto: {d.get('desc_mercancia', '')} | Clave SAT: {d.get('clave_prod_sat', '')}"), ln=1)
+        
         peso_val = d.get('peso_mercancia', '')
         if peso_val and peso_val != "N/A":
             pdf.cell(95, 5, safe_str(f"Cantidad: {d.get('cantidad_mercancia', '')} ({d.get('clave_unidad_sat', '')})"), ln=0)
             pdf.cell(95, 5, safe_str(f"Peso Total: {peso_val}"), ln=1)
         else:
             pdf.cell(0, 5, safe_str(f"Cantidad: {d.get('cantidad_mercancia', '')} ({d.get('clave_unidad_sat', '')})"), ln=1)
+            
         pdf.ln(4)
 
+        # 6. Validación y QR
         seccion_pdf("6. VALIDACIÓN Y VERIFICACIÓN OPERATIVA")
+        
         enlace_qr = "https://l1nq.com/3aqpov5"
         qr_path = generar_qr_tempfile(enlace_qr)
+        
         if qr_path and os.path.exists(qr_path):
             y_inicial = pdf.get_y()
             try:
@@ -321,15 +520,19 @@ def generar_pdf(d):
             except:
                 pass
 
+# ================= AUTENTICACIÓN RÁPIDA =================
 if not st.session_state.auth_naupagas:
     col1, col2, col3 = st.columns([1, 1.5, 1])
     with col2:
-        if os.path.exists("logo.jpg"):
-            st.image("logo.jpg", use_container_width=True)
+        logo_path = "logo.jpg" if os.path.exists("logo.jpg") else ""
+        if os.path.exists(logo_path):
+            st.image(logo_path, use_container_width=True)
         else:
-            st.markdown("<h1 style='text-align: center;'>🚚</h1>", unsafe_allow_html=True)
+            st.markdown("<h1 style='text-align: center;'>🔥</h1>", unsafe_allow_html=True)
+            
     st.markdown("<h2 style='text-align: center; color: #004080;'>NAUPAGAS S.A. DE C.V.</h2>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; color: gray;'>Módulo de Generación de Carta Porte</p>", unsafe_allow_html=True)
+    
     col_a1, col_a2, col_a3 = st.columns([1, 1.2, 1])
     with col_a2:
         pass_input = st.text_input("Contraseña de Acceso", type="password")
@@ -341,9 +544,11 @@ if not st.session_state.auth_naupagas:
                 st.error("Contraseña incorrecta.")
     st.stop()
 
+# ================= MENÚ PRINCIPAL =================
 with st.sidebar:
-    if os.path.exists("logo.jpg"):
-        st.image("logo.jpg", use_container_width=True)
+    logo_path = "logo.jpg" if os.path.exists("logo.jpg") else ""
+    if os.path.exists(logo_path):
+        st.image(logo_path, use_container_width=True)
     st.markdown("### 🎛️ Menú de Navegación")
     accion = st.radio("Selecciona una opción:", ["Nueva Carta Porte", "Historial de Documentos"])
     st.markdown("---")
@@ -353,31 +558,52 @@ with st.sidebar:
 
 ahora_mx = datetime.now(ZoneInfo("America/Mexico_City"))
 
+# ================= FORMULARIO PRINCIPAL =================
 if accion == "Nueva Carta Porte":
     st.title("📄 NAUPAGAS - Generador de Carta Porte")
     st.write("Complete los campos oficiales requeridos para el tránsito seguro de la unidad.")
     st.markdown("---")
 
+    # 1. Emisor y Permiso de Gas LP
     with st.container(border=True):
         st.subheader("1. 🏢 Datos del Emisor y Permiso de Distribución")
         col_e1, col_e2 = st.columns(2)
         with col_e1:
             nombre_emisor = st.text_input("Razón Social / Empresa Emisora", value="NAUPAGAS S.A. de C.V.")
         with col_e2:
-            rfc_emisor = st.text_input("RFC del Emisor", value="NGA1608221S4")
-        num_permiso_sct = st.text_input("Permiso de Distribución de Gas LP", value="LP/20474/DIST/PLA/2017")
+            rfc_emisor = st.text_input("RFC del Emisor", value="")
+        
+        num_permiso_sct = st.text_input("Permiso de Distribución de Gas LP", value="")
 
-    # 2. Chofer con selector de Catálogo o Personalizado en 2x2 exacto
+    # Variables por defecto para auto-llenado
+    def_eco = ""
+    def_placas = ""
+    def_marca = ""
+    def_capacidad_txt = "12,900 Lts"
+    def_capacidad_num = 4000.0
+    def_aseguradora = ""
+    def_poliza = ""
+
+    # 2. Chofer con Catálogo y opción de captura manual 2x2
     with st.container(border=True):
         st.subheader("2. 👤 Datos del Operador / Chofer (Figura Transporte)")
         
         modo_chofer = st.radio("Modo de Selección de Chofer:", ["Catálogo de Operadores", "Personalizado (Manual)"], horizontal=True)
 
-        if modo_chofer == "Catálogo de Operadores":
-            nombres_choferes = [c["nombre"] for c in CATALOGO_CHOFERES]
+        if modo_chofer == "Catálogo de Operadores" and CATALOGO_CHOFERES_NAUPA:
+            nombres_choferes = [c["nombre"] for c in CATALOGO_CHOFERES_NAUPA]
             chofer_seleccionado = st.selectbox("Seleccione al Chofer del Catálogo", options=nombres_choferes)
-            datos_chofer_actual = next((c for c in CATALOGO_CHOFERES if c["nombre"] == chofer_seleccionado), CATALOGO_CHOFERES[0])
+            datos_chofer_actual = next((c for c in CATALOGO_CHOFERES_NAUPA if c["nombre"] == chofer_seleccionado), CATALOGO_CHOFERES_NAUPA[0])
             
+            # Asignar datos de unidad y seguro del chofer seleccionado
+            def_eco = datos_chofer_actual["eco"]
+            def_placas = datos_chofer_actual["placas"]
+            def_marca = datos_chofer_actual["marca"]
+            def_capacidad_txt = datos_chofer_actual["capacidad_txt"]
+            def_capacidad_num = datos_chofer_actual["capacidad_num"] if datos_chofer_actual["capacidad_num"] > 0 else 4000.0
+            def_aseguradora = datos_chofer_actual["aseguradora"]
+            def_poliza = datos_chofer_actual["poliza"]
+
             # Rectángulo ordenado en 2x2 para Catálogo
             col_c1, col_c2 = st.columns(2)
             with col_c1:
@@ -396,28 +622,28 @@ if accion == "Nueva Carta Porte":
                 tipo_licencia = st.selectbox("Tipo de Licencia", ["Federal", "Estatal", "Chofer / Vendedor"])
                 num_licencia = st.text_input("Número de Licencia", placeholder="Número oficial de licencia")
 
+    # 3. Unidad (Autollenada con la unidad del chofer)
     with st.container(border=True):
         st.subheader("3. ⛽ Datos de la Unidad")
         col_u1, col_u2 = st.columns(2)
         with col_u1:
             tipo_unidad = st.selectbox("Tipo de Unidad", ["Autotanque (Pipa)", "Vehículo Repartidor (Cilindrera)"])
-            eco_unidad = st.text_input("Número Económico", placeholder="Ej. PIPA-01 o CIL-05")
-            placas = st.text_input("Placas", placeholder="Ej. XX-00-XXX")
+            eco_unidad = st.text_input("Número Económico", value=def_eco, placeholder="Ej. PIPA-01 o CIL-05")
+            placas = st.text_input("Placas", value=def_placas, placeholder="Ej. XX-00-XXX")
         with col_u2:
-            marca_modelo = st.text_input("Marca / Modelo", placeholder="Ej. Ford F-350 2020")
-            if tipo_unidad == "Autotanque (Pipa)":
-                capacidad = st.text_input("Capacidad descriptiva de la unidad", value="12,900 Litros", placeholder="Ej. 12,900 Litros")
-            else:
-                capacidad = st.text_input("Capacidad descriptiva de la unidad", value="Vehículo Repartidor Cilindros", placeholder="Ej. Cilindros 20kg y 30kg")
+            marca_modelo = st.text_input("Marca / Modelo", value=def_marca, placeholder="Ej. FREIGHTLINER M2 106 35K")
+            capacidad = st.text_input("Capacidad descriptiva de la unidad", value=def_capacidad_txt, placeholder="Ej. 12900 Lts")
 
+    # 4. Seguro (Autollenado con la póliza del chofer)
     with st.container(border=True):
         st.subheader("4. 🛡️ Póliza de Seguro")
         col_s1, col_s2 = st.columns(2)
         with col_s1:
-            aseguradora = st.text_input("Compañía Aseguradora", placeholder="Ej. GNP, Qualitas, AXA")
+            aseguradora = st.text_input("Compañía Aseguradora", value=def_aseguradora, placeholder="Ej. Qualitas, AXA")
         with col_s2:
-            num_poliza = st.text_input("Número de Póliza", placeholder="Ej. POL-987654321")
+            num_poliza = st.text_input("Número de Póliza", value=def_poliza, placeholder="Ej. 7150014491")
 
+    # 5. Origen y Destino
     with st.container(border=True):
         st.subheader("5. 📍 Ruta de Tránsito (Origen y Destino)")
         col_origen, col_destino = st.columns(2)
@@ -425,14 +651,15 @@ if accion == "Nueva Carta Porte":
         with col_origen:
             st.markdown("#### 🛫 ORIGEN")
             tipo_modo_origen = st.radio("Modalidad de Origen:", ["Planta NAUPAGAS (Oficial)", "Otro Origen (Manual)"], horizontal=False, key="radio_origen")
+            
             col_f1, col_f2 = st.columns(2)
             with col_f1:
                 f_salida_date = st.date_input("Fecha de Salida", value=ahora_mx.date())
             with col_f2:
-                f_salida_time = st.time_input("Hora de Salida", value=ahora_mx.time())
+                hora_salida_str = st.text_input("Hora de Salida (HH:MM)", value=ahora_mx.strftime("%H:%M"))
 
             if tipo_modo_origen == "Planta NAUPAGAS (Oficial)":
-                rfc_origen = "NGA1608221S4"
+                rfc_origen = ""
                 nombre_origen = "NAUPAGAS"
                 cp_origen = "91282"
                 colonia_origen = "El Limon"
@@ -440,6 +667,7 @@ if accion == "Nueva Carta Porte":
                 estado_origen = "Veracruz Llave"
                 pais_origen = "México"
                 calle_origen = "CARRETERA FEDERAL MÉXICO - VERACRUZ KM. 92.8"
+                
                 st.text_input("RFC Salida / Planta", value=rfc_origen, disabled=True)
                 st.text_input("Nombre / Empresa de Salida", value=nombre_origen, disabled=True)
                 st.text_input("CP Origen", value=cp_origen, disabled=True)
@@ -456,6 +684,7 @@ if accion == "Nueva Carta Porte":
                 nombre_origen = st.text_input("Nombre / Empresa de Salida", placeholder="Ej. Proveedor o Bodega Alterna")
                 cp_origen = st.text_input("CP Origen", max_chars=5, placeholder="Ej. 91400, 42188")
                 info_o = consultar_cp_mexico(cp_origen)
+                
                 col_o1, col_o2 = st.columns(2)
                 with col_o1:
                     colonia_origen = st.text_input("Colonia Origen", value=info_o["colonia"], placeholder="Colonia")
@@ -463,6 +692,7 @@ if accion == "Nueva Carta Porte":
                 with col_o2:
                     estado_origen = st.text_input("Estado Origen", value=info_o["estado"], placeholder="Estado")
                     pais_origen = st.text_input("País Origen", value=info_o["pais"])
+                    
                 calle_origen = st.text_input("Calle y Número de Salida", placeholder="Ej. Carretera Principal Km 2")
 
             dir_origen_final = f"{calle_origen}, Col. {colonia_origen}, C.P. {cp_origen}, {municipio_origen}, {estado_origen}"
@@ -470,17 +700,20 @@ if accion == "Nueva Carta Porte":
         with col_destino:
             st.markdown("#### 🛬 DESTINO")
             tipo_modo_destino = st.radio("Modalidad de Destino:", ["Cliente Específico (C.P. / Domicilio)", "Varios Clientes (Ruta General / Zona Libre)"], horizontal=False, key="radio_destino")
+            
             col_f3, col_f4 = st.columns(2)
             with col_f3:
                 f_llegada_date = st.date_input("Fecha Estimada Llegada", value=ahora_mx.date())
             with col_f4:
-                f_llegada_time = st.time_input("Hora Estimada Llegada", value=time(18, 0))
+                hora_llegada_str = st.text_input("Hora Estimada Llegada (HH:MM)", value="18:00")
 
             if tipo_modo_destino == "Cliente Específico (C.P. / Domicilio)":
-                rfc_destino = st.text_input("RFC Llegada / Cliente (Opcional)", placeholder="RFC de destino")
+                rfc_destino = st.text_input("RFC Llegada / Cliente (Opcional)", placeholder="RFC de destino (Vacío si es público general)")
                 nombre_destino = st.text_input("Nombre / Empresa de Llegada", placeholder="Ej. Cliente Destino")
+                
                 cp_destino = st.text_input("CP Destino", max_chars=5, placeholder="Ej. 54680, 91000")
                 info_d = consultar_cp_mexico(cp_destino)
+                
                 col_d1, col_d2 = st.columns(2)
                 with col_d1:
                     colonia_destino = st.text_input("Colonia Destino", value=info_d["colonia"], placeholder="Colonia")
@@ -488,6 +721,7 @@ if accion == "Nueva Carta Porte":
                 with col_d2:
                     estado_destino = st.text_input("Estado Destino", value=info_d["estado"], placeholder="Estado")
                     pais_destino = st.text_input("País Destino", value=info_d["pais"])
+                    
                 calle_destino = st.text_input("Calle y Número de Llegada", placeholder="Ej. Av. Principal #10")
                 dir_destino_final = f"{calle_destino}, Col. {colonia_destino}, C.P. {cp_destino}, {municipio_destino}, {estado_destino}"
             else:
@@ -495,27 +729,26 @@ if accion == "Nueva Carta Porte":
                 nombre_destino = "Ruta Varios Clientes"
                 col_m_lib1, col_m_lib2 = st.columns(2)
                 with col_m_lib1:
-                    zona_libre_destino = st.text_input("Destinos / Zona de Reparto", value="Guadalupe Victoria, Veracruz", placeholder="Ej. Banderilla, Xalapa")
+                    zona_libre_destino = st.text_input("Destinos / Zona de Reparto", value="Guadalupe Victoria, Veracruz", placeholder="Ej. Banderilla, Xalapa, Las Vigas")
                 with col_m_lib2:
                     estado_libre_destino = st.text_input("Estado / Región", value="Veracruz", placeholder="Ej. Veracruz")
+                    
                 dir_destino_final = f"Ruta multi-cliente / Zona de entrega: {zona_libre_destino}"
 
+    # 6. Mercancía
     with st.container(border=True):
         st.subheader("6. 📦 Descripción y Claves de la Mercancía")
         if tipo_unidad == "Autotanque (Pipa)":
             st.markdown("#### ⛽ Configuración para Pipa (Medidor Magnetel)")
-            opciones_capacidades = [4000.0, 4400.0, 4500.0, 5000.0, 12900.0, 13900.0, 24000.0, "Otra (Personalizada)"]
+            
             col_calc1, col_calc2 = st.columns(2)
             with col_calc1:
-                capacidad_seleccionada = st.selectbox("Capacidad Total de la Pipa (Litros)", options=opciones_capacidades, index=4)
-                if capacidad_seleccionada == "Otra (Personalizada)":
-                    capacidad_total_num = st.number_input("Especifique capacidad (Litros)", min_value=0.0, value=10000.0, step=100.0)
-                else:
-                    capacidad_total_num = float(capacidad_seleccionada)
+                capacidad_total_num = st.number_input("Capacidad Total de la Pipa (Litros)", min_value=0.0, value=def_capacidad_num, step=100.0)
             with col_calc2:
                 porcentaje_magnetel = st.number_input("Porcentaje de Llenado (%) - Magnetel", min_value=0.0, max_value=100.0, value=70.0, step=0.5)
 
             volumen_calculado_lts = capacidad_total_num * (porcentaje_magnetel / 100.0)
+
             st.info(f"📊 **Resultado Automático Pipa:** {volumen_calculado_lts:,.2f} Litros")
 
             col_m1, col_m2 = st.columns(2)
@@ -538,6 +771,7 @@ if accion == "Nueva Carta Porte":
 
             total_piezas = cant_cil_20 + cant_cil_30
             peso_neto_gas = (cant_cil_20 * 20.0) + (cant_cil_30 * 30.0)
+
             st.info(f"📊 **Total Envases:** {total_piezas} Cilindros ({cant_cil_20} de 20kg, {cant_cil_30} de 30kg) | **Peso Neto de Gas:** {peso_neto_gas:,.2f} KG")
 
             col_m1, col_m2, col_m3 = st.columns(3)
@@ -555,12 +789,13 @@ if accion == "Nueva Carta Porte":
     st.markdown("---")
     
     if st.button("Generar y Registrar Carta Porte", type="primary", use_container_width=True):
-        if not nombre_chofer or not rfc_chofer or not num_poliza or not desc_mercancia:
+        if not nombre_chofer or not num_poliza or not desc_mercancia:
             st.warning("⚠️ Por favor completa los datos obligatorios del chofer, póliza y mercancía.")
         else:
-            str_salida = f"{f_salida_date.strftime('%d/%m/%Y')} {f_salida_time.strftime('%H:%M')}"
-            str_llegada = f"{f_llegada_date.strftime('%d/%m/%Y')} {f_llegada_time.strftime('%H:%M')}"
+            str_salida = f"{f_salida_date.strftime('%d/%m/%Y')} {hora_salida_str}"
+            str_llegada = f"{f_llegada_date.strftime('%d/%m/%Y')} {hora_llegada_str}"
             
+            # OBTENER FOLIO DE LA NUBE
             folio_generado = obtener_siguiente_folio_nube()
 
             datos_nueva_carta = {
@@ -595,9 +830,11 @@ if accion == "Nueva Carta Porte":
                 "fecha_registro": ahora_mx.strftime("%d/%m/%Y %H:%M")
             }
 
+            # GUARDAR PERMANENTE EN SUPABASE
             exito = guardar_carta_en_nube(datos_nueva_carta)
+
             if exito:
-                st.success(f"¡Carta Porte con Folio {folio_generado} generada y guardada con éxito en la nube!")
+                st.success(f"¡Carta Porte con Folio {folio_generado} generada y guardada con éxito en la nube para Naupagas!")
                 st.balloons()
 
 elif accion == "Historial de Documentos":
@@ -605,6 +842,7 @@ elif accion == "Historial de Documentos":
     st.write("Consulta, filtra por fechas y administra los registros almacenados en la nube.")
     st.markdown("---")
 
+    # FILTROS DE FECHA EN EL HISTORIAL
     col_f_1, col_f_2 = st.columns(2)
     with col_f_1:
         filtro_inicio = st.date_input("Filtrar desde la fecha:", value=None)
@@ -614,18 +852,20 @@ elif accion == "Historial de Documentos":
     historial_nube = cargar_historial_nube()
 
     if not historial_nube:
-        st.info("No hay cartas registradas en la base de datos.")
+        st.info("No hay cartas registradas en la base de datos para Naupagas.")
     else:
         cartas_filtradas = []
         for carta in historial_nube:
             f_reg_str = carta.get('fecha_registro', '')
             try:
                 f_reg_date = datetime.strptime(f_reg_str.split()[0], "%d/%m/%Y").date()
+                
                 incluir = True
                 if filtro_inicio and f_reg_date < filtro_inicio:
                     incluir = False
                 if filtro_fin and f_reg_date > filtro_fin:
                     incluir = False
+                
                 if incluir:
                     cartas_filtradas.append(carta)
             except Exception:
@@ -635,6 +875,7 @@ elif accion == "Historial de Documentos":
             st.warning("⚠️ No se encontraron cartas en el rango de fechas seleccionado.")
         else:
             st.write(f"Mostrando **{len(cartas_filtradas)}** registro(s):")
+            
             for idx, carta in enumerate(cartas_filtradas):
                 with st.container(border=True):
                     col_h1, col_h2, col_h3 = st.columns([2.5, 3, 2.5])
@@ -654,6 +895,8 @@ elif accion == "Historial de Documentos":
                             mime="application/pdf",
                             key=f"dl_naupagas_{idx}"
                         )
+                        
+                        # ELIMINAR CON CONTRASEÑA MAESTRA
                         with st.expander("🗑️ Eliminar este registro"):
                             pass_borrar = st.text_input("Contraseña de autorización", type="password", key=f"pass_del_{carta.get('id')}")
                             if st.button("Confirmar Eliminación", key=f"btn_del_{carta.get('id')}", type="primary"):
