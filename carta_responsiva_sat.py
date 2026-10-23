@@ -50,9 +50,9 @@ def init_supabase():
 
 supabase = init_supabase()
 
-# ================= BASE DE DATOS COMPLETA OFICIAL DE NAUPAGAS (15 REGISTROS EXACTOS) =================
+# ================= BASE DE DATOS COMPLETA OFICIAL DE NAUPAGAS (15 REGISTROS Y RUTAS) =================
 CATALOGO_CHOFERES_NAUPA = [
-    # 1. MARTIN GONZALEZ LEON
+    # 1. MARTIN GONZALEZ LEON (Pipa Grande - Sin ruta fija)
     {
         "nombre": "MARTIN GONZALEZ LEON",
         "tipo": "Estatal",
@@ -67,9 +67,10 @@ CATALOGO_CHOFERES_NAUPA = [
         "cant_30": 0,
         "placas": "XV0965A",
         "aseguradora": "Qualitas",
-        "poliza": "7150014122"
+        "poliza": "7150014122",
+        "ruta": ""
     },
-    # 2. MARCO ANTONIO ALVARADO DURAN
+    # 2. MARCO ANTONIO ALVARADO DURAN (Pipa Grande - Sin ruta fija)
     {
         "nombre": "MARCO ANTONIO ALVARADO DURAN",
         "tipo": "Estatal",
@@ -84,9 +85,10 @@ CATALOGO_CHOFERES_NAUPA = [
         "cant_30": 0,
         "placas": "XX2879A",
         "aseguradora": "Qualitas",
-        "poliza": "7150014122"
+        "poliza": "7150014122",
+        "ruta": ""
     },
-    # 3. ALFONSO GONZALEZ ORTIZ
+    # 3. ALFONSO GONZALEZ ORTIZ (Pipa Grande - Sin ruta fija)
     {
         "nombre": "ALFONSO GONZALEZ ORTIZ",
         "tipo": "Federal",
@@ -101,7 +103,8 @@ CATALOGO_CHOFERES_NAUPA = [
         "cant_30": 0,
         "placas": "18AF4Y",
         "aseguradora": "Qualitas",
-        "poliza": "7150014491"
+        "poliza": "7150014491",
+        "ruta": ""
     },
     # 4. RODRIGO LOPEZ ALCANTARA
     {
@@ -118,7 +121,8 @@ CATALOGO_CHOFERES_NAUPA = [
         "cant_30": 0,
         "placas": "XU91794",
         "aseguradora": "Qualitas",
-        "poliza": "7150015083"
+        "poliza": "7150015083",
+        "ruta": "Perote, Jalacingo, Orilla del Monte y San Juan"
     },
     # 5. HERACLIO ARMANDO MACHUCA SILVA
     {
@@ -135,7 +139,8 @@ CATALOGO_CHOFERES_NAUPA = [
         "cant_30": 0,
         "placas": "XF4338B",
         "aseguradora": "Qualitas",
-        "poliza": "7150013784"
+        "poliza": "7150013784",
+        "ruta": "Perote, Alchichica, Sierra de Agua, Molinos, Tenextepec, Magueyitos, Los Antos"
     },
     # 6. CARLOS GONZALEZ ORTIZ
     {
@@ -152,7 +157,8 @@ CATALOGO_CHOFERES_NAUPA = [
         "cant_30": 0,
         "placas": "XT4418B",
         "aseguradora": "Qualitas",
-        "poliza": "7150015633"
+        "poliza": "7150015633",
+        "ruta": "Perote, Libertad, Madero, Villa Aldama y Tenextepec"
     },
     # 7. PORFIRIO HERNANDEZ CAMPUZANO
     {
@@ -169,7 +175,8 @@ CATALOGO_CHOFERES_NAUPA = [
         "cant_30": 0,
         "placas": "YB8730B",
         "aseguradora": "Qualitas",
-        "poliza": "7150013987"
+        "poliza": "7150013987",
+        "ruta": "Perote, Sierra de agua, Madero, Tenextepec y alrededores"
     },
     # 8. DAVID EUGENIO ROMERO
     {
@@ -186,7 +193,8 @@ CATALOGO_CHOFERES_NAUPA = [
         "cant_30": 0,
         "placas": "XP3908B",
         "aseguradora": "Qualitas",
-        "poliza": "7150015604"
+        "poliza": "7150015604",
+        "ruta": "Perote, Las Vigas, La Joya, Banderilla, San Miguel, El Fresno, Xalapa, Alchichica"
     },
     # 9. JOSE EUGENIO ROMERO
     {
@@ -203,7 +211,8 @@ CATALOGO_CHOFERES_NAUPA = [
         "cant_30": 0,
         "placas": "XX9342A",
         "aseguradora": "Qualitas",
-        "poliza": "7150014152"
+        "poliza": "7150014152",
+        "ruta": "Totalco, Alchichica, Sarabia, Tepeyahualco, Perote"
     },
     # 10. JUAN ADRIAN MOTA MARTINEZ
     {
@@ -220,7 +229,8 @@ CATALOGO_CHOFERES_NAUPA = [
         "cant_30": 9,
         "placas": "XP4212B",
         "aseguradora": "GNP SEGUROS",
-        "poliza": "TFSM0003070351"
+        "poliza": "TFSM0003070351",
+        "ruta": "Perote, Madero, Molinos"
     },
     # 11. JOSÉ CALIXTO ISAEL MACHUCA ORTEGA
     {
@@ -237,7 +247,8 @@ CATALOGO_CHOFERES_NAUPA = [
         "cant_30": 9,
         "placas": "XP4211B",
         "aseguradora": "GNP SEGUROS",
-        "poliza": "TFSM000307346"
+        "poliza": "TFSM000307346",
+        "ruta": "La joya, Las vigas, Cruz blanca, El cajete"
     },
     # 12. SAUL UBIRACI GALLARDO
     {
@@ -254,7 +265,8 @@ CATALOGO_CHOFERES_NAUPA = [
         "cant_30": 4,
         "placas": "XX2756A",
         "aseguradora": "AXA",
-        "poliza": "YBJ006730000"
+        "poliza": "YBJ006730000",
+        "ruta": "Guadalupe Victoria y alrededores"
     },
     # 13. ROSENDO SESENA HERNANDEZ
     {
@@ -271,7 +283,8 @@ CATALOGO_CHOFERES_NAUPA = [
         "cant_30": 5,
         "placas": "XX2755A",
         "aseguradora": "QUALITAS",
-        "poliza": "7150013591"
+        "poliza": "7150013591",
+        "ruta": "Totalco y Alchichica"
     },
     # 14. JOSE ARMANDO HERNANDEZ MIRANDA
     {
@@ -288,7 +301,8 @@ CATALOGO_CHOFERES_NAUPA = [
         "cant_30": 12,
         "placas": "XH8078B",
         "aseguradora": "QUALITAS",
-        "poliza": "7150013816"
+        "poliza": "7150013816",
+        "ruta": "Altotonga y alrededores"
     },
     # 15. JORGE ALFONSO SERRANO CORTINA (SAN MIGUEL)
     {
@@ -305,7 +319,8 @@ CATALOGO_CHOFERES_NAUPA = [
         "cant_30": 10,
         "placas": "XH8079B",
         "aseguradora": "QUALITAS",
-        "poliza": "7150015084"
+        "poliza": "7150015084",
+        "ruta": "San Miguel, Tlacolula, El fresno"
     }
 ]
 
@@ -635,6 +650,7 @@ if accion == "Nueva Carta Porte":
     def_cant_30 = 9
     def_aseguradora = ""
     def_poliza = ""
+    def_ruta = ""
 
     with st.container(border=True):
         st.subheader("2. 👤 Datos del Operador / Chofer (Figura Transporte)")
@@ -661,6 +677,7 @@ if accion == "Nueva Carta Porte":
             def_cant_30 = datos_chofer_actual.get("cant_30", 0)
             def_aseguradora = datos_chofer_actual["aseguradora"]
             def_poliza = datos_chofer_actual["poliza"]
+            def_ruta = datos_chofer_actual["ruta"]
 
             col_c1, col_c2 = st.columns(2)
             with col_c1:
@@ -790,7 +807,12 @@ if accion == "Nueva Carta Porte":
                 nombre_destino = "Ruta Varios Clientes"
                 col_m_lib1, col_m_lib2 = st.columns(2)
                 with col_m_lib1:
-                    zona_libre_destino = st.text_input("Destinos / Zona de Reparto", value="Guadalupe Victoria, Veracruz", placeholder="Ej. Banderilla, Xalapa, Las Vigas")
+                    zona_libre_destino = st.text_input(
+                        "Destinos / Zona de Reparto", 
+                        value=def_ruta, 
+                        key=f"ruta_zona_{nombre_chofer}", 
+                        placeholder="Ej. Banderilla, Xalapa, Las Vigas"
+                    )
                 with col_m_lib2:
                     estado_libre_destino = st.text_input("Estado / Región", value="Veracruz", placeholder="Ej. Veracruz")
                     
