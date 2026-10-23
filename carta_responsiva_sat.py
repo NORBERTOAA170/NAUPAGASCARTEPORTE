@@ -287,7 +287,7 @@ def eliminar_carta_nube(carta_id):
             supabase.table("cartas_naupagas").delete().eq("id", carta_id).execute()
             return True
         except Exception as e:
-            st.error(f"⚠️ Error al eliminar de Supabase: {e}")
+            st.error(f"❌ Error al eliminar de Supabase: {e}")
             return False
     return False
 
@@ -656,7 +656,10 @@ if accion == "Nueva Carta Porte":
             with col_f1:
                 f_salida_date = st.date_input("Fecha de Salida", value=ahora_mx.date())
             with col_f2:
-                hora_salida_str = st.text_input("Hora de Salida (HH:MM)", value=ahora_mx.strftime("%H:%M"))
+                # Inicializar hora de salida fija en session_state para que no se actualice sola cada minuto
+                if "hora_salida_input" not in st.session_state:
+                    st.session_state.hora_salida_input = ahora_mx.strftime("%H:%M")
+                hora_salida_str = st.text_input("Hora de Salida (HH:MM)", key="hora_salida_input")
 
             if tipo_modo_origen == "Planta NAUPAGAS (Oficial)":
                 rfc_origen = "NGA1608221S4"
@@ -705,7 +708,10 @@ if accion == "Nueva Carta Porte":
             with col_f3:
                 f_llegada_date = st.date_input("Fecha Estimada Llegada", value=ahora_mx.date())
             with col_f4:
-                hora_llegada_str = st.text_input("Hora Estimada Llegada (HH:MM)", value="18:00")
+                # Inicializar hora de llegada fija en session_state
+                if "hora_llegada_input" not in st.session_state:
+                    st.session_state.hora_llegada_input = "18:00"
+                hora_llegada_str = st.text_input("Hora Estimada Llegada (HH:MM)", key="hora_llegada_input")
 
             if tipo_modo_destino == "Cliente Específico (C.P. / Domicilio)":
                 rfc_destino = st.text_input("RFC Llegada / Cliente (Opcional)", placeholder="RFC de destino (Vacío si es público general)")
