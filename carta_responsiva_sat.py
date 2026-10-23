@@ -775,7 +775,14 @@ if accion == "Nueva Carta Porte":
 
         with col_destino:
             st.markdown("#### 🛬 DESTINO")
-            tipo_modo_destino = st.radio("Modalidad de Destino:", ["Cliente Específico (C.P. / Domicilio)", "Varios Clientes (Ruta General / Zona Libre)"], horizontal=False, key="radio_destino")
+            # SE CAMBIA EL INDEX A 1 PARA QUE ARRANQUE PRESELECCIONADO EN "Varios Clientes"
+            tipo_modo_destino = st.radio(
+                "Modalidad de Destino:", 
+                ["Cliente Específico (C.P. / Domicilio)", "Varios Clientes (Ruta General / Zona Libre)"], 
+                index=1,
+                horizontal=False, 
+                key="radio_destino"
+            )
             
             col_f3, col_f4 = st.columns(2)
             with col_f3:
