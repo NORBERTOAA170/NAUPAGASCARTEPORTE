@@ -50,9 +50,27 @@ def init_supabase():
 
 supabase = init_supabase()
 
-# ================= BASE DE DATOS COMPLETA OFICIAL DE NAUPAGAS (15 REGISTROS Y RUTAS) =================
+# ================= BASE DE DATOS COMPLETA OFICIAL DE NAUPAGAS (ACTUALIZADA) =================
 CATALOGO_CHOFERES_NAUPA = [
-    # 1. MARTIN GONZALEZ LEON (Pipa Grande - Sin ruta fija)
+    # 1. ALFONSO GONZALEZ ORTIZ (PIPA GRANDE 1)
+    {
+        "nombre": "ALFONSO GONZALEZ ORTIZ",
+        "tipo": "Federal",
+        "rfc": "GOOA900609TC5",
+        "licencia": "LFD00008878",
+        "tipo_unidad_sat": "Autotanque (Pipa)",
+        "marca": "STERLING",
+        "eco": "PIPA GRANDE 1",
+        "capacidad_txt": "12900 Lts",
+        "capacidad_num": 12900.0,
+        "cant_20": 0,
+        "cant_30": 0,
+        "placas": "XF4354B",
+        "aseguradora": "Qualitas",
+        "poliza": "7150015853",
+        "ruta": ""
+    },
+    # 2. MARTIN GONZALEZ LEON
     {
         "nombre": "MARTIN GONZALEZ LEON",
         "tipo": "Estatal",
@@ -70,7 +88,7 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "7150014122",
         "ruta": ""
     },
-    # 2. MARCO ANTONIO ALVARADO DURAN (Pipa Grande - Sin ruta fija)
+    # 3. MARCO ANTONIO ALVARADO DURAN
     {
         "nombre": "MARCO ANTONIO ALVARADO DURAN",
         "tipo": "Estatal",
@@ -88,9 +106,9 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "7150014122",
         "ruta": ""
     },
-    # 3. ALFONSO GONZALEZ ORTIZ (Pipa Grande - Sin ruta fija)
+    # 4. ALFONSO GONZALEZ ORTIZ (24,000 LTS)
     {
-        "nombre": "ALFONSO GONZALEZ ORTIZ",
+        "nombre": "ALFONSO GONZALEZ ORTIZ (24,000 LTS)",
         "tipo": "Federal",
         "rfc": "GOOA900609TC5",
         "licencia": "LFD00008878",
@@ -106,7 +124,25 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "7150014491",
         "ruta": ""
     },
-    # 4. RODRIGO LOPEZ ALCANTARA
+    # 5. RODRIGO LOPEZ ALCANTARA (NUEVA)
+    {
+        "nombre": "RODRIGO LOPEZ ALCANTARA (NUEVA)",
+        "tipo": "Estatal",
+        "rfc": "LOAR9112225J2",
+        "licencia": "UB0CKN1S4",
+        "tipo_unidad_sat": "Autotanque (Pipa)",
+        "marca": "CHRYSLER RAM 4000",
+        "eco": "S/N",
+        "capacidad_txt": "4000 Lts",
+        "capacidad_num": 4000.0,
+        "cant_20": 0,
+        "cant_30": 0,
+        "placas": "YB8729B",
+        "aseguradora": "Qualitas",
+        "poliza": "7150015855",
+        "ruta": "ECONOGAS"
+    },
+    # 6. RODRIGO LOPEZ ALCANTARA
     {
         "nombre": "RODRIGO LOPEZ ALCANTARA",
         "tipo": "Estatal",
@@ -114,7 +150,7 @@ CATALOGO_CHOFERES_NAUPA = [
         "licencia": "UB0CKN1S4",
         "tipo_unidad_sat": "Autotanque (Pipa)",
         "marca": "CS FORD F-500 CHASIS CABINA",
-        "eco": "1",
+        "eco": "9",
         "capacidad_txt": "4000 Lts",
         "capacidad_num": 4000.0,
         "cant_20": 0,
@@ -124,7 +160,7 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "7150015083",
         "ruta": "Perote, Jalacingo, Orilla del Monte y San Juan"
     },
-    # 5. HERACLIO ARMANDO MACHUCA SILVA
+    # 7. HERACLIO ARMANDO MACHUCA SILVA
     {
         "nombre": "HERACLIO ARMANDO MACHUCA SILVA",
         "tipo": "Estatal",
@@ -142,7 +178,7 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "7150013784",
         "ruta": "Perote, Alchichica, Sierra de Agua, Molinos, Tenextepec, Magueyitos, Los Antos"
     },
-    # 6. CARLOS GONZALEZ ORTIZ
+    # 8. CARLOS GONZALEZ ORTIZ
     {
         "nombre": "CARLOS GONZALEZ ORTIZ",
         "tipo": "Estatal",
@@ -160,7 +196,7 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "7150015633",
         "ruta": "Perote, Libertad, Madero, Villa Aldama y Tenextepec"
     },
-    # 7. PORFIRIO HERNANDEZ CAMPUZANO
+    # 9. PORFIRIO HERNANDEZ CAMPUZANO
     {
         "nombre": "PORFIRIO HERNANDEZ CAMPUZANO",
         "tipo": "Estatal",
@@ -178,7 +214,7 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "7150013987",
         "ruta": "Perote, Sierra de agua, Madero, Tenextepec y alrededores"
     },
-    # 8. DAVID EUGENIO ROMERO
+    # 10. DAVID EUGENIO ROMERO
     {
         "nombre": "DAVID EUGENIO ROMERO",
         "tipo": "Estatal",
@@ -196,7 +232,7 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "7150015604",
         "ruta": "Perote, Las Vigas, La Joya, Banderilla, San Miguel, El Fresno, Xalapa, Alchichica"
     },
-    # 9. JOSE EUGENIO ROMERO
+    # 11. JOSE EUGENIO ROMERO
     {
         "nombre": "JOSE EUGENIO ROMERO",
         "tipo": "Estatal",
@@ -204,7 +240,7 @@ CATALOGO_CHOFERES_NAUPA = [
         "licencia": "UBOCKUCUH",
         "tipo_unidad_sat": "Autotanque (Pipa)",
         "marca": "CS FORD F-350 CHASIS CABINA",
-        "eco": "10",
+        "eco": "S/N",
         "capacidad_txt": "4000 Lts",
         "capacidad_num": 4000.0,
         "cant_20": 0,
@@ -214,7 +250,7 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "7150014152",
         "ruta": "Totalco, Alchichica, Sarabia, Tepeyahualco, Perote"
     },
-    # 10. JUAN ADRIAN MOTA MARTINEZ
+    # 12. JUAN ADRIAN MOTA MARTINEZ
     {
         "nombre": "JUAN ADRIAN MOTA MARTINEZ",
         "tipo": "Estatal",
@@ -232,7 +268,7 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "TFSM0003070351",
         "ruta": "Perote, Madero, Molinos"
     },
-    # 11. JOSÉ CALIXTO ISAEL MACHUCA ORTEGA
+    # 13. JOSÉ CALIXTO ISAEL MACHUCA ORTEGA
     {
         "nombre": "JOSÉ CALIXTO ISAEL MACHUCA ORTEGA",
         "tipo": "Estatal",
@@ -240,7 +276,7 @@ CATALOGO_CHOFERES_NAUPA = [
         "licencia": "UB0N3LEMC",
         "tipo_unidad_sat": "Vehículo Repartidor (Cilindrera)",
         "marca": "TOYOTA HILUX",
-        "eco": "CILINDRERA 7",
+        "eco": "CILINDRERA 17",
         "capacidad_txt": "13 de 20 kg y 9 de 30 kg",
         "capacidad_num": 0.0,
         "cant_20": 13,
@@ -250,7 +286,7 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "TFSM000307346",
         "ruta": "La joya, Las vigas, Cruz blanca, El cajete"
     },
-    # 12. SAUL UBIRACI GALLARDO
+    # 14. SAUL UBIRACI GALLARDO
     {
         "nombre": "SAUL UBIRACI GALLARDO",
         "tipo": "Estatal",
@@ -268,7 +304,7 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "YBJ006730000",
         "ruta": "Guadalupe Victoria y alrededores"
     },
-    # 13. ROSENDO SESENA HERNANDEZ
+    # 15. ROSENDO SESENA HERNANDEZ
     {
         "nombre": "ROSENDO SESENA HERNANDEZ",
         "tipo": "Estatal",
@@ -286,7 +322,7 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "7150013591",
         "ruta": "Totalco y Alchichica"
     },
-    # 14. JOSE ARMANDO HERNANDEZ MIRANDA
+    # 16. JOSE ARMANDO HERNANDEZ MIRANDA
     {
         "nombre": "JOSE ARMANDO HERNANDEZ MIRANDA",
         "tipo": "Estatal",
@@ -294,7 +330,7 @@ CATALOGO_CHOFERES_NAUPA = [
         "licencia": "UB0N3BE6L",
         "tipo_unidad_sat": "Vehículo Repartidor (Cilindrera)",
         "marca": "TOYOTA HILUX 2 PUERTAS",
-        "eco": "S/N",
+        "eco": "CILINDRERA 16",
         "capacidad_txt": "19 de 20 kg y 12 de 30 kg",
         "capacidad_num": 0.0,
         "cant_20": 19,
@@ -304,7 +340,7 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "7150013816",
         "ruta": "Altotonga y alrededores"
     },
-    # 15. JORGE ALFONSO SERRANO CORTINA (SAN MIGUEL)
+    # 17. JORGE ALFONSO SERRANO CORTINA (SAN MIGUEL)
     {
         "nombre": "JORGE ALFONSO SERRANO CORTINA (SAN MIGUEL)",
         "tipo": "Estatal",
@@ -312,7 +348,7 @@ CATALOGO_CHOFERES_NAUPA = [
         "licencia": "SECJ9201067D4",
         "tipo_unidad_sat": "Vehículo Repartidor (Cilindrera)",
         "marca": "TOYOTA HILUX",
-        "eco": "S/N",
+        "eco": "CILINDRERA 8",
         "capacidad_txt": "10 de 20 kg y 10 de 30 kg",
         "capacidad_num": 0.0,
         "cant_20": 10,
@@ -775,7 +811,6 @@ if accion == "Nueva Carta Porte":
 
         with col_destino:
             st.markdown("#### 🛬 DESTINO")
-            # SE CAMBIA EL INDEX A 1 PARA QUE ARRANQUE PRESELECCIONADO EN "Varios Clientes"
             tipo_modo_destino = st.radio(
                 "Modalidad de Destino:", 
                 ["Cliente Específico (C.P. / Domicilio)", "Varios Clientes (Ruta General / Zona Libre)"], 
