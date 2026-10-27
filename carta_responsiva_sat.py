@@ -50,9 +50,8 @@ def init_supabase():
 
 supabase = init_supabase()
 
-# ================= BASE DE DATOS COMPLETA OFICIAL DE NAUPAGAS (ACTUALIZADA) =================
-CATALOGO_CHOFERES_NAUPA = [
-    # 1. ALFONSO GONZALEZ ORTIZ (PIPA GRANDE 1)
+# ================= BASE DE DATOS INICIAL (SEED PARA SUPABASE) =================
+DEFAULT_CATALOGO_NAUPA = [
     {
         "nombre": "ALFONSO GONZALEZ ORTIZ",
         "tipo": "Federal",
@@ -70,7 +69,6 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "7150015853",
         "ruta": ""
     },
-    # 2. MARTIN GONZALEZ LEON
     {
         "nombre": "MARTIN GONZALEZ LEON",
         "tipo": "Estatal",
@@ -88,7 +86,6 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "7150014122",
         "ruta": ""
     },
-    # 3. MARCO ANTONIO ALVARADO DURAN
     {
         "nombre": "MARCO ANTONIO ALVARADO DURAN",
         "tipo": "Estatal",
@@ -106,7 +103,6 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "7150014122",
         "ruta": ""
     },
-    # 4. ALFONSO GONZALEZ ORTIZ (24,000 LTS)
     {
         "nombre": "ALFONSO GONZALEZ ORTIZ (24,000 LTS)",
         "tipo": "Federal",
@@ -124,7 +120,6 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "7150014491",
         "ruta": ""
     },
-    # 5. RODRIGO LOPEZ ALCANTARA (NUEVA)
     {
         "nombre": "RODRIGO LOPEZ ALCANTARA (NUEVA)",
         "tipo": "Estatal",
@@ -142,7 +137,6 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "7150015855",
         "ruta": "ECONOGAS"
     },
-    # 6. RODRIGO LOPEZ ALCANTARA
     {
         "nombre": "RODRIGO LOPEZ ALCANTARA",
         "tipo": "Estatal",
@@ -160,7 +154,6 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "7150015083",
         "ruta": "Perote, Jalacingo, Orilla del Monte y San Juan"
     },
-    # 7. HERACLIO ARMANDO MACHUCA SILVA
     {
         "nombre": "HERACLIO ARMANDO MACHUCA SILVA",
         "tipo": "Estatal",
@@ -178,7 +171,6 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "7150013784",
         "ruta": "Perote, Alchichica, Sierra de Agua, Molinos, Tenextepec, Magueyitos, Los Antos"
     },
-    # 8. CARLOS GONZALEZ ORTIZ
     {
         "nombre": "CARLOS GONZALEZ ORTIZ",
         "tipo": "Estatal",
@@ -196,7 +188,6 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "7150015633",
         "ruta": "Perote, Libertad, Madero, Villa Aldama y Tenextepec"
     },
-    # 9. PORFIRIO HERNANDEZ CAMPUZANO
     {
         "nombre": "PORFIRIO HERNANDEZ CAMPUZANO",
         "tipo": "Estatal",
@@ -214,7 +205,6 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "7150013987",
         "ruta": "Perote, Sierra de agua, Madero, Tenextepec y alrededores"
     },
-    # 10. DAVID EUGENIO ROMERO
     {
         "nombre": "DAVID EUGENIO ROMERO",
         "tipo": "Estatal",
@@ -232,7 +222,6 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "7150015604",
         "ruta": "Perote, Las Vigas, La Joya, Banderilla, San Miguel, El Fresno, Xalapa, Alchichica"
     },
-    # 11. JOSE EUGENIO ROMERO (Número Económico 10 actualizado)
     {
         "nombre": "JOSE EUGENIO ROMERO",
         "tipo": "Estatal",
@@ -250,7 +239,6 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "7150014152",
         "ruta": "Totalco, Alchichica, Sarabia, Tepeyahualco, Perote"
     },
-    # 12. JUAN ADRIAN MOTA MARTINEZ
     {
         "nombre": "JUAN ADRIAN MOTA MARTINEZ",
         "tipo": "Estatal",
@@ -268,7 +256,6 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "TFSM0003070351",
         "ruta": "Perote, Madero, Molinos"
     },
-    # 13. JOSÉ CALIXTO ISAEL MACHUCA ORTEGA
     {
         "nombre": "JOSÉ CALIXTO ISAEL MACHUCA ORTEGA",
         "tipo": "Estatal",
@@ -286,7 +273,6 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "TFSM000307346",
         "ruta": "La joya, Las vigas, Cruz blanca, El cajete"
     },
-    # 14. SAUL UBIRACI GALLARDO
     {
         "nombre": "SAUL UBIRACI GALLARDO",
         "tipo": "Estatal",
@@ -304,7 +290,6 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "YBJ006730000",
         "ruta": "Guadalupe Victoria y alrededores"
     },
-    # 15. ROSENDO SESENA HERNANDEZ
     {
         "nombre": "ROSENDO SESENA HERNANDEZ",
         "tipo": "Estatal",
@@ -322,7 +307,6 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "7150013591",
         "ruta": "Totalco y Alchichica"
     },
-    # 16. JOSE ARMANDO HERNANDEZ MIRANDA
     {
         "nombre": "JOSE ARMANDO HERNANDEZ MIRANDA",
         "tipo": "Estatal",
@@ -340,7 +324,6 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "7150013816",
         "ruta": "Altotonga y alrededores"
     },
-    # 17. JORGE ALFONSO SERRANO CORTINA (SAN MIGUEL)
     {
         "nombre": "JORGE ALFONSO SERRANO CORTINA (SAN MIGUEL)",
         "tipo": "Estatal",
@@ -406,7 +389,54 @@ def eliminar_carta_nube(carta_id):
             supabase.table("cartas_naupagas").delete().eq("id", carta_id).execute()
             return True
         except Exception as e:
-            st.error(f"⚠️ Error al eliminar de Supabase: {e}")
+            st.error(f"❌ Error al eliminar de Supabase: {e}")
+            return False
+    return False
+
+# --- GESTIÓN DINÁMICA DEL CATÁLOGO EN SUPABASE ---
+def cargar_catalogo_nube():
+    if supabase is None:
+        return DEFAULT_CATALOGO_NAUPA
+    try:
+        response = supabase.table("catalogo_choferes_naupagas").select("*").execute()
+        if response.data and len(response.data) > 0:
+            return response.data
+        else:
+            # Sembrar datos iniciales si la tabla está vacía
+            for item in DEFAULT_CATALOGO_NAUPA:
+                supabase.table("catalogo_choferes_naupagas").insert(item).execute()
+            response = supabase.table("catalogo_choferes_naupagas").select("*").execute()
+            return response.data or DEFAULT_CATALOGO_NAUPA
+    except Exception as e:
+        return DEFAULT_CATALOGO_NAUPA
+
+def guardar_chofer_nube(datos):
+    if supabase is not None:
+        try:
+            supabase.table("catalogo_choferes_naupagas").insert(datos).execute()
+            return True
+        except Exception as e:
+            st.error(f"Error al guardar chofer: {e}")
+            return False
+    return False
+
+def actualizar_chofer_nube(chofer_id, datos):
+    if supabase is not None:
+        try:
+            supabase.table("catalogo_choferes_naupagas").update(datos).eq("id", chofer_id).execute()
+            return True
+        except Exception as e:
+            st.error(f"Error al actualizar chofer: {e}")
+            return False
+    return False
+
+def eliminar_chofer_nube(chofer_id):
+    if supabase is not None:
+        try:
+            supabase.table("catalogo_choferes_naupagas").delete().eq("id", chofer_id).execute()
+            return True
+        except Exception as e:
+            st.error(f"Error al eliminar chofer: {e}")
             return False
     return False
 
@@ -653,13 +683,14 @@ with st.sidebar:
     if os.path.exists(logo_path):
         st.image(logo_path, use_container_width=True)
     st.markdown("### 🎛️ Menú de Navegación")
-    accion = st.radio("Selecciona una opción:", ["Nueva Carta Porte", "Historial de Documentos"])
+    accion = st.radio("Selecciona una opción:", ["Nueva Carta Porte", "Historial de Documentos", "⚙️ Administrar Catálogo"])
     st.markdown("---")
     if st.button("Cerrar Sesión", use_container_width=True):
         st.session_state.auth_naupagas = False
         st.rerun()
 
 ahora_mx = datetime.now(ZoneInfo("America/Mexico_City"))
+CATALOGO_CHOFERES_NAUPA = cargar_catalogo_nube()
 
 if accion == "Nueva Carta Porte":
     st.title("📄 NAUPAGAS - Generador de Carta Porte")
@@ -703,25 +734,25 @@ if accion == "Nueva Carta Porte":
             
             datos_chofer_actual = next((c for c in CATALOGO_CHOFERES_NAUPA if c["nombre"] == chofer_seleccionado), CATALOGO_CHOFERES_NAUPA[0])
             
-            def_tipo_unidad_sat = datos_chofer_actual["tipo_unidad_sat"]
-            def_eco = datos_chofer_actual["eco"]
-            def_placas = datos_chofer_actual["placas"]
-            def_marca = datos_chofer_actual["marca"]
-            def_capacidad_txt = datos_chofer_actual["capacidad_txt"]
-            def_capacidad_num = datos_chofer_actual["capacidad_num"] if datos_chofer_actual["capacidad_num"] > 0 else 4000.0
-            def_cant_20 = datos_chofer_actual.get("cant_20", 0)
-            def_cant_30 = datos_chofer_actual.get("cant_30", 0)
-            def_aseguradora = datos_chofer_actual["aseguradora"]
-            def_poliza = datos_chofer_actual["poliza"]
-            def_ruta = datos_chofer_actual["ruta"]
+            def_tipo_unidad_sat = datos_chofer_actual.get("tipo_unidad_sat", "Autotanque (Pipa)")
+            def_eco = datos_chofer_actual.get("eco", "")
+            def_placas = datos_chofer_actual.get("placas", "")
+            def_marca = datos_chofer_actual.get("marca", "")
+            def_capacidad_txt = datos_chofer_actual.get("capacidad_txt", "4000 Lts")
+            def_capacidad_num = float(datos_chofer_actual.get("capacidad_num", 4000.0))
+            def_cant_20 = int(datos_chofer_actual.get("cant_20", 0))
+            def_cant_30 = int(datos_chofer_actual.get("cant_30", 0))
+            def_aseguradora = datos_chofer_actual.get("aseguradora", "")
+            def_poliza = datos_chofer_actual.get("poliza", "")
+            def_ruta = datos_chofer_actual.get("ruta", "")
 
             col_c1, col_c2 = st.columns(2)
             with col_c1:
                 nombre_chofer = st.text_input("Nombre Seleccionado / Registrado", value=chofer_seleccionado, disabled=True)
-                rfc_chofer = st.text_input("RFC del Chofer (Oficial)", value=datos_chofer_actual["rfc"], disabled=True)
+                rfc_chofer = st.text_input("RFC del Chofer (Oficial)", value=datos_chofer_actual.get("rfc", ""), disabled=True)
             with col_c2:
-                tipo_licencia = st.text_input("Tipo de Licencia (Oficial)", value=datos_chofer_actual["tipo"], disabled=True)
-                num_licencia = st.text_input("Número de Licencia (Oficial)", value=datos_chofer_actual["licencia"], disabled=True)
+                tipo_licencia = st.text_input("Tipo de Licencia (Oficial)", value=datos_chofer_actual.get("tipo", ""), disabled=True)
+                num_licencia = st.text_input("Número de Licencia (Oficial)", value=datos_chofer_actual.get("licencia", ""), disabled=True)
         else:
             col_c1, col_c2 = st.columns(2)
             with col_c1:
@@ -1041,3 +1072,111 @@ elif accion == "Historial de Documentos":
                                         st.error("Error al eliminar en Supabase.")
                                 else:
                                     st.error("❌ Contraseña incorrecta. No se pudo eliminar.")
+
+elif accion == "⚙️ Administrar Catálogo":
+    st.title("⚙️ NAUPAGAS - Administración de Choferes y Unidades")
+    st.write("Agrega, edita o elimina choferes y unidades de la base de datos en la nube sin modificar el código.")
+    st.markdown("---")
+
+    tab_nuevo, tab_editar = st.tabs(["➕ Agregar Nuevo Operador", "✏️ Modificar / Eliminar Operador Existente"])
+
+    with tab_nuevo:
+        st.subheader("Registrar Nuevo Chofer y Unidad")
+        with st.form("form_nuevo_chofer"):
+            c1, c2 = st.columns(2)
+            with c1:
+                n_nombre = st.text_input("Nombre Completo del Chofer")
+                n_rfc = st.text_input("RFC del Chofer")
+                n_tipo_lic = st.selectbox("Tipo de Licencia", ["Estatal", "Federal"])
+                n_num_lic = st.text_input("Número de Licencia")
+                n_tipo_unidad = st.selectbox("Tipo de Unidad SAT", ["Autotanque (Pipa)", "Vehículo Repartidor (Cilindrera)"])
+                n_marca = st.text_input("Marca / Modelo de la Unidad")
+                n_eco = st.text_input("Número Económico")
+            with c2:
+                n_cap_txt = st.text_input("Capacidad Descriptiva", placeholder="Ej. 12900 Lts o 19 de 20 kg y 9 de 30 kg")
+                n_cap_num = st.number_input("Capacidad Numérica (Litros - 0 si es cilindrera)", value=0.0)
+                n_placas = st.text_input("Placas")
+                n_aseg = st.text_input("Aseguradora", value="Qualitas")
+                n_pol = st.text_input("Número de Póliza")
+                n_ruta = st.text_input("Zonas de Reparto / Ruta", placeholder="Ej. Perote, Madero, Molinos")
+
+            btn_guardar_nuevo = st.form_submit_button("Guardar Nuevo Operador en Nube", type="primary")
+            if btn_guardar_nuevo:
+                if not n_nombre or not n_polizas := n_pol:
+                    st.warning("⚠️ Por favor completa al menos el nombre y la póliza.")
+                else:
+                    nuevo_registro = {
+                        "nombre": n_nombre.strip().upper(),
+                        "tipo": n_tipo_lic,
+                        "rfc": n_rfc.strip().upper(),
+                        "licencia": n_num_lic.strip().upper(),
+                        "tipo_unidad_sat": n_tipo_unidad,
+                        "marca": n_marca.strip().upper(),
+                        "eco": n_eco.strip().upper(),
+                        "capacidad_txt": n_cap_txt.strip(),
+                        "capacidad_num": float(n_cap_num),
+                        "cant_20": 0,
+                        "cant_30": 0,
+                        "placas": n_placas.strip().upper(),
+                        "aseguradora": n_aseg.strip().upper(),
+                        "poliza": n_pol.strip().upper(),
+                        "ruta": n_ruta.strip()
+                    }
+                    if guardar_chofer_nube(nuevo_registro):
+                        st.success(f"¡Operador {n_nombre} agregado correctamente al catálogo!")
+                        st.rerun()
+
+    with tab_editar:
+        st.subheader("Editar o Dar de Baja Operadores")
+        if not CATALOGO_CHOFERES_NAUPA:
+            st.info("No hay operadores en el catálogo.")
+        else:
+            nombres_edit = [c["nombre"] for c in CATALOGO_CHOFERES_NAUPA]
+            sel_edit = st.selectbox("Seleccione al operador a modificar", options=nombres_edit, key="sel_op_edit")
+            datos_sel = next((c for c in CATALOGO_CHOFERES_NAUPA if c["nombre"] == sel_edit), None)
+
+            if datos_sel:
+                with st.form("form_edicion_chofer"):
+                    ec1, ec2 = st.columns(2)
+                    with ec1:
+                        e_nombre = st.text_input("Nombre Completo", value=datos_sel.get("nombre", ""))
+                        e_rfc = st.text_input("RFC", value=datos_sel.get("rfc", ""))
+                        e_tipo_lic = st.text_input("Tipo Licencia", value=datos_sel.get("tipo", ""))
+                        e_num_lic = st.text_input("Número Licencia", value=datos_sel.get("licencia", ""))
+                        e_eco = st.text_input("Número Económico", value=datos_sel.get("eco", ""))
+                        e_marca = st.text_input("Marca / Modelo", value=datos_sel.get("marca", ""))
+                    with ec2:
+                        e_cap_txt = st.text_input("Capacidad Descriptiva", value=datos_sel.get("capacidad_txt", ""))
+                        e_placas = st.text_input("Placas", value=datos_sel.get("placas", ""))
+                        e_aseg = st.text_input("Aseguradora", value=datos_sel.get("aseguradora", ""))
+                        e_pol = st.text_input("Número de Póliza", value=datos_sel.get("poliza", ""))
+                        e_ruta = st.text_input("Zonas de Reparto / Ruta", value=datos_sel.get("ruta", ""))
+
+                    col_btn_1, col_btn_2 = st.columns(2)
+                    with col_btn_1:
+                        btn_actualizar = st.form_submit_button("Actualizar Datos", type="primary")
+                    with col_btn_2:
+                        btn_borrar = st.form_submit_button("Eliminar Operador", type="secondary")
+
+                    if btn_actualizar:
+                        datos_actualizados = {
+                            "nombre": e_nombre.strip().upper(),
+                            "rfc": e_rfc.strip().upper(),
+                            "tipo": e_tipo_lic.strip(),
+                            "licencia": e_num_lic.strip().upper(),
+                            "eco": e_eco.strip().upper(),
+                            "marca": e_marca.strip().upper(),
+                            "capacidad_txt": e_cap_txt.strip(),
+                            "placas": e_placas.strip().upper(),
+                            "aseguradora": e_aseg.strip().upper(),
+                            "poliza": e_pol.strip().upper(),
+                            "ruta": e_ruta.strip()
+                        }
+                        if actualizar_chofer_nube(datos_sel["id"], datos_actualizados):
+                            st.success(f"¡Operador {e_nombre} actualizado con éxito!")
+                            st.rerun()
+
+                    if btn_borrar:
+                        if eliminar_chofer_nube(datos_sel["id"]):
+                            st.success(f"¡Operador {sel_edit} eliminado del catálogo!")
+                            st.rerun()
