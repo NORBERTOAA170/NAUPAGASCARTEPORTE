@@ -232,7 +232,7 @@ CATALOGO_CHOFERES_NAUPA = [
         "poliza": "7150015604",
         "ruta": "Perote, Las Vigas, La Joya, Banderilla, San Miguel, El Fresno, Xalapa, Alchichica"
     },
-    # 11. JOSE EUGENIO ROMERO
+    # 11. JOSE EUGENIO ROMERO (Número Económico 10 actualizado)
     {
         "nombre": "JOSE EUGENIO ROMERO",
         "tipo": "Estatal",
@@ -240,7 +240,7 @@ CATALOGO_CHOFERES_NAUPA = [
         "licencia": "UBOCKUCUH",
         "tipo_unidad_sat": "Autotanque (Pipa)",
         "marca": "CS FORD F-350 CHASIS CABINA",
-        "eco": "S/N",
+        "eco": "10",
         "capacidad_txt": "4000 Lts",
         "capacidad_num": 4000.0,
         "cant_20": 0,
@@ -406,7 +406,7 @@ def eliminar_carta_nube(carta_id):
             supabase.table("cartas_naupagas").delete().eq("id", carta_id).execute()
             return True
         except Exception as e:
-            st.error(f"❌ Error al eliminar de Supabase: {e}")
+            st.error(f"⚠️ Error al eliminar de Supabase: {e}")
             return False
     return False
 
