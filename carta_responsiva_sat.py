@@ -679,30 +679,11 @@ def generar_pdf(d):
             except:
                 pass
 
-def boton_abrir_nueva_pestana(pdf_bytes, texto_boton="👁️ Abrir Vista Previa en Nueva Pestaña"):
-    """Genera un enlace HTML con diseño de botón que abre el PDF en una pestaña nueva del navegador"""
+def mostrar_visor_pdf_nativo(pdf_bytes, altura=550):
+    """Muestra el PDF incrustado de forma nativa y sin errores en la propia app"""
     b64 = base64.b64encode(pdf_bytes).decode('utf-8')
-    html_code = f'''
-    <a href="data:application/pdf;base64,{b64}" target="_blank" style="
-        display: block;
-        width: 100%;
-        text-align: center;
-        background-color: #ffffff;
-        color: #31334F;
-        padding: 0.5rem 0.75rem;
-        border: 1px solid #d6d6d6;
-        border-radius: 0.5rem;
-        text-decoration: none;
-        font-weight: 500;
-        font-size: 14px;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        margin-bottom: 0.5rem;
-        box-sizing: border-box;
-    ">
-        {texto_boton}
-    </a>
-    '''
-    st.markdown(html_code, unsafe_allow_html=True)
+    pdf_html = f'<iframe src="data:application/pdf;base64,{b64}" width="100%" height="{altura}px" type="application/pdf"></iframe>'
+    st.markdown(pdf_html, unsafe_allow_html=True)
 
 if not st.session_state.auth_naupagas:
     col1, col2, col3 = st.columns([1, 1.5, 1])
@@ -1057,10 +1038,11 @@ if accion == "Nueva Carta Porte":
 
     if "ultima_carta_generada" in st.session_state:
         st.markdown("---")
-        st.subheader("👁️ Vista Previa y Opciones del Documento Generado")
+        st.subheader("👁️ Vista Previa del Documento Generado")
         pdf_bytes_preview = generar_pdf(st.session_state.ultima_carta_generada)
         
-        boton_abrir_nueva_pestana(pdf_bytes_preview, "🔍 Abrir Vista Previa en Nueva Pestaña")
+        # Visor incrustado nativo (sin problemas de pestañas en blanco)
+        mostrar_visor_pdf_nativo(pdf_bytes_preview, altura=600)
         
         st.download_button(
             label="📥 Descargar PDF Definitivo",
@@ -1072,7 +1054,7 @@ if accion == "Nueva Carta Porte":
 
 elif accion == "Historial de Documentos":
     st.title("📁 NAUPAGAS - Historial de Cartas Generadas")
-    st.write("Consulta, filtra por fechas o chofer, abre vistas previas en pestañas nuevas y administra los registros.")
+    st.write("Consulta, filtra por fechas o chofer, visualiza los documentos en pantalla y administra los registros.")
     st.markdown("---")
 
     historial_nube = cargar_historial_nube()
@@ -1127,8 +1109,10 @@ elif accion == "Historial de Documentos":
                     with col_h3:
                         pdf_hist_bytes = generar_pdf(carta)
                         
-                        # Botón que abre el PDF en una pestaña nueva del navegador
-                        boton_abrir_nueva_pestana(pdf_hist_bytes, "👁️ Ver en Nueva Pestaña")
+                        # Usamos un expander limpio para la vista previa integrada sin salir de la app
+                        with st.expander("👁️ Vista Previa en Pantalla"):
+                            st.markdown(f"**Documento - Folio: {carta.get('folio', 'N/A')}**")
+                            mostrar_visor_pdf_nativo(pdf_hist_bytes, altura=450)
 
                         st.download_button(
                             label="📄 Descargar PDF",
