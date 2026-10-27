@@ -67,9 +67,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "placas": "XF4354B",
         "aseguradora": "Qualitas",
         "poliza": "7150015853",
-        "ruta": "",
-        "estado_chofer": "Activo",
-        "estado_unidad": "Activa"
+        "ruta": ""
     },
     {
         "nombre": "MARTIN GONZALEZ LEON",
@@ -86,9 +84,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "placas": "XV0965A",
         "aseguradora": "Qualitas",
         "poliza": "7150014122",
-        "ruta": "",
-        "estado_chofer": "Activo",
-        "estado_unidad": "Activa"
+        "ruta": ""
     },
     {
         "nombre": "MARCO ANTONIO ALVARADO DURAN",
@@ -105,9 +101,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "placas": "XX2879A",
         "aseguradora": "Qualitas",
         "poliza": "7150014122",
-        "ruta": "",
-        "estado_chofer": "Activo",
-        "estado_unidad": "Activa"
+        "ruta": ""
     },
     {
         "nombre": "ALFONSO GONZALEZ ORTIZ (24,000 LTS)",
@@ -124,9 +118,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "placas": "18AF4Y",
         "aseguradora": "Qualitas",
         "poliza": "7150014491",
-        "ruta": "",
-        "estado_chofer": "Activo",
-        "estado_unidad": "Activa"
+        "ruta": ""
     },
     {
         "nombre": "RODRIGO LOPEZ ALCANTARA (NUEVA)",
@@ -143,9 +135,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "placas": "YB8729B",
         "aseguradora": "Qualitas",
         "poliza": "7150015855",
-        "ruta": "ECONOGAS",
-        "estado_chofer": "Activo",
-        "estado_unidad": "Activa"
+        "ruta": "ECONOGAS"
     },
     {
         "nombre": "RODRIGO LOPEZ ALCANTARA",
@@ -162,9 +152,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "placas": "XU91794",
         "aseguradora": "Qualitas",
         "poliza": "7150015083",
-        "ruta": "Perote, Jalacingo, Orilla del Monte y San Juan",
-        "estado_chofer": "Activo",
-        "estado_unidad": "Activa"
+        "ruta": "Perote, Jalacingo, Orilla del Monte y San Juan"
     },
     {
         "nombre": "HERACLIO ARMANDO MACHUCA SILVA",
@@ -181,9 +169,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "placas": "XF4338B",
         "aseguradora": "Qualitas",
         "poliza": "7150013784",
-        "ruta": "Perote, Alchichica, Sierra de Agua, Molinos, Tenextepec, Magueyitos, Los Antos",
-        "estado_chofer": "Activo",
-        "estado_unidad": "Activa"
+        "ruta": "Perote, Alchichica, Sierra de Agua, Molinos, Tenextepec, Magueyitos, Los Antos"
     },
     {
         "nombre": "CARLOS GONZALEZ ORTIZ",
@@ -200,9 +186,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "placas": "XT4418B",
         "aseguradora": "Qualitas",
         "poliza": "7150015633",
-        "ruta": "Perote, Libertad, Madero, Villa Aldama y Tenextepec",
-        "estado_chofer": "Activo",
-        "estado_unidad": "Activa"
+        "ruta": "Perote, Libertad, Madero, Villa Aldama y Tenextepec"
     },
     {
         "nombre": "PORFIRIO HERNANDEZ CAMPUZANO",
@@ -219,9 +203,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "placas": "YB8730B",
         "aseguradora": "Qualitas",
         "poliza": "7150013987",
-        "ruta": "Perote, Sierra de agua, Madero, Tenextepec y alrededores",
-        "estado_chofer": "Activo",
-        "estado_unidad": "Activa"
+        "ruta": "Perote, Sierra de agua, Madero, Tenextepec y alrededores"
     },
     {
         "nombre": "DAVID EUGENIO ROMERO",
@@ -238,9 +220,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "placas": "XP3908B",
         "aseguradora": "Qualitas",
         "poliza": "7150015604",
-        "ruta": "Perote, Las Vigas, La Joya, Banderilla, San Miguel, El Fresno, Xalapa, Alchichica",
-        "estado_chofer": "Activo",
-        "estado_unidad": "Activa"
+        "ruta": "Perote, Las Vigas, La Joya, Banderilla, San Miguel, El Fresno, Xalapa, Alchichica"
     },
     {
         "nombre": "JOSE EUGENIO ROMERO",
@@ -257,9 +237,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "placas": "XX9342A",
         "aseguradora": "Qualitas",
         "poliza": "7150014152",
-        "ruta": "Totalco, Alchichica, Sarabia, Tepeyahualco, Perote",
-        "estado_chofer": "Activo",
-        "estado_unidad": "Activa"
+        "ruta": "Totalco, Alchichica, Sarabia, Tepeyahualco, Perote"
     },
     {
         "nombre": "JUAN ADRIAN MOTA MARTINEZ",
@@ -276,9 +254,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "placas": "XP4212B",
         "aseguradora": "GNP SEGUROS",
         "poliza": "TFSM0003070351",
-        "ruta": "Perote, Madero, Molinos",
-        "estado_chofer": "Activo",
-        "estado_unidad": "Activa"
+        "ruta": "Perote, Madero, Molinos"
     },
     {
         "nombre": "JOSÉ CALIXTO ISAEL MACHUCA ORTEGA",
@@ -295,9 +271,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "placas": "XP4211B",
         "aseguradora": "GNP SEGUROS",
         "poliza": "TFSM000307346",
-        "ruta": "La joya, Las vigas, Cruz blanca, El cajete",
-        "estado_chofer": "Activo",
-        "estado_unidad": "Activa"
+        "ruta": "La joya, Las vigas, Cruz blanca, El cajete"
     },
     {
         "nombre": "SAUL UBIRACI GALLARDO",
@@ -314,9 +288,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "placas": "XX2756A",
         "aseguradora": "AXA",
         "poliza": "YBJ006730000",
-        "ruta": "Guadalupe Victoria y alrededores",
-        "estado_chofer": "Activo",
-        "estado_unidad": "Activa"
+        "ruta": "Guadalupe Victoria y alrededores"
     },
     {
         "nombre": "ROSENDO SESENA HERNANDEZ",
@@ -333,9 +305,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "placas": "XX2755A",
         "aseguradora": "QUALITAS",
         "poliza": "7150013591",
-        "ruta": "Totalco y Alchichica",
-        "estado_chofer": "Activo",
-        "estado_unidad": "Activa"
+        "ruta": "Totalco y Alchichica"
     },
     {
         "nombre": "JOSE ARMANDO HERNANDEZ MIRANDA",
@@ -352,9 +322,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "placas": "XH8078B",
         "aseguradora": "QUALITAS",
         "poliza": "7150013816",
-        "ruta": "Altotonga y alrededores",
-        "estado_chofer": "Activo",
-        "estado_unidad": "Activa"
+        "ruta": "Altotonga y alrededores"
     },
     {
         "nombre": "JORGE ALFONSO SERRANO CORTINA (SAN MIGUEL)",
@@ -371,9 +339,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "placas": "XH8079B",
         "aseguradora": "QUALITAS",
         "poliza": "7150015084",
-        "ruta": "San Miguel, Tlacolula, El fresno",
-        "estado_chofer": "Activo",
-        "estado_unidad": "Activa"
+        "ruta": "San Miguel, Tlacolula, El fresno"
     }
 ]
 
@@ -757,21 +723,15 @@ if accion == "Nueva Carta Porte":
         
         modo_chofer = st.radio("Modo de Selección de Chofer:", ["Catálogo de Operadores", "Personalizado (Manual)"], horizontal=True)
 
-        # Filtrar solo operadores y unidades que estén ACTIVOS
-        catalogo_activos = [
-            c for c in CATALOGO_CHOFERES_NAUPA 
-            if c.get("estado_chofer", "Activo") == "Activo" and c.get("estado_unidad", "Activa") == "Activa"
-        ]
-
-        if modo_chofer == "Catálogo de Operadores" and catalogo_activos:
-            nombres_choferes = [c["nombre"] for c in catalogo_activos]
+        if modo_chofer == "Catálogo de Operadores" and CATALOGO_CHOFERES_NAUPA:
+            nombres_choferes = [c["nombre"] for c in CATALOGO_CHOFERES_NAUPA]
             
             chofer_seleccionado = st.selectbox(
-                "Seleccione al Chofer del Catálogo (Solo Activos)", 
+                "Seleccione al Chofer del Catálogo", 
                 options=nombres_choferes
             )
             
-            datos_chofer_actual = next((c for c in catalogo_activos if c["nombre"] == chofer_seleccionado), catalogo_activos[0])
+            datos_chofer_actual = next((c for c in CATALOGO_CHOFERES_NAUPA if c["nombre"] == chofer_seleccionado), CATALOGO_CHOFERES_NAUPA[0])
             
             def_tipo_unidad_sat = datos_chofer_actual.get("tipo_unidad_sat", "Autotanque (Pipa)")
             def_eco = datos_chofer_actual.get("eco", "")
@@ -792,9 +752,6 @@ if accion == "Nueva Carta Porte":
             with col_c2:
                 tipo_licencia = st.text_input("Tipo de Licencia (Oficial)", value=datos_chofer_actual.get("tipo", ""), disabled=True)
                 num_licencia = st.text_input("Número de Licencia (Oficial)", value=datos_chofer_actual.get("licencia", ""), disabled=True)
-        elif modo_chofer == "Catálogo de Operadores" and not catalogo_activos:
-            st.warning("⚠️ No hay operadores/unidades activas en el catálogo. Por favor verifique en 'Administrar Catálogo'.")
-            nombre_chofer, rfc_chofer, tipo_licencia, num_licencia = "", "", "", ""
         else:
             col_c1, col_c2 = st.columns(2)
             with col_c1:
@@ -1117,97 +1074,59 @@ elif accion == "Historial de Documentos":
 
 elif accion == "⚙️ Administrar Catálogo":
     st.title("⚙️ NAUPAGAS - Administración de Choferes y Unidades")
-    st.write("Agrega, edita o da de baja de forma independiente a conductores o unidades sin margen de error.")
+    st.write("Agrega, edita o elimina choferes y unidades de la base de datos en la nube sin modificar el código.")
     st.markdown("---")
 
-    tab_nuevo, tab_editar = st.tabs(["➕ Agregar Nuevo Operador", "✏️ Modificar / Bajas Independientes"])
+    tab_nuevo, tab_editar = st.tabs(["➕ Agregar Nuevo Operador", "✏️ Modificar / Eliminar Operador Existente"])
 
     with tab_nuevo:
         st.subheader("Registrar Nuevo Chofer y Unidad")
-        
-        st.markdown("#### 👤 1. Datos del Operador")
-        c1, c2 = st.columns(2)
-        with c1:
-            n_nombre = st.text_input("Nombre Completo del Chofer", key="n_nombre")
-            n_rfc = st.text_input("RFC del Chofer", key="n_rfc")
-        with c2:
-            n_tipo_lic = st.selectbox("Tipo de Licencia", ["Estatal", "Federal"], key="n_tipo_lic")
-            n_num_lic = st.text_input("Número de Licencia", key="n_num_lic")
+        with st.form("form_nuevo_chofer"):
+            c1, c2 = st.columns(2)
+            with c1:
+                n_nombre = st.text_input("Nombre Completo del Chofer")
+                n_rfc = st.text_input("RFC del Chofer")
+                n_tipo_lic = st.selectbox("Tipo de Licencia", ["Estatal", "Federal"])
+                n_num_lic = st.text_input("Número de Licencia")
+                n_tipo_unidad = st.selectbox("Tipo de Unidad SAT", ["Autotanque (Pipa)", "Vehículo Repartidor (Cilindrera)"])
+                n_marca = st.text_input("Marca / Modelo de la Unidad")
+                n_eco = st.text_input("Número Económico")
+            with c2:
+                n_cap_txt = st.text_input("Capacidad Descriptiva", placeholder="Ej. 12900 Lts o 19 de 20 kg y 9 de 30 kg")
+                n_cap_num = st.number_input("Capacidad Numérica (Litros - 0 si es cilindrera)", value=0.0)
+                n_placas = st.text_input("Placas")
+                n_aseg = st.text_input("Aseguradora", value="Qualitas")
+                n_pol = st.text_input("Número de Póliza")
+                n_ruta = st.text_input("Zonas de Reparto / Ruta", placeholder="Ej. Perote, Madero, Molinos")
 
-        st.markdown("---")
-        st.markdown("#### 🚚 2. Datos de la Unidad y Capacidad Dinámica")
-        
-        n_tipo_unidad = st.selectbox("Tipo de Unidad SAT", ["Autotanque (Pipa)", "Vehículo Repartidor (Cilindrera)"], key="n_tipo_unidad_admin")
-
-        c3, c4 = st.columns(2)
-        with c3:
-            n_marca = st.text_input("Marca / Modelo de la Unidad", key="n_marca")
-            n_eco = st.text_input("Número Económico", placeholder="Ej. PIPA GRANDE 1 o CILINDRERA 7", key="n_eco")
-        with c4:
-            n_placas = st.text_input("Placas", placeholder="Ej. XF4354B", key="n_placas")
-
-        if n_tipo_unidad == "Autotanque (Pipa)":
-            st.info("⛽ **Configuración de Pipa:** Ingrese la capacidad total en litros.")
-            n_litros_pipa = st.number_input("Capacidad Total (Litros)", min_value=0.0, value=12900.0, step=100.0, key="n_litros_pipa")
-            n_cap_txt = f"{int(n_litros_pipa)} Lts"
-            n_cap_num = float(n_litros_pipa)
-            n_cant_20 = 0
-            n_cant_30 = 0
-        else:
-            st.info("🛢️ **Configuración de Cilindrera:** Ingrese cuántos cilindros lleva de cada tipo.")
-            cc1, cc2 = st.columns(2)
-            with cc1:
-                n_cant_20 = st.number_input("Cantidad de Cilindros de 20 KG", min_value=0, value=19, step=1, key="n_cant_20_admin")
-            with cc2:
-                n_cant_30 = st.number_input("Cantidad de Cilindros de 30 KG", min_value=0, value=9, step=1, key="n_cant_30_admin")
-            n_cap_txt = f"{n_cant_20} de 20 kg y {n_cant_30} de 30 kg"
-            n_cap_num = 0.0
-
-        st.markdown("---")
-        st.markdown("#### 🛡️ 3. Póliza, Ruta y Estatus Operativo")
-        c5, c6 = st.columns(2)
-        with c5:
-            n_aseg = st.text_input("Aseguradora", value="Qualitas", key="n_aseg")
-            n_pol = st.text_input("Número de Póliza", key="n_pol")
-        with c6:
-            n_ruta = st.text_input("Zonas de Reparto / Ruta", placeholder="Ej. Perote, Madero, Molinos", key="n_ruta")
-
-        ce1, ce2 = st.columns(2)
-        with ce1:
-            n_est_chofer = st.selectbox("Estatus del Chofer", ["Activo", "Baja / Renuncia"], key="n_est_chofer")
-        with ce2:
-            n_est_unidad = st.selectbox("Estatus de la Unidad", ["Activa", "Baja / Fuera de Servicio"], key="n_est_unidad")
-
-        st.markdown("")
-        if st.button("Guardar Nuevo Operador en Nube", type="primary", use_container_width=True):
-            if not n_nombre or not n_pol:
-                st.warning("⚠️ Por favor completa al menos el nombre y la póliza.")
-            else:
-                nuevo_registro = {
-                    "nombre": n_nombre.strip().upper(),
-                    "tipo": n_tipo_lic,
-                    "rfc": n_rfc.strip().upper(),
-                    "licencia": n_num_lic.strip().upper(),
-                    "tipo_unidad_sat": n_tipo_unidad,
-                    "marca": n_marca.strip().upper(),
-                    "eco": n_eco.strip().upper(),
-                    "capacidad_txt": n_cap_txt,
-                    "capacidad_num": float(n_cap_num),
-                    "cant_20": int(n_cant_20),
-                    "cant_30": int(n_cant_30),
-                    "placas": n_placas.strip().upper(),
-                    "aseguradora": n_aseg.strip().upper(),
-                    "poliza": n_pol.strip().upper(),
-                    "ruta": n_ruta.strip(),
-                    "estado_chofer": n_est_chofer,
-                    "estado_unidad": n_est_unidad
-                }
-                if guardar_chofer_nube(nuevo_registro):
-                    st.success(f"¡Operador {n_nombre} agregado correctamente al catálogo!")
-                    st.rerun()
+            btn_guardar_nuevo = st.form_submit_button("Guardar Nuevo Operador en Nube", type="primary")
+            if btn_guardar_nuevo:
+                if not n_nombre or not n_pol:
+                    st.warning("⚠️ Por favor completa al menos el nombre y la póliza.")
+                else:
+                    nuevo_registro = {
+                        "nombre": n_nombre.strip().upper(),
+                        "tipo": n_tipo_lic,
+                        "rfc": n_rfc.strip().upper(),
+                        "licencia": n_num_lic.strip().upper(),
+                        "tipo_unidad_sat": n_tipo_unidad,
+                        "marca": n_marca.strip().upper(),
+                        "eco": n_eco.strip().upper(),
+                        "capacidad_txt": n_cap_txt.strip(),
+                        "capacidad_num": float(n_cap_num),
+                        "cant_20": 0,
+                        "cant_30": 0,
+                        "placas": n_placas.strip().upper(),
+                        "aseguradora": n_aseg.strip().upper(),
+                        "poliza": n_pol.strip().upper(),
+                        "ruta": n_ruta.strip()
+                    }
+                    if guardar_chofer_nube(nuevo_registro):
+                        st.success(f"¡Operador {n_nombre} agregado correctamente al catálogo!")
+                        st.rerun()
 
     with tab_editar:
-        st.subheader("Modificar Datos o Dar de Baja Independientes (Chofer / Unidad)")
+        st.subheader("Editar o Dar de Baja Operadores")
         if not CATALOGO_CHOFERES_NAUPA:
             st.info("No hay operadores en el catálogo.")
         else:
@@ -1216,112 +1135,47 @@ elif accion == "⚙️ Administrar Catálogo":
             datos_sel = next((c for c in CATALOGO_CHOFERES_NAUPA if c["nombre"] == sel_edit), None)
 
             if datos_sel:
-                tipo_actual_def = datos_sel.get("tipo_unidad_sat", "Autotanque (Pipa)")
-                if tipo_actual_def not in ["Autotanque (Pipa)", "Vehículo Repartidor (Cilindrera)"]:
-                    tipo_actual_def = "Autotanque (Pipa)"
+                with st.form("form_edicion_chofer"):
+                    ec1, ec2 = st.columns(2)
+                    with ec1:
+                        e_nombre = st.text_input("Nombre Completo", value=datos_sel.get("nombre", ""))
+                        e_rfc = st.text_input("RFC", value=datos_sel.get("rfc", ""))
+                        e_tipo_lic = st.text_input("Tipo Licencia", value=datos_sel.get("tipo", ""))
+                        e_num_lic = st.text_input("Número Licencia", value=datos_sel.get("licencia", ""))
+                        e_eco = st.text_input("Número Económico", value=datos_sel.get("eco", ""))
+                        e_marca = st.text_input("Marca / Modelo", value=datos_sel.get("marca", ""))
+                    with ec2:
+                        e_cap_txt = st.text_input("Capacidad Descriptiva", value=datos_sel.get("capacidad_txt", ""))
+                        e_placas = st.text_input("Placas", value=datos_sel.get("placas", ""))
+                        e_aseg = st.text_input("Aseguradora", value=datos_sel.get("aseguradora", ""))
+                        e_pol = st.text_input("Número de Póliza", value=datos_sel.get("poliza", ""))
+                        e_ruta = st.text_input("Zonas de Reparto / Ruta", value=datos_sel.get("ruta", ""))
 
-                st.markdown("#### 👤 1. Datos del Operador")
-                ec1, ec2 = st.columns(2)
-                with ec1:
-                    e_nombre = st.text_input("Nombre Completo", value=datos_sel.get("nombre", ""), key="e_nombre")
-                    e_rfc = st.text_input("RFC", value=datos_sel.get("rfc", ""), key="e_rfc")
-                with ec2:
-                    e_tipo_lic = st.selectbox("Tipo Licencia", ["Estatal", "Federal"], index=0 if datos_sel.get("tipo", "Estatal")=="Estatal" else 1, key="e_tipo_lic")
-                    e_num_lic = st.text_input("Número Licencia", value=datos_sel.get("licencia", ""), key="e_num_lic")
+                    col_btn_1, col_btn_2 = st.columns(2)
+                    with col_btn_1:
+                        btn_actualizar = st.form_submit_button("Actualizar Datos", type="primary")
+                    with col_btn_2:
+                        btn_borrar = st.form_submit_button("Eliminar Operador", type="secondary")
 
-                st.markdown("---")
-                st.markdown("#### 🚚 2. Datos de la Unidad y Capacidad Dinámica")
-                e_tipo_unidad = st.selectbox(
-                    "Tipo de Unidad SAT", 
-                    ["Autotanque (Pipa)", "Vehículo Repartidor (Cilindrera)"], 
-                    index=0 if tipo_actual_def == "Autotanque (Pipa)" else 1, 
-                    key="e_tipo_unidad"
-                )
-
-                ec3, ec4 = st.columns(2)
-                with ec3:
-                    e_eco = st.text_input("Número Económico", value=datos_sel.get("eco", ""), key="e_eco")
-                    e_marca = st.text_input("Marca / Modelo", value=datos_sel.get("marca", ""), key="e_marca")
-                with ec4:
-                    e_placas = st.text_input("Placas", value=datos_sel.get("placas", ""), key="e_placas")
-
-                if e_tipo_unidad == "Autotanque (Pipa)":
-                    val_litros_init = float(datos_sel.get("capacidad_num", 12900.0))
-                    if val_litros_init <= 0:
-                        val_litros_init = 12900.0
-                    e_litros_pipa = st.number_input("Capacidad Total (Litros)", min_value=0.0, value=val_litros_init, step=100.0, key="e_litros_pipa")
-                    e_cap_txt = f"{int(e_litros_pipa)} Lts"
-                    e_cap_num = float(e_litros_pipa)
-                    e_cant_20 = 0
-                    e_cant_30 = 0
-                else:
-                    val_20_init = int(datos_sel.get("cant_20", 19))
-                    val_30_init = int(datos_sel.get("cant_30", 9))
-                    ecc1, ecc2 = st.columns(2)
-                    with ecc1:
-                        e_cant_20 = st.number_input("Cantidad de Cilindros de 20 KG", min_value=0, value=val_20_init, step=1, key="e_cant_20")
-                    with ecc2:
-                        e_cant_30 = st.number_input("Cantidad de Cilindros de 30 KG", min_value=0, value=val_30_init, step=1, key="e_cant_30")
-                    e_cap_txt = f"{e_cant_20} de 20 kg y {e_cant_30} de 30 kg"
-                    e_cap_num = 0.0
-
-                st.markdown("---")
-                st.markdown("#### 🛡️ 3. Póliza, Ruta y Control de Bajas Independientes")
-                ec5, ec6 = st.columns(2)
-                with ec5:
-                    e_aseg = st.text_input("Aseguradora", value=datos_sel.get("aseguradora", "Qualitas"), key="e_aseg")
-                    e_pol = st.text_input("Número de Póliza", value=datos_sel.get("poliza", ""), key="e_pol")
-                with ec6:
-                    e_ruta = st.text_input("Zonas de Reparto / Ruta", value=datos_sel.get("ruta", ""), key="e_ruta")
-
-                # Selector independiente de estatus para chofer y unidad
-                est_chofer_actual = datos_sel.get("estado_chofer", "Activo")
-                est_unidad_actual = datos_sel.get("estado_unidad", "Activa")
-
-                eec1, eec2 = st.columns(2)
-                with eec1:
-                    e_est_chofer = st.selectbox(
-                        "Estatus del Chofer", 
-                        ["Activo", "Baja / Renuncia"], 
-                        index=0 if est_chofer_actual == "Activo" else 1, 
-                        key="e_est_chofer"
-                    )
-                with eec2:
-                    e_est_unidad = st.selectbox(
-                        "Estatus de la Unidad", 
-                        ["Activa", "Baja / Fuera de Servicio"], 
-                        index=0 if est_unidad_actual == "Activa" else 1, 
-                        key="e_est_unidad"
-                    )
-
-                st.markdown("")
-                col_btn_1, col_btn_2 = st.columns(2)
-                with col_btn_1:
-                    if st.button("Actualizar Estatus / Datos", type="primary", use_container_width=True, key="btn_act"):
+                    if btn_actualizar:
                         datos_actualizados = {
                             "nombre": e_nombre.strip().upper(),
                             "rfc": e_rfc.strip().upper(),
-                            "tipo": e_tipo_lic,
+                            "tipo": e_tipo_lic.strip(),
                             "licencia": e_num_lic.strip().upper(),
-                            "tipo_unidad_sat": e_tipo_unidad,
                             "eco": e_eco.strip().upper(),
                             "marca": e_marca.strip().upper(),
-                            "capacidad_txt": e_cap_txt,
-                            "capacidad_num": float(e_cap_num),
-                            "cant_20": int(e_cant_20),
-                            "cant_30": int(e_cant_30),
+                            "capacidad_txt": e_cap_txt.strip(),
                             "placas": e_placas.strip().upper(),
                             "aseguradora": e_aseg.strip().upper(),
                             "poliza": e_pol.strip().upper(),
-                            "ruta": e_ruta.strip(),
-                            "estado_chofer": e_est_chofer,
-                            "estado_unidad": e_est_unidad
+                            "ruta": e_ruta.strip()
                         }
                         if actualizar_chofer_nube(datos_sel["id"], datos_actualizados):
-                            st.success(f"¡Registro de {e_nombre} / Unidad {e_eco} actualizado con éxito!")
+                            st.success(f"¡Operador {e_nombre} actualizado con éxito!")
                             st.rerun()
-                with col_btn_2:
-                    if st.button("Eliminar Registro Definitivo", type="secondary", use_container_width=True, key="btn_del_op"):
+
+                    if btn_borrar:
                         if eliminar_chofer_nube(datos_sel["id"]):
-                            st.success(f"¡Registro de {sel_edit} eliminado por completo de la base de datos!")
+                            st.success(f"¡Operador {sel_edit} eliminado del catálogo!")
                             st.rerun()
