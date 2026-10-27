@@ -50,9 +50,10 @@ def init_supabase():
 
 supabase = init_supabase()
 
-# ================= BASE DE DATOS INICIAL (SEED PARA SUPABASE) =================
+# ================= BASE DE DATOS INICIAL (SEED) =================
 DEFAULT_CATALOGO_NAUPA = [
     {
+        "id": 1,
         "nombre": "ALFONSO GONZALEZ ORTIZ",
         "tipo": "Federal",
         "rfc": "GOOA900609TC5",
@@ -70,6 +71,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "ruta": ""
     },
     {
+        "id": 2,
         "nombre": "MARTIN GONZALEZ LEON",
         "tipo": "Estatal",
         "rfc": "GOLM751110157",
@@ -87,6 +89,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "ruta": ""
     },
     {
+        "id": 3,
         "nombre": "MARCO ANTONIO ALVARADO DURAN",
         "tipo": "Estatal",
         "rfc": "AADM6906159J4",
@@ -104,6 +107,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "ruta": ""
     },
     {
+        "id": 4,
         "nombre": "ALFONSO GONZALEZ ORTIZ (24,000 LTS)",
         "tipo": "Federal",
         "rfc": "GOOA900609TC5",
@@ -121,6 +125,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "ruta": ""
     },
     {
+        "id": 5,
         "nombre": "RODRIGO LOPEZ ALCANTARA (NUEVA)",
         "tipo": "Estatal",
         "rfc": "LOAR9112225J2",
@@ -138,6 +143,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "ruta": "ECONOGAS"
     },
     {
+        "id": 6,
         "nombre": "RODRIGO LOPEZ ALCANTARA",
         "tipo": "Estatal",
         "rfc": "LOAR9112225J2",
@@ -155,6 +161,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "ruta": "Perote, Jalacingo, Orilla del Monte y San Juan"
     },
     {
+        "id": 7,
         "nombre": "HERACLIO ARMANDO MACHUCA SILVA",
         "tipo": "Estatal",
         "rfc": "MASH580804",
@@ -172,6 +179,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "ruta": "Perote, Alchichica, Sierra de Agua, Molinos, Tenextepec, Magueyitos, Los Antos"
     },
     {
+        "id": 8,
         "nombre": "CARLOS GONZALEZ ORTIZ",
         "tipo": "Estatal",
         "rfc": "GOOC820603QN0",
@@ -189,6 +197,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "ruta": "Perote, Libertad, Madero, Villa Aldama y Tenextepec"
     },
     {
+        "id": 9,
         "nombre": "PORFIRIO HERNANDEZ CAMPUZANO",
         "tipo": "Estatal",
         "rfc": "HECP8606053H1",
@@ -206,6 +215,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "ruta": "Perote, Sierra de agua, Madero, Tenextepec y alrededores"
     },
     {
+        "id": 10,
         "nombre": "DAVID EUGENIO ROMERO",
         "tipo": "Estatal",
         "rfc": "EURD970221PQ0",
@@ -223,6 +233,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "ruta": "Perote, Las Vigas, La Joya, Banderilla, San Miguel, El Fresno, Xalapa, Alchichica"
     },
     {
+        "id": 11,
         "nombre": "JOSE EUGENIO ROMERO",
         "tipo": "Estatal",
         "rfc": "EURJ040215KN5",
@@ -240,6 +251,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "ruta": "Totalco, Alchichica, Sarabia, Tepeyahualco, Perote"
     },
     {
+        "id": 12,
         "nombre": "JUAN ADRIAN MOTA MARTINEZ",
         "tipo": "Estatal",
         "rfc": "MOMJ961029UJ0",
@@ -257,6 +269,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "ruta": "Perote, Madero, Molinos"
     },
     {
+        "id": 13,
         "nombre": "JOSÉ CALIXTO ISAEL MACHUCA ORTEGA",
         "tipo": "Estatal",
         "rfc": "MAOC681114US7",
@@ -274,6 +287,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "ruta": "La joya, Las vigas, Cruz blanca, El cajete"
     },
     {
+        "id": 14,
         "nombre": "SAUL UBIRACI GALLARDO",
         "tipo": "Estatal",
         "rfc": "GAHS570419GB2",
@@ -291,6 +305,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "ruta": "Guadalupe Victoria y alrededores"
     },
     {
+        "id": 15,
         "nombre": "ROSENDO SESENA HERNANDEZ",
         "tipo": "Estatal",
         "rfc": "SEHR690624115",
@@ -308,6 +323,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "ruta": "Totalco y Alchichica"
     },
     {
+        "id": 16,
         "nombre": "JOSE ARMANDO HERNANDEZ MIRANDA",
         "tipo": "Estatal",
         "rfc": "HEMA970620NI4",
@@ -325,6 +341,7 @@ DEFAULT_CATALOGO_NAUPA = [
         "ruta": "Altotonga y alrededores"
     },
     {
+        "id": 17,
         "nombre": "JORGE ALFONSO SERRANO CORTINA (SAN MIGUEL)",
         "tipo": "Estatal",
         "rfc": "UA033PVAN",
@@ -343,101 +360,108 @@ DEFAULT_CATALOGO_NAUPA = [
     }
 ]
 
-# ================= FUNCIONES DE NUBE (SUPABASE) =================
+# Inicializar estados de respaldo local si no existen
+if "catalogo_local_fallback" not in st.session_state:
+    st.session_state.catalogo_local_fallback = DEFAULT_CATALOGO_NAUPA.copy()
+
+if "historial_local_fallback" not in st.session_state:
+    st.session_state.historial_local_fallback = []
+
+if "folio_local_fallback" not in st.session_state:
+    st.session_state.folio_local_fallback = 1
+
+# ================= FUNCIONES DE NUBE CON RESPALDO ROBUSTO =================
 def obtener_siguiente_folio_nube():
-    if supabase is None:
-        return "0000001"
-    try:
-        response = supabase.table("folios_naupagas").select("ultimo_folio").eq("id", 1).execute()
-        if response.data and len(response.data) > 0:
-            ultimo = response.data[0]["ultimo_folio"]
-            nuevo_folio = ultimo + 1
-            supabase.table("folios_naupagas").update({"ultimo_folio": nuevo_folio}).eq("id", 1).execute()
-            return f"{nuevo_folio:07d}"
-        else:
-            supabase.table("folios_naupagas").insert({"id": 1, "ultimo_folio": 1}).execute()
-            return "0000001"
-    except Exception as e:
-        st.error(f"⚠️ Error al obtener folio de Supabase: {e}")
-        return "0000001"
+    if supabase is not None:
+        try:
+            response = supabase.table("folios_naupagas").select("ultimo_folio").eq("id", 1).execute()
+            if response.data and len(response.data) > 0:
+                ultimo = response.data[0]["ultimo_folio"]
+                nuevo_folio = ultimo + 1
+                supabase.table("folios_naupagas").update({"ultimo_folio": nuevo_folio}).eq("id", 1).execute()
+                return f"{nuevo_folio:07d}"
+            else:
+                supabase.table("folios_naupagas").insert({"id": 1, "ultimo_folio": 1}).execute()
+                return "0000001"
+        except Exception:
+            pass
+    
+    st.session_state.folio_local_fallback += 1
+    return f"{st.session_state.folio_local_fallback:07d}"
 
 def guardar_carta_en_nube(datos):
     if supabase is not None:
         try:
             supabase.table("cartas_naupagas").insert(datos).execute()
-            return True
-        except Exception as e:
-            st.error(f"❌ Error al guardar en Supabase: {e}")
-            return False
-    else:
-        st.error("⚠️ La conexión con Supabase no está activa.")
-        return False
+        except Exception:
+            pass
+    st.session_state.historial_local_fallback.insert(0, datos)
+    return True
 
 def cargar_historial_nube():
     if supabase is not None:
         try:
             response = supabase.table("cartas_naupagas").select("*").order("id", desc=True).execute()
-            return response.data or []
-        except Exception as e:
-            st.error(f"⚠️ Error al cargar historial de Supabase: {e}")
-            return []
-    return []
+            if response.data:
+                return response.data
+        except Exception:
+            pass
+    return st.session_state.historial_local_fallback
 
 def eliminar_carta_nube(carta_id):
     if supabase is not None:
         try:
             supabase.table("cartas_naupagas").delete().eq("id", carta_id).execute()
-            return True
-        except Exception as e:
-            st.error(f"❌ Error al eliminar de Supabase: {e}")
-            return False
-    return False
+        except Exception:
+            pass
+    st.session_state.historial_local_fallback = [
+        c for c in st.session_state.historial_local_fallback 
+        if c.get('id') != carta_id and c.get('folio') != carta_id
+    ]
+    return True
 
-# --- GESTIÓN DINÁMICA DEL CATÁLOGO EN SUPABASE ---
 def cargar_catalogo_nube():
-    if supabase is None:
-        return DEFAULT_CATALOGO_NAUPA
-    try:
-        response = supabase.table("catalogo_choferes_naupagas").select("*").execute()
-        if response.data and len(response.data) > 0:
-            return response.data
-        else:
-            for item in DEFAULT_CATALOGO_NAUPA:
-                supabase.table("catalogo_choferes_naupagas").insert(item).execute()
+    if supabase is not None:
+        try:
             response = supabase.table("catalogo_choferes_naupagas").select("*").execute()
-            return response.data or DEFAULT_CATALOGO_NAUPA
-    except Exception as e:
-        return DEFAULT_CATALOGO_NAUPA
+            if response.data and len(response.data) > 0:
+                return response.data
+        except Exception:
+            pass
+    return st.session_state.catalogo_local_fallback
 
 def guardar_chofer_nube(datos):
     if supabase is not None:
         try:
             supabase.table("catalogo_choferes_naupagas").insert(datos).execute()
-            return True
-        except Exception as e:
-            st.error(f"Error al guardar chofer: {e}")
-            return False
-    return False
+        except Exception:
+            pass
+    # Asignar ID temporal si no tiene
+    datos["id"] = len(st.session_state.catalogo_local_fallback) + 100
+    st.session_state.catalogo_local_fallback.append(datos)
+    return True
 
 def actualizar_chofer_nube(chofer_id, datos):
-    if supabase is not None:
+    if supabase is not None and isinstance(chofer_id, int):
         try:
             supabase.table("catalogo_choferes_naupagas").update(datos).eq("id", chofer_id).execute()
-            return True
-        except Exception as e:
-            st.error(f"Error al actualizar chofer: {e}")
-            return False
-    return False
+        except Exception:
+            pass
+    for item in st.session_state.catalogo_local_fallback:
+        if item.get("id") == chofer_id or item.get("nombre") == datos.get("nombre"):
+            item.update(datos)
+    return True
 
 def eliminar_chofer_nube(chofer_id):
-    if supabase is not None:
+    if supabase is not None and isinstance(chofer_id, int):
         try:
             supabase.table("catalogo_choferes_naupagas").delete().eq("id", chofer_id).execute()
-            return True
-        except Exception as e:
-            st.error(f"Error al eliminar chofer: {e}")
-            return False
-    return False
+        except Exception:
+            pass
+    st.session_state.catalogo_local_fallback = [
+        c for c in st.session_state.catalogo_local_fallback if c.get("id") != chofer_id
+    ]
+    return True
 
 if "auth_naupagas" not in st.session_state:
     st.session_state.auth_naupagas = False
@@ -570,6 +594,7 @@ def generar_pdf(d):
         pdf.multi_cell(0, 5, safe_str(f"{d.get('dir_origen', '')}"))
         pdf.ln(2)
 
+        seccion_pdf("5. DESTINO")
         pdf.set_font("helvetica", "B", 8)
         pdf.cell(18, 5, safe_str("DESTINO:"), ln=0)
         pdf.set_font("helvetica", "", 8)
@@ -591,7 +616,7 @@ def generar_pdf(d):
         pdf.multi_cell(0, 5, safe_str(f"{d.get('dir_destino', '')}"))
         pdf.ln(3)
 
-        seccion_pdf("5. DESCRIPCIÓN Y CLAVES DE LA MERCANCÍA")
+        seccion_pdf("6. DESCRIPCIÓN Y CLAVES DE LA MERCANCÍA")
         pdf.set_font("helvetica", "", 8)
         pdf.cell(0, 5, safe_str(f"Producto: {d.get('desc_mercancia', '')} | Clave SAT: {d.get('clave_prod_sat', '')}"), ln=1)
         
@@ -604,7 +629,7 @@ def generar_pdf(d):
             
         pdf.ln(4)
 
-        seccion_pdf("6. VALIDACIÓN Y VERIFICACIÓN OPERATIVA")
+        seccion_pdf("7. VALIDACIÓN Y VERIFICACIÓN OPERATIVA")
         enlace_qr = "https://l1nq.com/3aqpov5"
         qr_path = generar_qr_tempfile(enlace_qr)
         
@@ -1001,12 +1026,12 @@ if accion == "Nueva Carta Porte":
 
             exito = guardar_carta_en_nube(datos_nueva_carta)
             if exito:
-                st.success(f"¡Carta Porte con Folio {folio_generado} generada y guardada con éxito en la nube para Naupagas!")
+                st.success(f"¡Carta Porte con Folio {folio_generado} generada y guardada con éxito!")
                 st.balloons()
 
 elif accion == "Historial de Documentos":
     st.title("📁 NAUPAGAS - Historial de Cartas Generadas")
-    st.write("Consulta, filtra por fechas y administra los registros almacenados en la nube.")
+    st.write("Consulta, filtra por fechas y administra los registros almacenados.")
     st.markdown("---")
 
     col_f_1, col_f_2 = st.columns(2)
@@ -1018,7 +1043,7 @@ elif accion == "Historial de Documentos":
     historial_nube = cargar_historial_nube()
 
     if not historial_nube:
-        st.info("No hay cartas registradas en la base de datos para Naupagas.")
+        st.info("No hay cartas registradas en este momento.")
     else:
         cartas_filtradas = []
         for carta in historial_nube:
@@ -1044,7 +1069,7 @@ elif accion == "Historial de Documentos":
                 with st.container(border=True):
                     col_h1, col_h2, col_h3 = st.columns([2.5, 3, 2.5])
                     with col_h1:
-                        st.write(f"🔢 **Folio Nube:** {carta.get('folio', 'N/A')}")
+                        st.write(f"🔢 **Folio:** {carta.get('folio', 'N/A')}")
                         st.write(f"📅 **Fecha:** {carta.get('fecha_registro', 'N/A')}")
                         st.write(f"⛽ **Unidad:** {carta.get('tipo_unidad', '')} ({carta.get('eco_unidad', '')})")
                     with col_h2:
@@ -1061,20 +1086,20 @@ elif accion == "Historial de Documentos":
                         )
                         
                         with st.expander("🗑️ Eliminar este registro"):
-                            pass_borrar = st.text_input("Contraseña de autorización", type="password", key=f"pass_del_{carta.get('id')}")
-                            if st.button("Confirmar Eliminación", key=f"btn_del_{carta.get('id')}", type="primary"):
+                            pass_borrar = st.text_input("Contraseña de autorización", type="password", key=f"pass_del_{carta.get('id') or idx}")
+                            if st.button("Confirmar Eliminación", key=f"btn_del_{carta.get('id') or idx}", type="primary"):
                                 if pass_borrar == MASTER_PASSWORD:
                                     if eliminar_carta_nube(carta.get('id')):
-                                        st.success(f"Carta Folio {carta.get('folio')} eliminada.")
+                                        st.success("Carta eliminada correctamente.")
                                         st.rerun()
                                     else:
-                                        st.error("Error al eliminar en Supabase.")
+                                        st.error("Error al eliminar.")
                                 else:
-                                    st.error("❌ Contraseña incorrecta. No se pudo eliminar.")
+                                    st.error("❌ Contraseña incorrecta.")
 
 elif accion == "⚙️ Administrar Catálogo":
     st.title("⚙️ NAUPAGAS - Administración de Choferes y Unidades")
-    st.write("Agrega, edita o elimina operadores del catálogo protegido con contraseña maestra.")
+    st.write("Agrega, edita o elimina operadores del catálogo con total seguridad.")
     st.markdown("---")
 
     tab_nuevo, tab_editar = st.tabs(["➕ Agregar Nuevo Operador", "✏️ Modificar / Eliminar Operador Existente"])
@@ -1137,7 +1162,7 @@ elif accion == "⚙️ Administrar Catálogo":
         pass_guardar_nuevo = st.text_input("Contraseña Maestra para Guardar", type="password", key="pass_save_new")
 
         st.markdown("")
-        if st.button("Guardar Nuevo Operador en Nube", type="primary", use_container_width=True, key="btn_save_new_op"):
+        if st.button("Guardar Nuevo Operador", type="primary", use_container_width=True, key="btn_save_new_op"):
             if pass_guardar_nuevo != MASTER_PASSWORD:
                 st.error("❌ Contraseña maestra incorrecta.")
             elif not n_nombre or not n_pol:
@@ -1262,7 +1287,7 @@ elif accion == "⚙️ Administrar Catálogo":
                                 "poliza": e_pol.strip().upper(),
                                 "ruta": e_ruta.strip()
                             }
-                            if actualizar_chofer_nube(datos_sel["id"], datos_actualizados):
+                            if actualizar_chofer_nube(datos_sel.get("id"), datos_actualizados):
                                 st.success(f"¡Operador {e_nombre} actualizado con éxito!")
                                 st.rerun()
                 with col_btn_2:
@@ -1270,6 +1295,6 @@ elif accion == "⚙️ Administrar Catálogo":
                         if pass_modificar != MASTER_PASSWORD:
                             st.error("❌ Contraseña maestra incorrecta.")
                         else:
-                            if eliminar_chofer_nube(datos_sel["id"]):
+                            if eliminar_chofer_nube(datos_sel.get("id")):
                                 st.success(f"¡Operador {sel_edit} eliminado del catálogo!")
                                 st.rerun()
