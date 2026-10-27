@@ -4,7 +4,6 @@ from zoneinfo import ZoneInfo
 import os
 import requests
 import tempfile
-import base64
 import streamlit as st
 
 # Supabase SDK para sincronización en la nube
@@ -679,12 +678,6 @@ def generar_pdf(d):
             except:
                 pass
 
-def mostrar_visor_pdf_nativo(pdf_bytes, altura=550):
-    """Muestra el PDF incrustado de forma nativa y sin errores en la propia app"""
-    b64 = base64.b64encode(pdf_bytes).decode('utf-8')
-    pdf_html = f'<iframe src="data:application/pdf;base64,{b64}" width="100%" height="{altura}px" type="application/pdf"></iframe>'
-    st.markdown(pdf_html, unsafe_allow_html=True)
-
 if not st.session_state.auth_naupagas:
     col1, col2, col3 = st.columns([1, 1.5, 1])
     with col2:
@@ -1038,14 +1031,11 @@ if accion == "Nueva Carta Porte":
 
     if "ultima_carta_generada" in st.session_state:
         st.markdown("---")
-        st.subheader("👁️ Vista Previa del Documento Generado")
+        st.subheader("📥 Descargar Documento Recién Generado")
         pdf_bytes_preview = generar_pdf(st.session_state.ultima_carta_generada)
         
-        # Visor incrustado nativo (sin problemas de pestañas en blanco)
-        mostrar_visor_pdf_nativo(pdf_bytes_preview, altura=600)
-        
         st.download_button(
-            label="📥 Descargar PDF Definitivo",
+            label="📄 Descargar PDF Definitivo",
             data=pdf_bytes_preview,
             file_name=f"Naupagas_Folio_{st.session_state.ultima_carta_generada.get('folio', '0000001')}.pdf",
             mime="application/pdf",
@@ -1054,7 +1044,7 @@ if accion == "Nueva Carta Porte":
 
 elif accion == "Historial de Documentos":
     st.title("📁 NAUPAGAS - Historial de Cartas Generadas")
-    st.write("Consulta, filtra por fechas o chofer, visualiza los documentos en pantalla y administra los registros.")
+    st.write("Consulta, filtra por fechas o chofer, descarga y administra los registros.")
     st.markdown("---")
 
     historial_nube = cargar_historial_nube()
@@ -1098,7 +1088,7 @@ elif accion == "Historial de Documentos":
             
             for idx, carta in enumerate(cartas_filtradas):
                 with st.container(border=True):
-                    col_h1, col_h2, col_h3 = st.columns([2.5, 3, 2.5])
+                    col_h1, col_h2, col_h3 = st.columns([3, 3, 2])
                     with col_h1:
                         st.write(f"🔢 **Folio:** {carta.get('folio', 'N/A')}")
                         st.write(f"📅 **Fecha:** {carta.get('fecha_registro', 'N/A')}")
@@ -1109,11 +1099,6 @@ elif accion == "Historial de Documentos":
                     with col_h3:
                         pdf_hist_bytes = generar_pdf(carta)
                         
-                        # Usamos un expander limpio para la vista previa integrada sin salir de la app
-                        with st.expander("👁️ Vista Previa en Pantalla"):
-                            st.markdown(f"**Documento - Folio: {carta.get('folio', 'N/A')}**")
-                            mostrar_visor_pdf_nativo(pdf_hist_bytes, altura=450)
-
                         st.download_button(
                             label="📄 Descargar PDF",
                             data=pdf_hist_bytes,
