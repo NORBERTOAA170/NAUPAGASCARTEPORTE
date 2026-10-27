@@ -4,6 +4,7 @@ from zoneinfo import ZoneInfo
 import os
 import requests
 import tempfile
+import base64
 import streamlit as st
 
 # Supabase SDK para sincronización en la nube
@@ -678,6 +679,12 @@ def generar_pdf(d):
             except:
                 pass
 
+def mostrar_vista_previa_pdf(pdf_bytes, altura=500):
+    """Renderiza un visor interactivo de PDF en pantalla usando base64"""
+    base64_pdf = base64.b64encode(pdf_bytes).decode('utf-8')
+    pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="{altura}px" type="application/pdf"></iframe>'
+    st.markdown(pdf_display, unsafe_allow_html=True)
+
 if not st.session_state.auth_naupagas:
     col1, col2, col3 = st.columns([1, 1.5, 1])
     with col2:
@@ -1027,19 +1034,42 @@ if accion == "Nueva Carta Porte":
             if exito:
                 st.success(f"¡Carta Porte con Folio {folio_generado} generada y guardada con éxito!")
                 st.balloons()
+                
+                # Guardar en session state para mostrar la vista previa inmediata
+                st.session_state.ultima_carta_generada = datos_nueva_carta
+
+    # Mostrar vista previa automática si se acaba de generar una carta
+    if "ultima_carta_generada" in st.session_state:
+        st.markdown("---")
+        st.subheader("👁️ Vista Previa del Documento Generado")
+        pdf_bytes_preview = generar_pdf(st.session_state.ultima_carta_generada)
+        
+        mostrar_vista_previa_pdf(pdf_bytes_preview, altura=550)
+        
+        st.download_button(
+            label="📥 Descargar PDF Definitivo",
+            data=pdf_bytes_preview,
+            file_name=f"Naupagas_Folio_{st.session_state.ultima_carta_generada.get('folio', '0000001')}.pdf",
+            mime="application/pdf",
+            use_container_width=True
+        )
 
 elif accion == "Historial de Documentos":
     st.title("📁 NAUPAGAS - Historial de Cartas Generadas")
-    st.write("Consulta, filtra por fechas y administra los registros almacenados.")
+    st.write("Consulta, filtra por fechas o chofer, visualiza en pantalla y administra los registros.")
     st.markdown("---")
 
-    col_f_1, col_f_2 = st.columns(2)
+    historial_nube = cargar_historial_nube()
+
+    choferes_en_historial = sorted(list(set([c.get('nombre_chofer', '') for c in historial_nube if c.get('nombre_chofer')])))
+
+    col_f_1, col_f_2, col_f_3 = st.columns(3)
     with col_f_1:
         filtro_inicio = st.date_input("Filtrar desde la fecha:", value=None)
     with col_f_2:
         filtro_fin = st.date_input("Filtrar hasta la fecha:", value=None)
-
-    historial_nube = cargar_historial_nube()
+    with col_f_3:
+        filtro_chofer = st.selectbox("Filtrar por Chofer:", options=["Todos los choferes"] + choferes_en_historial)
 
     if not historial_nube:
         st.info("No hay cartas registradas en este momento.")
@@ -1047,6 +1077,7 @@ elif accion == "Historial de Documentos":
         cartas_filtradas = []
         for carta in historial_nube:
             f_reg_str = carta.get('fecha_registro', '')
+            c_nombre = carta.get('nombre_chofer', '')
             try:
                 f_reg_date = datetime.strptime(f_reg_str.split()[0], "%d/%m/%Y").date()
                 incluir = True
@@ -1054,13 +1085,16 @@ elif accion == "Historial de Documentos":
                     incluir = False
                 if filtro_fin and f_reg_date > filtro_fin:
                     incluir = False
+                if filtro_chofer != "Todos los choferes" and c_nombre != filtro_chofer:
+                    incluir = False
                 if incluir:
                     cartas_filtradas.append(carta)
             except Exception:
-                cartas_filtradas.append(carta)
+                if filtro_chofer == "Todos los choferes" or c_nombre == filtro_chofer:
+                    cartas_filtradas.append(carta)
 
         if not cartas_filtradas:
-            st.warning("⚠️ No se encontraron cartas en el rango de fechas seleccionado.")
+            st.warning("⚠️ No se encontraron cartas con los filtros seleccionados.")
         else:
             st.write(f"Mostrando **{len(cartas_filtradas)}** registro(s):")
             
@@ -1076,12 +1110,19 @@ elif accion == "Historial de Documentos":
                         st.write(f"🛣️ **Ruta:** {carta.get('nombre_origen', '')} ➔ {carta.get('nombre_destino', '')}")
                     with col_h3:
                         pdf_hist_bytes = generar_pdf(carta)
+                        
+                        # Botón para desplegar la vista previa en el historial
+                        with st.popover("👁️ Vista Previa en Pantalla", use_container_width=True):
+                            st.markdown(f"### Vista Previa - Folio {carta.get('folio', 'N/A')}")
+                            mostrar_vista_previa_pdf(pdf_hist_bytes, altura=500)
+
                         st.download_button(
                             label="📄 Descargar PDF",
                             data=pdf_hist_bytes,
                             file_name=f"Naupagas_Folio_{carta.get('folio', '0000001')}.pdf",
                             mime="application/pdf",
-                            key=f"dl_naupagas_{idx}"
+                            key=f"dl_naupagas_{idx}",
+                            use_container_width=True
                         )
                         
                         with st.expander("🗑️ Eliminar este registro"):
