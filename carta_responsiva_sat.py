@@ -679,11 +679,30 @@ def generar_pdf(d):
             except:
                 pass
 
-def mostrar_vista_previa_pdf(pdf_bytes, altura=500):
-    """Renderiza un visor interactivo de PDF en pantalla usando base64"""
-    base64_pdf = base64.b64encode(pdf_bytes).decode('utf-8')
-    pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="{altura}px" type="application/pdf"></iframe>'
-    st.markdown(pdf_display, unsafe_allow_html=True)
+def boton_abrir_nueva_pestana(pdf_bytes, texto_boton="👁️ Abrir Vista Previa en Nueva Pestaña"):
+    """Genera un enlace HTML con diseño de botón que abre el PDF en una pestaña nueva del navegador"""
+    b64 = base64.b64encode(pdf_bytes).decode('utf-8')
+    html_code = f'''
+    <a href="data:application/pdf;base64,{b64}" target="_blank" style="
+        display: block;
+        width: 100%;
+        text-align: center;
+        background-color: #ffffff;
+        color: #31334F;
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #d6d6d6;
+        border-radius: 0.5rem;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 14px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        margin-bottom: 0.5rem;
+        box-sizing: border-box;
+    ">
+        {texto_boton}
+    </a>
+    '''
+    st.markdown(html_code, unsafe_allow_html=True)
 
 if not st.session_state.auth_naupagas:
     col1, col2, col3 = st.columns([1, 1.5, 1])
@@ -1034,17 +1053,14 @@ if accion == "Nueva Carta Porte":
             if exito:
                 st.success(f"¡Carta Porte con Folio {folio_generado} generada y guardada con éxito!")
                 st.balloons()
-                
-                # Guardar en session state para mostrar la vista previa inmediata
                 st.session_state.ultima_carta_generada = datos_nueva_carta
 
-    # Mostrar vista previa automática si se acaba de generar una carta
     if "ultima_carta_generada" in st.session_state:
         st.markdown("---")
-        st.subheader("👁️ Vista Previa del Documento Generado")
+        st.subheader("👁️ Vista Previa y Opciones del Documento Generado")
         pdf_bytes_preview = generar_pdf(st.session_state.ultima_carta_generada)
         
-        mostrar_vista_previa_pdf(pdf_bytes_preview, altura=550)
+        boton_abrir_nueva_pestana(pdf_bytes_preview, "🔍 Abrir Vista Previa en Nueva Pestaña")
         
         st.download_button(
             label="📥 Descargar PDF Definitivo",
@@ -1056,7 +1072,7 @@ if accion == "Nueva Carta Porte":
 
 elif accion == "Historial de Documentos":
     st.title("📁 NAUPAGAS - Historial de Cartas Generadas")
-    st.write("Consulta, filtra por fechas o chofer, visualiza en pantalla y administra los registros.")
+    st.write("Consulta, filtra por fechas o chofer, abre vistas previas en pestañas nuevas y administra los registros.")
     st.markdown("---")
 
     historial_nube = cargar_historial_nube()
@@ -1111,10 +1127,8 @@ elif accion == "Historial de Documentos":
                     with col_h3:
                         pdf_hist_bytes = generar_pdf(carta)
                         
-                        # Botón para desplegar la vista previa en el historial
-                        with st.popover("👁️ Vista Previa en Pantalla", use_container_width=True):
-                            st.markdown(f"### Vista Previa - Folio {carta.get('folio', 'N/A')}")
-                            mostrar_vista_previa_pdf(pdf_hist_bytes, altura=500)
+                        # Botón que abre el PDF en una pestaña nueva del navegador
+                        boton_abrir_nueva_pestana(pdf_hist_bytes, "👁️ Ver en Nueva Pestaña")
 
                         st.download_button(
                             label="📄 Descargar PDF",
