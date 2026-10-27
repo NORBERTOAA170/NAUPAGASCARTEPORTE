@@ -1102,7 +1102,7 @@ elif accion == "⚙️ Administrar Catálogo":
 
             btn_guardar_nuevo = st.form_submit_button("Guardar Nuevo Operador en Nube", type="primary")
             if btn_guardar_nuevo:
-                if not n_nombre or not n_polizas := n_pol:
+                if not n_nombre or not n_pol:
                     st.warning("⚠️ Por favor completa al menos el nombre y la póliza.")
                 else:
                     nuevo_registro = {
