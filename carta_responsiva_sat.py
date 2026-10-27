@@ -436,7 +436,6 @@ def guardar_chofer_nube(datos):
             supabase.table("catalogo_choferes_naupagas").insert(datos).execute()
         except Exception:
             pass
-    # Asignar ID temporal si no tiene
     datos["id"] = len(st.session_state.catalogo_local_fallback) + 100
     st.session_state.catalogo_local_fallback.append(datos)
     return True
@@ -901,7 +900,7 @@ if accion == "Nueva Carta Porte":
                 dir_destino_final = f"{calle_destino}, Col. {colonia_destino}, C.P. {cp_destino}, {municipio_destino}, {estado_destino}"
             else:
                 rfc_destino = ""
-                nombre_destino = "Ruta Varios Clientes"
+                nombre_destino = "Varios clientes"
                 col_m_lib1, col_m_lib2 = st.columns(2)
                 with col_m_lib1:
                     zona_libre_destino = st.text_input(
@@ -913,7 +912,7 @@ if accion == "Nueva Carta Porte":
                 with col_m_lib2:
                     estado_libre_destino = st.text_input("Estado / Región", value="Veracruz", placeholder="Ej. Veracruz")
                     
-                dir_destino_final = f"Ruta multi-cliente / Zona de entrega: {zona_libre_destino}"
+                dir_destino_final = f"{zona_libre_destino}, {estado_libre_destino}"
 
     with st.container(border=True):
         st.subheader("6. 📦 Descripción y Claves de la Mercancía")
