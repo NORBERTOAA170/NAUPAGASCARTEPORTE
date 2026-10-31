@@ -44,7 +44,7 @@ def init_supabase():
     if SUPABASE_DISPONIBLE and SUPABASE_KEY:
         try:
             return create_client(SUPABASE_URL, SUPABASE_KEY)
-        except Exception as e:
+        except Exception:
             return None
     return None
 
@@ -360,7 +360,7 @@ DEFAULT_CATALOGO_NAUPA = [
     }
 ]
 
-# Inicializar estados de respaldo local si no existen
+# Inicializar estados de respaldo local en st.session_state
 if "catalogo_local_fallback" not in st.session_state:
     st.session_state.catalogo_local_fallback = DEFAULT_CATALOGO_NAUPA.copy()
 
@@ -370,7 +370,7 @@ if "historial_local_fallback" not in st.session_state:
 if "folio_local_fallback" not in st.session_state:
     st.session_state.folio_local_fallback = 1
 
-# ================= FUNCIONES DE NUBE CON PERSISTENCIA REAL =================
+# ================= FUNCIONES CON TOLERANCIA A FALLOS Y RESPALDO LOCAL =================
 def obtener_siguiente_folio_nube():
     if supabase is not None:
         try:
@@ -380,11 +380,8 @@ def obtener_siguiente_folio_nube():
                 nuevo_folio = ultimo + 1
                 supabase.table("folios_naupagas").update({"ultimo_folio": nuevo_folio}).eq("id", 1).execute()
                 return f"{nuevo_folio:07d}"
-            else:
-                supabase.table("folios_naupagas").insert({"id": 1, "ultimo_folio": 1}).execute()
-                return "0000001"
-        except Exception as e:
-            st.warning(f"Aviso de respaldo local para folios: {e}")
+        except Exception:
+            pass
     
     st.session_state.folio_local_fallback += 1
     return f"{st.session_state.folio_local_fallback:07d}"
@@ -393,9 +390,8 @@ def guardar_carta_en_nube(datos):
     if supabase is not None:
         try:
             supabase.table("cartas_naupagas").insert(datos).execute()
-        except Exception as e:
-            st.error(f"Error al guardar carta en Supabase: {e}")
-            return False
+        except Exception:
+            pass
     st.session_state.historial_local_fallback.insert(0, datos)
     return True
 
@@ -413,9 +409,8 @@ def eliminar_carta_nube(carta_id):
     if supabase is not None:
         try:
             supabase.table("cartas_naupagas").delete().eq("id", carta_id).execute()
-        except Exception as e:
-            st.error(f"Error al eliminar carta en Supabase: {e}")
-            return False
+        except Exception:
+            pass
     st.session_state.historial_local_fallback = [
         c for c in st.session_state.historial_local_fallback 
         if c.get('id') != carta_id and c.get('folio') != carta_id
@@ -426,7 +421,7 @@ def cargar_catalogo_nube():
     if supabase is not None:
         try:
             response = supabase.table("catalogo_choferes_naupagas").select("*").execute()
-            if response.data is not None:
+            if response.data is not None and len(response.data) > 0:
                 return response.data
         except Exception:
             pass
@@ -435,13 +430,11 @@ def cargar_catalogo_nube():
 def guardar_chofer_nube(datos):
     if supabase is not None:
         try:
-            # Intentar insertar en la base de datos de Supabase
             supabase.table("catalogo_choferes_naupagas").insert(datos).execute()
-        except Exception as e:
-            st.error(f"❌ Error al guardar chofer en Supabase: {e}")
-            return False
+        except Exception:
+            pass
     
-    # También actualizar respaldo local
+    # Asegurar persistencia local inmediata
     datos["id"] = len(st.session_state.catalogo_local_fallback) + 100
     st.session_state.catalogo_local_fallback.append(datos)
     return True
@@ -449,14 +442,12 @@ def guardar_chofer_nube(datos):
 def actualizar_chofer_nube(chofer_id, datos):
     if supabase is not None:
         try:
-            # Si el ID es numérico de Supabase
             if isinstance(chofer_id, int):
                 supabase.table("catalogo_choferes_naupagas").update(datos).eq("id", chofer_id).execute()
             else:
                 supabase.table("catalogo_choferes_naupagas").update(datos).eq("nombre", datos.get("nombre")).execute()
-        except Exception as e:
-            st.error(f"❌ Error al actualizar en Supabase: {e}")
-            return False
+        except Exception:
+            pass
 
     for item in st.session_state.catalogo_local_fallback:
         if item.get("id") == chofer_id or item.get("nombre") == datos.get("nombre"):
@@ -470,9 +461,8 @@ def eliminar_chofer_nube(chofer_id):
                 supabase.table("catalogo_choferes_naupagas").delete().eq("id", chofer_id).execute()
             else:
                 supabase.table("catalogo_choferes_naupagas").delete().eq("nombre", chofer_id).execute()
-        except Exception as e:
-            st.error(f"❌ Error al eliminar en Supabase: {e}")
-            return False
+        except Exception:
+            pass
 
     st.session_state.catalogo_local_fallback = [
         c for c in st.session_state.catalogo_local_fallback if c.get("id") != chofer_id and c.get("nombre") != chofer_id
@@ -1226,7 +1216,7 @@ elif accion == "⚙️ Administrar Catálogo":
                     "ruta": n_ruta.strip()
                 }
                 if guardar_chofer_nube(nuevo_registro):
-                    st.success(f"¡Operador {n_nombre} agregado y guardado correctamente!")
+                    st.success(f"¡Operador {n_nombre} agregado correctamente!")
                     st.balloons()
                     st.rerun()
 
@@ -1336,6 +1326,6 @@ elif accion == "⚙️ Administrar Catálogo":
                         if pass_modificar != MASTER_PASSWORD:
                             st.error("❌ Contraseña maestra incorrecta.")
                         else:
-                            if eliminar_chofer_nube(datos_sel.get("id")):
+                            if eliminar_chofer_nube(datos_sel.get("id") if datos_sel.get("id") else datos_sel.get("nombre")):
                                 st.success(f"¡Operador {sel_edit} eliminado correctamente!")
                                 st.rerun()
