@@ -370,7 +370,7 @@ if "historial_local_fallback" not in st.session_state:
 if "folio_local_fallback" not in st.session_state:
     st.session_state.folio_local_fallback = 1
 
-# ================= FUNCIONES DE NUBE CON RESPALDO ROBUSTO =================
+# ================= FUNCIONES DE NUBE CON PERSISTENCIA REAL =================
 def obtener_siguiente_folio_nube():
     if supabase is not None:
         try:
@@ -383,8 +383,8 @@ def obtener_siguiente_folio_nube():
             else:
                 supabase.table("folios_naupagas").insert({"id": 1, "ultimo_folio": 1}).execute()
                 return "0000001"
-        except Exception:
-            pass
+        except Exception as e:
+            st.warning(f"Aviso de respaldo local para folios: {e}")
     
     st.session_state.folio_local_fallback += 1
     return f"{st.session_state.folio_local_fallback:07d}"
@@ -393,8 +393,9 @@ def guardar_carta_en_nube(datos):
     if supabase is not None:
         try:
             supabase.table("cartas_naupagas").insert(datos).execute()
-        except Exception:
-            pass
+        except Exception as e:
+            st.error(f"Error al guardar carta en Supabase: {e}")
+            return False
     st.session_state.historial_local_fallback.insert(0, datos)
     return True
 
@@ -412,8 +413,9 @@ def eliminar_carta_nube(carta_id):
     if supabase is not None:
         try:
             supabase.table("cartas_naupagas").delete().eq("id", carta_id).execute()
-        except Exception:
-            pass
+        except Exception as e:
+            st.error(f"Error al eliminar carta en Supabase: {e}")
+            return False
     st.session_state.historial_local_fallback = [
         c for c in st.session_state.historial_local_fallback 
         if c.get('id') != carta_id and c.get('folio') != carta_id
@@ -424,7 +426,7 @@ def cargar_catalogo_nube():
     if supabase is not None:
         try:
             response = supabase.table("catalogo_choferes_naupagas").select("*").execute()
-            if response.data and len(response.data) > 0:
+            if response.data is not None:
                 return response.data
         except Exception:
             pass
@@ -433,32 +435,47 @@ def cargar_catalogo_nube():
 def guardar_chofer_nube(datos):
     if supabase is not None:
         try:
+            # Intentar insertar en la base de datos de Supabase
             supabase.table("catalogo_choferes_naupagas").insert(datos).execute()
-        except Exception:
-            pass
+        except Exception as e:
+            st.error(f"❌ Error al guardar chofer en Supabase: {e}")
+            return False
+    
+    # También actualizar respaldo local
     datos["id"] = len(st.session_state.catalogo_local_fallback) + 100
     st.session_state.catalogo_local_fallback.append(datos)
     return True
 
 def actualizar_chofer_nube(chofer_id, datos):
-    if supabase is not None and isinstance(chofer_id, int):
+    if supabase is not None:
         try:
-            supabase.table("catalogo_choferes_naupagas").update(datos).eq("id", chofer_id).execute()
-        except Exception:
-            pass
+            # Si el ID es numérico de Supabase
+            if isinstance(chofer_id, int):
+                supabase.table("catalogo_choferes_naupagas").update(datos).eq("id", chofer_id).execute()
+            else:
+                supabase.table("catalogo_choferes_naupagas").update(datos).eq("nombre", datos.get("nombre")).execute()
+        except Exception as e:
+            st.error(f"❌ Error al actualizar en Supabase: {e}")
+            return False
+
     for item in st.session_state.catalogo_local_fallback:
         if item.get("id") == chofer_id or item.get("nombre") == datos.get("nombre"):
             item.update(datos)
     return True
 
 def eliminar_chofer_nube(chofer_id):
-    if supabase is not None and isinstance(chofer_id, int):
+    if supabase is not None:
         try:
-            supabase.table("catalogo_choferes_naupagas").delete().eq("id", chofer_id).execute()
-        except Exception:
-            pass
+            if isinstance(chofer_id, int):
+                supabase.table("catalogo_choferes_naupagas").delete().eq("id", chofer_id).execute()
+            else:
+                supabase.table("catalogo_choferes_naupagas").delete().eq("nombre", chofer_id).execute()
+        except Exception as e:
+            st.error(f"❌ Error al eliminar en Supabase: {e}")
+            return False
+
     st.session_state.catalogo_local_fallback = [
-        c for c in st.session_state.catalogo_local_fallback if c.get("id") != chofer_id
+        c for c in st.session_state.catalogo_local_fallback if c.get("id") != chofer_id and c.get("nombre") != chofer_id
     ]
     return True
 
@@ -474,7 +491,7 @@ CATALOGO_LOCAL_CP = {
     "91000": {"colonia": "Xalapa Enríquez Centro", "municipio": "Xalapa", "estado": "Veracruz", "pais": "México"},
     "91190": {"colonia": "Ánimas", "municipio": "Xalapa", "estado": "Veracruz", "pais": "México"},
     "91110": {"colonia": "Badillo", "municipio": "Xalapa", "estado": "Veracruz", "pais": "México"},
-    "91700": {"colonia": "Veracruz Centro", "municipio": "Veracruz", "estado": "Veracruz", "pais": "México"},
+    "91700": {"colonia": "Veracruz Centro", "municipio": "Veracruz", "pais": "México"},
     "72000": {"colonia": "Puebla Centro", "municipio": "Puebla", "estado": "Puebla", "pais": "México"},
     "72100": {"colonia": "La Paz", "municipio": "Puebla", "estado": "Puebla", "pais": "México"}
 }
@@ -1209,8 +1226,9 @@ elif accion == "⚙️ Administrar Catálogo":
                     "ruta": n_ruta.strip()
                 }
                 if guardar_chofer_nube(nuevo_registro):
-                    st.success(f"¡Operador {n_nombre} agregado correctamente al catálogo!")
+                    st.success(f"¡Operador {n_nombre} agregado y guardado correctamente!")
                     st.balloons()
+                    st.rerun()
 
     with tab_editar:
         st.subheader("Editar o Eliminar Operador Existente")
@@ -1319,5 +1337,5 @@ elif accion == "⚙️ Administrar Catálogo":
                             st.error("❌ Contraseña maestra incorrecta.")
                         else:
                             if eliminar_chofer_nube(datos_sel.get("id")):
-                                st.success(f"¡Operador {sel_edit} eliminado del catálogo!")
+                                st.success(f"¡Operador {sel_edit} eliminado correctamente!")
                                 st.rerun()
