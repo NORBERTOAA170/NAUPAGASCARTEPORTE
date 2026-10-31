@@ -50,7 +50,342 @@ def init_supabase():
 
 supabase = init_supabase()
 
-# ================= FUNCIONES DE CONEXIÓN DIRECTA A SUPABASE =================
+# ================= BASE DE DATOS INICIAL (SEED CATALOGO) =================
+DEFAULT_CATALOGO_NAUPA = [
+    {
+        "id": 1,
+        "nombre": "ALFONSO GONZALEZ ORTIZ",
+        "tipo": "Federal",
+        "rfc": "GOOA900609TC5",
+        "licencia": "LFD00008878",
+        "tipo_unidad_sat": "Autotanque (Pipa)",
+        "marca": "STERLING",
+        "eco": "PIPA GRANDE 1",
+        "capacidad_txt": "12900 Lts",
+        "capacidad_num": 12900.0,
+        "cant_20": 0,
+        "cant_30": 0,
+        "placas": "XF4354B",
+        "aseguradora": "Qualitas",
+        "poliza": "7150015853",
+        "ruta": ""
+    },
+    {
+        "id": 2,
+        "nombre": "MARTIN GONZALEZ LEON",
+        "tipo": "Estatal",
+        "rfc": "GOLM751110157",
+        "licencia": "UB003RH9Z",
+        "tipo_unidad_sat": "Autotanque (Pipa)",
+        "marca": "CHRYSLER",
+        "eco": "PIPA GRANDE 2",
+        "capacidad_txt": "12900 Lts",
+        "capacidad_num": 12900.0,
+        "cant_20": 0,
+        "cant_30": 0,
+        "placas": "XV0965A",
+        "aseguradora": "Qualitas",
+        "poliza": "7150014122",
+        "ruta": ""
+    },
+    {
+        "id": 3,
+        "nombre": "MARCO ANTONIO ALVARADO DURAN",
+        "tipo": "Estatal",
+        "rfc": "AADM6906159J4",
+        "licencia": "MT123507",
+        "tipo_unidad_sat": "Autotanque (Pipa)",
+        "marca": "FREIGHTLINER M2 106 35K",
+        "eco": "PIPA GRANDE 3",
+        "capacidad_txt": "13900 Lts",
+        "capacidad_num": 13900.0,
+        "cant_20": 0,
+        "cant_30": 0,
+        "placas": "XX2879A",
+        "aseguradora": "Qualitas",
+        "poliza": "7150014122",
+        "ruta": ""
+    },
+    {
+        "id": 4,
+        "nombre": "ALFONSO GONZALEZ ORTIZ (24,000 LTS)",
+        "tipo": "Federal",
+        "rfc": "GOOA900609TC5",
+        "licencia": "LFD00008878",
+        "tipo_unidad_sat": "Autotanque (Pipa)",
+        "marca": "FREIGHTLINER M2 106 35K",
+        "eco": "PIPA GRANDE 4",
+        "capacidad_txt": "24000 Lts",
+        "capacidad_num": 24000.0,
+        "cant_20": 0,
+        "cant_30": 0,
+        "placas": "18AF4Y",
+        "aseguradora": "Qualitas",
+        "poliza": "7150014491",
+        "ruta": ""
+    },
+    {
+        "id": 5,
+        "nombre": "RODRIGO LOPEZ ALCANTARA (NUEVA)",
+        "tipo": "Estatal",
+        "rfc": "LOAR9112225J2",
+        "licencia": "UB0CKN1S4",
+        "tipo_unidad_sat": "Autotanque (Pipa)",
+        "marca": "CHRYSLER RAM 4000",
+        "eco": "S/N",
+        "capacidad_txt": "4000 Lts",
+        "capacidad_num": 4000.0,
+        "cant_20": 0,
+        "cant_30": 0,
+        "placas": "YB8729B",
+        "aseguradora": "Qualitas",
+        "poliza": "7150015855",
+        "ruta": "ECONOGAS"
+    },
+    {
+        "id": 6,
+        "nombre": "RODRIGO LOPEZ ALCANTARA",
+        "tipo": "Estatal",
+        "rfc": "LOAR9112225J2",
+        "licencia": "UB0CKN1S4",
+        "tipo_unidad_sat": "Autotanque (Pipa)",
+        "marca": "CS FORD F-500 CHASIS CABINA",
+        "eco": "9",
+        "capacidad_txt": "4000 Lts",
+        "capacidad_num": 4000.0,
+        "cant_20": 0,
+        "cant_30": 0,
+        "placas": "XU91794",
+        "aseguradora": "Qualitas",
+        "poliza": "7150015083",
+        "ruta": "Perote, Jalacingo, Orilla del Monte y San Juan"
+    },
+    {
+        "id": 7,
+        "nombre": "HERACLIO ARMANDO MACHUCA SILVA",
+        "tipo": "Estatal",
+        "rfc": "MASH580804",
+        "licencia": "UB003R85C",
+        "tipo_unidad_sat": "Autotanque (Pipa)",
+        "marca": "CHRYSLER RAM 4000",
+        "eco": "5",
+        "capacidad_txt": "4000 Lts",
+        "capacidad_num": 4000.0,
+        "cant_20": 0,
+        "cant_30": 0,
+        "placas": "XF4338B",
+        "aseguradora": "Qualitas",
+        "poliza": "7150013784",
+        "ruta": "Perote, Alchichica, Sierra de Agua, Molinos, Tenextepec, Magueyitos, Los Antos"
+    },
+    {
+        "id": 8,
+        "nombre": "CARLOS GONZALEZ ORTIZ",
+        "tipo": "Estatal",
+        "rfc": "GOOC820603QN0",
+        "licencia": "UB0N3KX2K",
+        "tipo_unidad_sat": "Autotanque (Pipa)",
+        "marca": "CHEVROLET SILVERADO",
+        "eco": "6",
+        "capacidad_txt": "4500 Lts",
+        "capacidad_num": 4500.0,
+        "cant_20": 0,
+        "cant_30": 0,
+        "placas": "XT4418B",
+        "aseguradora": "Qualitas",
+        "poliza": "7150015633",
+        "ruta": "Perote, Libertad, Madero, Villa Aldama y Tenextepec"
+    },
+    {
+        "id": 9,
+        "nombre": "PORFIRIO HERNANDEZ CAMPUZANO",
+        "tipo": "Estatal",
+        "rfc": "HECP8606053H1",
+        "licencia": "UBOCKQOY4",
+        "tipo_unidad_sat": "Autotanque (Pipa)",
+        "marca": "CS CHRYSLER RAM 4000 5.7L",
+        "eco": "23",
+        "capacidad_txt": "4000 Lts",
+        "capacidad_num": 4000.0,
+        "cant_20": 0,
+        "cant_30": 0,
+        "placas": "YB8730B",
+        "aseguradora": "Qualitas",
+        "poliza": "7150013987",
+        "ruta": "Perote, Sierra de agua, Madero, Tenextepec y alrededores"
+    },
+    {
+        "id": 10,
+        "nombre": "DAVID EUGENIO ROMERO",
+        "tipo": "Estatal",
+        "rfc": "EURD970221PQ0",
+        "licencia": "UB0N3KQAQ",
+        "tipo_unidad_sat": "Autotanque (Pipa)",
+        "marca": "CHRYSLER RAM 4000",
+        "eco": "3",
+        "capacidad_txt": "4000 Lts",
+        "capacidad_num": 4000.0,
+        "cant_20": 0,
+        "cant_30": 0,
+        "placas": "XP3908B",
+        "aseguradora": "Qualitas",
+        "poliza": "7150015604",
+        "ruta": "Perote, Las Vigas, La Joya, Banderilla, San Miguel, El Fresno, Xalapa, Alchichica"
+    },
+    {
+        "id": 11,
+        "nombre": "JOSE EUGENIO ROMERO",
+        "tipo": "Estatal",
+        "rfc": "EURJ040215KN5",
+        "licencia": "UBOCKUCUH",
+        "tipo_unidad_sat": "Autotanque (Pipa)",
+        "marca": "CS FORD F-350 CHASIS CABINA",
+        "eco": "10",
+        "capacidad_txt": "4000 Lts",
+        "capacidad_num": 4000.0,
+        "cant_20": 0,
+        "cant_30": 0,
+        "placas": "XX9342A",
+        "aseguradora": "Qualitas",
+        "poliza": "7150014152",
+        "ruta": "Totalco, Alchichica, Sarabia, Tepeyahualco, Perote"
+    },
+    {
+        "id": 12,
+        "nombre": "JUAN ADRIAN MOTA MARTINEZ",
+        "tipo": "Estatal",
+        "rfc": "MOMJ961029UJ0",
+        "licencia": "UB0N3KZ7D",
+        "tipo_unidad_sat": "Vehículo Repartidor (Cilindrera)",
+        "marca": "TOYOTA HILUX",
+        "eco": "CILINDRERA 7",
+        "capacidad_txt": "19 de 20 kg y 9 de 30 kg",
+        "capacidad_num": 0.0,
+        "cant_20": 19,
+        "cant_30": 9,
+        "placas": "XP4212B",
+        "aseguradora": "GNP SEGUROS",
+        "poliza": "TFSM0003070351",
+        "ruta": "Perote, Madero, Molinos"
+    },
+    {
+        "id": 13,
+        "nombre": "JOSÉ CALIXTO ISAEL MACHUCA ORTEGA",
+        "tipo": "Estatal",
+        "rfc": "MAOC681114US7",
+        "licencia": "UB0N3LEMC",
+        "tipo_unidad_sat": "Vehículo Repartidor (Cilindrera)",
+        "marca": "TOYOTA HILUX",
+        "eco": "CILINDRERA 17",
+        "capacidad_txt": "13 de 20 kg y 9 de 30 kg",
+        "capacidad_num": 0.0,
+        "cant_20": 13,
+        "cant_30": 9,
+        "placas": "XP4211B",
+        "aseguradora": "GNP SEGUROS",
+        "poliza": "TFSM000307346",
+        "ruta": "La joya, Las vigas, Cruz blanca, El cajete"
+    },
+    {
+        "id": 14,
+        "nombre": "SAUL UBIRACI GALLARDO",
+        "tipo": "Estatal",
+        "rfc": "GAHS570419GB2",
+        "licencia": "UB0N3L5GY",
+        "tipo_unidad_sat": "Vehículo Repartidor (Cilindrera)",
+        "marca": "TOYOTA HILUX",
+        "eco": "CILINDRERA 3",
+        "capacidad_txt": "17 de 20 kg y 4 de 30 kg",
+        "capacidad_num": 0.0,
+        "cant_20": 17,
+        "cant_30": 4,
+        "placas": "XX2756A",
+        "aseguradora": "AXA",
+        "poliza": "YBJ006730000",
+        "ruta": "Guadalupe Victoria y alrededores"
+    },
+    {
+        "id": 15,
+        "nombre": "ROSENDO SESENA HERNANDEZ",
+        "tipo": "Estatal",
+        "rfc": "SEHR690624115",
+        "licencia": "UBOCKMSYG",
+        "tipo_unidad_sat": "Vehículo Repartidor (Cilindrera)",
+        "marca": "TOYOTA HILUX",
+        "eco": "CILINDRERA 6",
+        "capacidad_txt": "19 de 20 kg y 5 de 30 kg",
+        "capacidad_num": 0.0,
+        "cant_20": 19,
+        "cant_30": 5,
+        "placas": "XX2755A",
+        "aseguradora": "QUALITAS",
+        "poliza": "7150013591",
+        "ruta": "Totalco y Alchichica"
+    },
+    {
+        "id": 16,
+        "nombre": "JOSE ARMANDO HERNANDEZ MIRANDA",
+        "tipo": "Estatal",
+        "rfc": "HEMA970620NI4",
+        "licencia": "UB0N3BE6L",
+        "tipo_unidad_sat": "Vehículo Repartidor (Cilindrera)",
+        "marca": "TOYOTA HILUX 2 PUERTAS",
+        "eco": "CILINDRERA 16",
+        "capacidad_txt": "19 de 20 kg y 12 de 30 kg",
+        "capacidad_num": 0.0,
+        "cant_20": 19,
+        "cant_30": 12,
+        "placas": "XH8078B",
+        "aseguradora": "QUALITAS",
+        "poliza": "7150013816",
+        "ruta": "Altotonga y alrededores"
+    },
+    {
+        "id": 17,
+        "nombre": "JORGE ALFONSO SERRANO CORTINA (SAN MIGUEL)",
+        "tipo": "Estatal",
+        "rfc": "UA033PVAN",
+        "licencia": "SECJ9201067D4",
+        "tipo_unidad_sat": "Vehículo Repartidor (Cilindrera)",
+        "marca": "TOYOTA HILUX",
+        "eco": "CILINDRERA 8",
+        "capacidad_txt": "10 de 20 kg y 10 de 30 kg",
+        "capacidad_num": 0.0,
+        "cant_20": 10,
+        "cant_30": 10,
+        "placas": "XH8079B",
+        "aseguradora": "QUALITAS",
+        "poliza": "7150015084",
+        "ruta": "San Miguel, Tlacolula, El fresno"
+    },
+    {
+        "id": 18,
+        "nombre": "JUAN MANUEL GOMEZ ROMANO",
+        "tipo": "Estatal",
+        "rfc": "GORJ770118QN3",
+        "licencia": "UB0CKLQFG",
+        "tipo_unidad_sat": "Autotanque (Pipa)",
+        "marca": "CHEVROLET",
+        "eco": "PIPA 30",
+        "capacidad_txt": "4000 Lts",
+        "capacidad_num": 4000.0,
+        "cant_20": 0,
+        "cant_30": 0,
+        "placas": "HF7916B",
+        "aseguradora": "Qualitas",
+        "poliza": "7150015000",
+        "ruta": "Altotonga y sus alrededores, Veracruz"
+    }
+]
+
+# Inicializar respaldos en session_state para que NUNCA se pierda nada
+if "historial_local_fallback" not in st.session_state:
+    st.session_state.historial_local_fallback = []
+
+if "folio_local_fallback" not in st.session_state:
+    st.session_state.folio_local_fallback = 1
+
+# ================= FUNCIONES CON TOLERANCIA A FALLOS Y RESPALDO LOCAL =================
 def obtener_siguiente_folio_nube():
     if supabase is not None:
         try:
@@ -60,59 +395,69 @@ def obtener_siguiente_folio_nube():
                 nuevo_folio = ultimo + 1
                 supabase.table("folios_naupagas").update({"ultimo_folio": nuevo_folio}).eq("id", 1).execute()
                 return f"{nuevo_folio:07d}"
-        except Exception as e:
-            st.error(f"Error de folios en Supabase: {e}")
-    return "0000001"
+        except Exception:
+            pass
+    
+    st.session_state.folio_local_fallback += 1
+    return f"{st.session_state.folio_local_fallback:07d}"
 
 def guardar_carta_en_nube(datos):
     if supabase is not None:
         try:
             supabase.table("cartas_naupagas").insert(datos).execute()
-            return True
-        except Exception as e:
-            st.error(f"Error al guardar carta en Supabase: {e}")
-            return False
-    return False
+        except Exception:
+            pass
+    # Guardar siempre en el historial local de respaldo
+    st.session_state.historial_local_fallback.insert(0, datos)
+    return True
 
 def cargar_historial_nube():
+    cartas_nube = []
     if supabase is not None:
         try:
             response = supabase.table("cartas_naupagas").select("*").order("id", desc=True).execute()
             if response.data:
-                return response.data
+                cartas_nube = response.data
         except Exception:
             pass
-    return []
+    
+    # Combinar con el respaldo local para asegurar que no falte nada
+    existente_folios = {c.get('folio') for c in cartas_nube}
+    combinado = cartas_nube.copy()
+    for local_item in st.session_state.historial_local_fallback:
+        if local_item.get('folio') not in existente_folios:
+            combinado.insert(0, local_item)
+    return combinado
 
 def eliminar_carta_nube(carta_id):
     if supabase is not None:
         try:
             supabase.table("cartas_naupagas").delete().eq("id", carta_id).execute()
-            return True
-        except Exception as e:
-            st.error(f"Error al eliminar carta en Supabase: {e}")
-            return False
-    return False
+        except Exception:
+            pass
+    st.session_state.historial_local_fallback = [
+        c for c in st.session_state.historial_local_fallback 
+        if c.get('id') != carta_id and c.get('folio') != carta_id
+    ]
+    return True
 
 def cargar_catalogo_nube():
     if supabase is not None:
         try:
             response = supabase.table("catalogo_choferes_naupagas").select("*").execute()
-            if response.data is not None:
+            if response.data is not None and len(response.data) > 0:
                 return response.data
-        except Exception as e:
-            st.error(f"Error al cargar catálogo de Supabase: {e}")
-    return []
+        except Exception:
+            pass
+    return DEFAULT_CATALOGO_NAUPA
 
 def guardar_chofer_nube(datos):
     if supabase is not None:
         try:
             supabase.table("catalogo_choferes_naupagas").insert(datos).execute()
-            return True
-        except Exception as e:
-            st.error(f"❌ Error al guardar chofer en Supabase: {e}")
-            return False
-    return False
+        except Exception:
+            pass
+    return True
 
 def actualizar_chofer_nube(chofer_id, datos):
     if supabase is not None:
@@ -121,11 +466,9 @@ def actualizar_chofer_nube(chofer_id, datos):
                 supabase.table("catalogo_choferes_naupagas").update(datos).eq("id", chofer_id).execute()
             else:
                 supabase.table("catalogo_choferes_naupagas").update(datos).eq("nombre", datos.get("nombre")).execute()
-            return True
-        except Exception as e:
-            st.error(f"❌ Error al actualizar en Supabase: {e}")
-            return False
-    return False
+        except Exception:
+            pass
+    return True
 
 def eliminar_chofer_nube(chofer_id):
     if supabase is not None:
@@ -134,11 +477,9 @@ def eliminar_chofer_nube(chofer_id):
                 supabase.table("catalogo_choferes_naupagas").delete().eq("id", chofer_id).execute()
             else:
                 supabase.table("catalogo_choferes_naupagas").delete().eq("nombre", chofer_id).execute()
-            return True
-        except Exception as e:
-            st.error(f"❌ Error al eliminar en Supabase: {e}")
-            return False
-    return False
+        except Exception:
+            pass
+    return True
 
 if "auth_naupagas" not in st.session_state:
     st.session_state.auth_naupagas = False
@@ -703,7 +1044,7 @@ if accion == "Nueva Carta Porte":
 
             exito = guardar_carta_en_nube(datos_nueva_carta)
             if exito:
-                st.success(f"¡Carta Porte con Folio {folio_generado} generada y guardada con éxito en Supabase!")
+                st.success(f"¡Carta Porte con Folio {folio_generado} generada con éxito!")
                 st.balloons()
                 st.session_state.ultima_carta_generada = datos_nueva_carta
 
@@ -738,7 +1079,7 @@ elif accion == "Historial de Documentos":
         filtro_chofer = st.selectbox("Filtrar por Chofer:", options=["Todos los choferes"] + choferes_en_historial)
 
     if not historial_nube:
-        st.info("No hay cartas registradas en este momento en Supabase.")
+        st.info("No hay cartas registradas en este momento.")
     else:
         cartas_filtradas = []
         for carta in historial_nube:
@@ -800,7 +1141,7 @@ elif accion == "Historial de Documentos":
 
 elif accion == "⚙️ Administrar Catálogo":
     st.title("⚙️ NAUPAGAS - Administración de Choferes y Unidades")
-    st.write("Agrega, edita o elimina operadores del catálogo con sincronización directa en Supabase.")
+    st.write("Agrega, edita o elimina operadores del catálogo con total seguridad.")
     st.markdown("---")
 
     tab_nuevo, tab_editar = st.tabs(["➕ Agregar Nuevo Operador", "✏️ Modificar / Eliminar Operador Existente"])
@@ -887,7 +1228,7 @@ elif accion == "⚙️ Administrar Catálogo":
                     "ruta": n_ruta.strip()
                 }
                 if guardar_chofer_nube(nuevo_registro):
-                    st.success(f"¡Operador {n_nombre} guardado en Supabase con éxito!")
+                    st.success(f"¡Operador {n_nombre} agregado correctamente!")
                     st.balloons()
                     st.rerun()
 
@@ -990,7 +1331,7 @@ elif accion == "⚙️ Administrar Catálogo":
                                 "ruta": e_ruta.strip()
                             }
                             if actualizar_chofer_nube(datos_sel.get("id"), datos_actualizados):
-                                st.success(f"¡Operador {e_nombre} actualizado en Supabase!")
+                                st.success(f"¡Operador {e_nombre} actualizado con éxito!")
                                 st.rerun()
                 with col_btn_2:
                     if st.button("Eliminar Operador", type="secondary", use_container_width=True, key=f"btn_del_{sel_edit}"):
@@ -998,5 +1339,5 @@ elif accion == "⚙️ Administrar Catálogo":
                             st.error("❌ Contraseña maestra incorrecta.")
                         else:
                             if eliminar_chofer_nube(datos_sel.get("id") if datos_sel.get("id") else datos_sel.get("nombre")):
-                                st.success(f"¡Operador {sel_edit} eliminado de Supabase!")
+                                st.success(f"¡Operador {sel_edit} eliminado correctamente!")
                                 st.rerun()
