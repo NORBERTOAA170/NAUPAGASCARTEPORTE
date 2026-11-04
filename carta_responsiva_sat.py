@@ -742,25 +742,24 @@ def generar_hoja_traslado_pdf(d):
         pdf = FPDF(orientation='P', unit='mm', format='A4')
         pdf.add_page()
         
-        # Logo superior derecho o superior centrado
+        # Logo superior derecho
         logo_path = "logo.jpg"
         if os.path.exists(logo_path):
             try:
-                # Ubicado en la esquina superior derecha tal como en la imagen de referencia
-                pdf.image(logo_path, x=135, y=10, w=65)
+                pdf.image(logo_path, x=135, y=8, w=65)
             except:
                 pass
 
-        pdf.set_y(35)
+        # Bajamos la ubicación y fecha para que no pegue con el logo
+        pdf.set_y(38)
         pdf.set_font("helvetica", "B", 9)
         
-        # Fecha formateada según la imagen de referencia
         f_emision_str = d.get('fecha_registro', '04 DE NOVIEMBRE DEL 2026')
         pdf.cell(0, 6, safe_str(f"TOTALCO, VER. A {f_emision_str.split()[0]} DE 2026"), align="R", ln=True)
-        pdf.ln(15)
+        pdf.ln(12)
 
-        # Cuerpo del texto del traslado
-        pdf.set_font("helvetica", "B", 10)
+        # LETRA NORMAL (NO negritas) para todo el párrafo para darle una vista elegante
+        pdf.set_font("helvetica", "", 10)
         
         litros_txt = d.get('cantidad_mercancia', '6950 LITROS')
         marca_unidad = d.get('marca_modelo', 'FREIGHTLINER')
@@ -769,7 +768,9 @@ def generar_hoja_traslado_pdf(d):
         serie_unidad = d.get('serie_unidad', '3ALACYCS6CDBS9001')
         color_unidad = d.get('color_unidad', 'GRIS')
         chofer_unidad = d.get('nombre_chofer', 'MARCO ANTONIO ALVARADO DURAN')
-        destino_unidad = d.get('nombre_destino', 'GUADALUPE VICTORIA, PUEBLA')
+        
+        # Usamos la dirección de destino o el nombre de destino para que refleje exactamente el lugar en lugar de "Varios clientes"
+        destino_unidad = d.get('dir_destino', '') or d.get('nombre_destino', 'GUADALUPE VICTORIA, PUEBLA')
 
         texto_traslado = (
             f"TRASLADO DE {litros_txt} DE GAS L.P., SALIENDO DE LA PLANTA DENOMINADA NAUPA "
@@ -781,7 +782,7 @@ def generar_hoja_traslado_pdf(d):
         )
 
         pdf.multi_cell(0, 7, safe_str(texto_traslado), align="J")
-        pdf.ln(50)
+        pdf.ln(45)
 
         # Firma del Gerente General
         pdf.set_font("helvetica", "B", 10)
@@ -1168,7 +1169,6 @@ if accion == "Nueva Carta Porte":
         st.markdown("---")
         st.subheader("📥 Descargar Documentos Generados")
         
-        # Validación estricta para saber si es una de las 4 PIPAS GRANDES
         eco_actual = str(st.session_state.ultima_carta_generada.get('eco_unidad', '')).strip().upper()
         es_pipa_grande = eco_actual in ["PIPA GRANDE 1", "PIPA GRANDE 2", "PIPA GRANDE 3", "PIPA GRANDE 4"]
 
