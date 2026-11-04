@@ -754,8 +754,24 @@ def generar_hoja_traslado_pdf(d):
         pdf.set_y(38)
         pdf.set_font("helvetica", "B", 9)
         
-        f_emision_str = d.get('fecha_registro', '04 DE NOVIEMBRE DEL 2026')
-        pdf.cell(0, 6, safe_str(f"TOTALCO, VER. A {f_emision_str.split()[0]} DE 2026"), align="R", ln=True)
+        # Formato de fecha formal en español (Ej: "4 de noviembre de 2026")
+        meses_es = {
+            "01": "enero", "02": "febrero", "03": "marzo", "04": "abril",
+            "05": "mayo", "06": "junio", "07": "julio", "08": "agosto",
+            "09": "septiembre", "10": "octubre", "11": "noviembre", "12": "diciembre"
+        }
+        
+        f_emision_str = d.get('fecha_registro', '')
+        try:
+            # Extraer fecha tipo DD/MM/YYYY del registro
+            fecha_parte = f_emision_str.split()[0]
+            dia, mes, anio = fecha_parte.split('/')
+            mes_nombre = meses_es.get(mes, "noviembre")
+            fecha_formal = f"{int(dia)} de {mes_nombre} de {anio}"
+        except:
+            fecha_formal = "4 de noviembre de 2026"
+
+        pdf.cell(0, 6, safe_str(f"TOTALCO, VER., A {fecha_formal.upper()}"), align="R", ln=True)
         pdf.ln(12)
 
         # LETRA NORMAL (NO negritas) para todo el párrafo para darle una vista elegante
@@ -769,7 +785,6 @@ def generar_hoja_traslado_pdf(d):
         color_unidad = d.get('color_unidad', 'GRIS')
         chofer_unidad = d.get('nombre_chofer', 'MARCO ANTONIO ALVARADO DURAN')
         
-        # Usamos la dirección de destino o el nombre de destino para que refleje exactamente el lugar en lugar de "Varios clientes"
         destino_unidad = d.get('dir_destino', '') or d.get('nombre_destino', 'GUADALUPE VICTORIA, PUEBLA')
 
         texto_traslado = (
