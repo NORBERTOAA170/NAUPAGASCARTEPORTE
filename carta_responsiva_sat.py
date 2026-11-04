@@ -378,26 +378,30 @@ DEFAULT_CATALOGO_NAUPA = [
     }
 ]
 
-# Inicializar respaldos en session_state para que NUNCA se pierda nada
+# Inicializar respaldos en session_state por si falla la red
 if "historial_local_fallback" not in st.session_state:
     st.session_state.historial_local_fallback = []
 
 if "folio_local_fallback" not in st.session_state:
-    st.session_state.folio_local_fallback = 1
+    st.session_state.folio_local_fallback = 108
 
-# ================= FUNCIONES CON TOLERANCIA A FALLOS Y RESPALDO LOCAL =================
+# ================= FUNCIONES CON CONSULTA OBLIGATORIA A SUPABASE =================
 def obtener_siguiente_folio_nube():
+    """Consulta obligatoriamente el folio almacenado en Supabase."""
     if supabase is not None:
         try:
-            response = supabase.table("folios_naupagas").select("ultimo_folio").eq("id", 1).execute()
-            if response.data and len(response.data) > 0:
-                ultimo = response.data[0]["ultimo_folio"]
-                nuevo_folio = ultimo + 1
+            res = supabase.table("folios_naupagas").select("ultimo_folio").eq("id", 1).execute()
+            if res.data and len(res.data) > 0:
+                ultimo_folio_actual = int(res.data[0]["ultimo_folio"])
+                nuevo_folio = ultimo_folio_actual + 1
+                
+                # Actualiza el folio en Supabase
                 supabase.table("folios_naupagas").update({"ultimo_folio": nuevo_folio}).eq("id", 1).execute()
                 return f"{nuevo_folio:07d}"
-        except Exception:
-            pass
+        except Exception as e:
+            st.error(f"Error al conectar con folios en la nube: {e}")
     
+    # Fallback local en caso de desconexión estricta
     st.session_state.folio_local_fallback += 1
     return f"{st.session_state.folio_local_fallback:07d}"
 
@@ -405,9 +409,9 @@ def guardar_carta_en_nube(datos):
     if supabase is not None:
         try:
             supabase.table("cartas_naupagas").insert(datos).execute()
-        except Exception:
-            pass
-    # Guardar siempre en el historial local de respaldo
+        except Exception as e:
+            st.error(f"Error al guardar carta en Supabase: {e}")
+            
     st.session_state.historial_local_fallback.insert(0, datos)
     return True
 
@@ -420,8 +424,7 @@ def cargar_historial_nube():
                 cartas_nube = response.data
         except Exception:
             pass
-    
-    # Combinar con el respaldo local para asegurar que no falte nada
+            
     existente_folios = {c.get('folio') for c in cartas_nube}
     combinado = cartas_nube.copy()
     for local_item in st.session_state.historial_local_fallback:
@@ -444,7 +447,7 @@ def eliminar_carta_nube(carta_id):
 def cargar_catalogo_nube():
     if supabase is not None:
         try:
-            response = supabase.table("catalogo_choferes_naupagas").select("*").execute()
+            response = supabase.table("catalogo_choferes_naupagas").select("*").order("id", desc=False).execute()
             if response.data is not None and len(response.data) > 0:
                 return response.data
         except Exception:
