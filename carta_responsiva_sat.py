@@ -742,7 +742,6 @@ def generar_hoja_traslado_pdf(d):
         pdf = FPDF(orientation='P', unit='mm', format='A4')
         pdf.add_page()
         
-        # Logo superior derecho
         logo_path = "logo.jpg"
         if os.path.exists(logo_path):
             try:
@@ -750,11 +749,9 @@ def generar_hoja_traslado_pdf(d):
             except:
                 pass
 
-        # Bajamos la ubicación y fecha para que no pegue con el logo
         pdf.set_y(38)
         pdf.set_font("helvetica", "B", 9)
         
-        # Formato de fecha formal en español (Ej: "4 de noviembre de 2026")
         meses_es = {
             "01": "enero", "02": "febrero", "03": "marzo", "04": "abril",
             "05": "mayo", "06": "junio", "07": "julio", "08": "agosto",
@@ -763,7 +760,6 @@ def generar_hoja_traslado_pdf(d):
         
         f_emision_str = d.get('fecha_registro', '')
         try:
-            # Extraer fecha tipo DD/MM/YYYY del registro
             fecha_parte = f_emision_str.split()[0]
             dia, mes, anio = fecha_parte.split('/')
             mes_nombre = meses_es.get(mes, "noviembre")
@@ -774,7 +770,6 @@ def generar_hoja_traslado_pdf(d):
         pdf.cell(0, 6, safe_str(f"TOTALCO, VER., A {fecha_formal.upper()}"), align="R", ln=True)
         pdf.ln(12)
 
-        # LETRA NORMAL (NO negritas) para todo el párrafo para darle una vista elegante
         pdf.set_font("helvetica", "", 10)
         
         litros_txt = d.get('cantidad_mercancia', '6950 LITROS')
@@ -799,7 +794,6 @@ def generar_hoja_traslado_pdf(d):
         pdf.multi_cell(0, 7, safe_str(texto_traslado), align="J")
         pdf.ln(45)
 
-        # Firma del Gerente General
         pdf.set_font("helvetica", "B", 10)
         pdf.cell(0, 6, safe_str("ATENTAMENTE"), align="C", ln=True)
         pdf.ln(18)
@@ -1265,7 +1259,16 @@ elif accion == "Historial de Documentos":
                         st.write(f"⛽ **Unidad:** {carta.get('tipo_unidad', '')} ({carta.get('eco_unidad', '')})")
                     with col_h2:
                         st.write(f"👤 **Chofer:** {carta.get('nombre_chofer', '')}")
-                        st.write(f"🛣️ **Ruta:** {carta.get('nombre_origen', '')} ➔ {carta.get('nombre_destino', '')}")
+                        
+                        # Obtener la dirección o destino real para mostrar en el historial
+                        destino_historial = carta.get('dir_destino', '') or carta.get('nombre_destino', 'S/D')
+                        
+                        # Renderizado con salto de línea automático si el texto es muy largo
+                        st.markdown(
+                            f"🛣️ **Ruta:** {carta.get('nombre_origen', 'NAUPAGAS')} ➔ "
+                            f"<span style='display:inline-block; max-width:280px; word-break:break-word; vertical-align:top;'>{destino_historial}</span>", 
+                            unsafe_allow_html=True
+                        )
                     with col_h3:
                         pdf_hist_bytes = generar_pdf(carta)
                         
